@@ -35,47 +35,49 @@ function AppShell() {
       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[500px] bg-accent-20 opacity-20 blur-[120px] rounded-full pointer-events-none" />
 
       {/* Navbar Minimal */}
-      <header className="relative z-20 w-full px-6 md:px-8 py-6 md:py-10 flex justify-between items-center mix-blend-difference">
-        <button
-          onClick={() => view !== 'landing' && setView('landing')}
-          disabled={view === 'landing'}
-          className="flex items-center gap-3 group"
-          aria-label="Noblr"
-        >
-          <span className="text-text-main font-display text-[22px] tracking-[-0.005em] font-light leading-none pt-1 group-hover:tracking-[0.005em] transition-[letter-spacing] duration-500">Noblr</span>
-          <span className="hidden md:block h-[14px] w-px bg-accent-20 group-hover:bg-accent transition-colors duration-500" />
-        </button>
-        {view === 'landing' && (
-          <nav className="flex gap-8 items-center">
+      <header className="relative z-20 w-full px-6 md:px-8 py-6 md:py-10 mix-blend-difference">
+        <div className="max-w-5xl mx-auto flex justify-between items-center">
+          <button
+            onClick={() => view !== 'landing' && setView('landing')}
+            disabled={view === 'landing'}
+            className="flex items-center gap-3 group"
+            aria-label="Noblr"
+          >
+            <span className="text-text-main font-display text-[22px] tracking-[-0.005em] font-light leading-none pt-1 group-hover:tracking-[0.005em] transition-[letter-spacing] duration-500">Noblr</span>
+            <span className="hidden md:block h-[14px] w-px bg-accent-20 group-hover:bg-accent transition-colors duration-500" />
+          </button>
+          {view === 'landing' && (
+            <nav className="flex gap-8 items-center">
+              <button
+                onClick={() => setView('login')}
+                className="font-caps text-[11px] tracking-[0.2em] text-text-dim hover:text-text-main transition-colors uppercase flex items-center gap-2 group"
+              >
+                Member Login
+                <ArrowRight className="w-3 h-3 opacity-0 -translate-x-1 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300" />
+              </button>
+            </nav>
+          )}
+          {(view === 'apply' || view === 'waitlist' || view === 'login' || view === 'admin' || view === 'privacy' || view === 'terms') && (
             <button
-              onClick={() => setView('login')}
-              className="font-caps text-[11px] tracking-[0.2em] text-text-dim hover:text-text-main transition-colors uppercase flex items-center gap-2 group"
+              onClick={() => setView('landing')}
+              className="w-10 h-10 rounded-full flex items-center justify-center text-text-dim hover:text-text-main border border-transparent hover:border-accent-20 transition-all duration-300"
+              aria-label="Close"
             >
-              Member Login
-              <ArrowRight className="w-3 h-3 opacity-0 -translate-x-1 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300" />
+              <X className="w-5 h-5" />
             </button>
-          </nav>
-        )}
-        {(view === 'apply' || view === 'waitlist' || view === 'login' || view === 'admin' || view === 'privacy' || view === 'terms') && (
-          <button
-            onClick={() => setView('landing')}
-            className="w-10 h-10 rounded-full flex items-center justify-center text-text-dim hover:text-text-main border border-transparent hover:border-accent-20 transition-all duration-300"
-            aria-label="Close"
-          >
-            <X className="w-5 h-5" />
-          </button>
-        )}
-        {view === 'portal' && (
-          <button
-            onClick={() => setView('landing')}
-            className="relative font-caps text-[10px] tracking-[0.2em] text-text-dim hover:text-text-main transition-colors uppercase border-b border-accent-20 pb-0.5"
-          >
-            Log Out
-            {hasUnread && (
-              <span className="absolute -top-1 -right-3 w-1.5 h-1.5 rounded-full bg-accent animate-pulse" aria-label="Unread notifications" />
-            )}
-          </button>
-        )}
+          )}
+          {view === 'portal' && (
+            <button
+              onClick={() => setView('landing')}
+              className="relative font-caps text-[10px] tracking-[0.2em] text-text-dim hover:text-text-main transition-colors uppercase border-b border-accent-20 pb-0.5"
+            >
+              Log Out
+              {hasUnread && (
+                <span className="absolute -top-1 -right-3 w-1.5 h-1.5 rounded-full bg-accent animate-pulse" aria-label="Unread notifications" />
+              )}
+            </button>
+          )}
+        </div>
       </header>
 
       <main className="flex-1 flex flex-col relative z-10 isolate overflow-y-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">

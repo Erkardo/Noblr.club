@@ -1,14 +1,17 @@
 import { motion } from 'motion/react';
+import { useState } from 'react';
 import { ArrowRight } from 'lucide-react';
 import { PRESS_DATA } from '../data/press';
 import { NoiseOverlay } from '../components/ui/NoiseOverlay';
 import { useAppContext } from '../context/AppContext';
+import { SelectionProcessModal } from './SelectionProcessModal';
 
 export function LandingView({ onApply, onAdmin }: { onApply: () => void, onAdmin?: () => void }) {
   const { setView, lastApplicationId, applications } = useAppContext();
   const hasPendingApplication = lastApplicationId
     ? applications.some(a => a.id === lastApplicationId)
     : false;
+  const [showProcess, setShowProcess] = useState(false);
   return (
     <motion.div
       initial={{ opacity: 0 }}
@@ -66,6 +69,7 @@ export function LandingView({ onApply, onAdmin }: { onApply: () => void, onAdmin
 
             <button
               type="button"
+              onClick={() => setShowProcess(true)}
               className="text-text-main text-[10px] tracking-[0.15em] uppercase border-b border-accent/20 pb-1 hover:border-accent hover:text-accent transition-all duration-300 font-caps"
             >
               Сонгон шалгаруулах үйл явц
@@ -266,6 +270,12 @@ export function LandingView({ onApply, onAdmin }: { onApply: () => void, onAdmin
         <div>Pending applications: <span className="text-white">1,422</span></div>
         <div className="font-serif italic text-accent tracking-normal capitalize text-[11px]">100% Identity Verification Required</div>
       </motion.div>
+
+      <SelectionProcessModal
+        open={showProcess}
+        onClose={() => setShowProcess(false)}
+        onApply={onApply}
+      />
     </motion.div>
   );
 }

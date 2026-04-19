@@ -33,7 +33,7 @@ const INITIAL_FORM: FormState = {
 const MOTIVATION_MIN = 80;
 
 export function ApplicationView({ onComplete }: { onComplete: () => void }) {
-  const { setApplications } = useAppContext();
+  const { setApplications, setLastApplicationId } = useAppContext();
   const [step, setStep] = useState(1);
   const [isProcessing, setIsProcessing] = useState(false);
   const [form, setForm] = useState<FormState>(INITIAL_FORM);
@@ -94,6 +94,7 @@ export function ApplicationView({ onComplete }: { onComplete: () => void }) {
       linkedin: form.linkedin,
     };
     setApplications(prev => [newApp, ...prev]);
+    setLastApplicationId(newApp.id);
   };
 
   const nextStep = (e: React.FormEvent) => {

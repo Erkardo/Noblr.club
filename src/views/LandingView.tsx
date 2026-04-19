@@ -5,7 +5,10 @@ import { NoiseOverlay } from '../components/ui/NoiseOverlay';
 import { useAppContext } from '../context/AppContext';
 
 export function LandingView({ onApply, onAdmin }: { onApply: () => void, onAdmin?: () => void }) {
-  const { setView } = useAppContext();
+  const { setView, lastApplicationId, applications } = useAppContext();
+  const hasPendingApplication = lastApplicationId
+    ? applications.some(a => a.id === lastApplicationId)
+    : false;
   return (
     <motion.div
       initial={{ opacity: 0 }}
@@ -68,6 +71,21 @@ export function LandingView({ onApply, onAdmin }: { onApply: () => void, onAdmin
               Сонгон шалгаруулах үйл явц
             </button>
           </motion.div>
+
+          {hasPendingApplication && (
+            <motion.button
+              type="button"
+              onClick={() => setView('waitlist')}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.8, delay: 1.1 }}
+              className="mt-10 font-caps text-[10px] tracking-[0.25em] text-accent/80 uppercase hover:text-accent transition-colors flex items-center gap-2 group"
+            >
+              <span className="w-1.5 h-1.5 rounded-full bg-accent animate-pulse" />
+              Миний dossier статус
+              <ArrowRight className="w-3 h-3 transform group-hover:translate-x-1 transition-transform" />
+            </motion.button>
+          )}
         </div>
       </div>
 

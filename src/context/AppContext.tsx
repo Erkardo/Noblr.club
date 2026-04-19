@@ -8,6 +8,7 @@ import type {
   View,
 } from '../types';
 import { useSupabaseState } from '../hooks/useSupabaseState';
+import { useLocalStorage } from '../hooks/useLocalStorage';
 import { MOCK_APPLICATIONS } from '../data/applications';
 import { PENDING_INTRODUCTIONS, VERIFIED_ACCORDS } from '../data/introductions';
 
@@ -45,6 +46,10 @@ interface AppContextValue {
   archivedProfileIds: string[];
   setArchivedProfileIds: Dispatch<SetStateAction<string[]>>;
 
+  // Personal (per-device) — not synced across users.
+  lastApplicationId: string | null;
+  setLastApplicationId: Dispatch<SetStateAction<string | null>>;
+
   resetDemoData: () => void;
 }
 
@@ -69,6 +74,9 @@ export function AppProvider({ children }: { children: ReactNode }) {
   const [eventFilledOverrides, setEventFilledOverrides] = useSupabaseState<Record<string, number>>('eventFilledOverrides', {});
   const [outboundRequests, setOutboundRequests] = useSupabaseState<OutboundRequest[]>('outboundRequests', []);
   const [archivedProfileIds, setArchivedProfileIds] = useSupabaseState<string[]>('archivedProfileIds', []);
+
+  // Per-device: last application ID the user submitted from this browser
+  const [lastApplicationId, setLastApplicationId] = useLocalStorage<string | null>('noblr:lastApplicationId', null);
 
   const resetDemoData = () => {
     setApplications(MOCK_APPLICATIONS);
@@ -95,6 +103,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
     eventFilledOverrides, setEventFilledOverrides,
     outboundRequests, setOutboundRequests,
     archivedProfileIds, setArchivedProfileIds,
+    lastApplicationId, setLastApplicationId,
     resetDemoData,
   }), [
     view,
@@ -108,6 +117,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
     eventFilledOverrides,
     outboundRequests,
     archivedProfileIds,
+    lastApplicationId,
   ]);
 
   return <AppContext.Provider value={value}>{children}</AppContext.Provider>;

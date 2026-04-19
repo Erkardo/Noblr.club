@@ -6,8 +6,13 @@ import { generateText, isGeminiAvailable } from '../services/gemini';
 
 const BRIEF_SYSTEM = `You are advising the Noblr private society's admissions committee. Given a candidate dossier, produce a concise brief in Mongolian Cyrillic with exactly three sections: "Давуу тал" (2-3 bullet points), "Анхаарах" (2-3 bullet points), and "Зөвлөмж" (one-line recommendation: Accept / Hold / Decline with a short justification). Tone: Monocle-level measured editorial, confident but not flattering. Keep the entire brief under 140 words.`;
 
+const INVITE_LIFETIME_CAP = 5;
+
 export function AdminView() {
-  const { applications, setApplications, resetDemoData } = useAppContext();
+  const {
+    applications, setApplications, resetDemoData,
+    invites, setInvites, currentMember, setCurrentMember,
+  } = useAppContext();
   const firstPendingId = applications.find(a => a.status === 'PENDING')?.id ?? applications[0]?.id ?? null;
   const [selectedId, setSelectedId] = useState<string | null>(firstPendingId);
   const [brief, setBrief] = useState<string | null>(null);
@@ -19,7 +24,35 @@ export function AdminView() {
 
   const handleDecision = (decision: 'APPROVED' | 'REJECTED') => {
     if (!selectedId) return;
+    const app = applications.find(a => a.id === selectedId);
     setApplications(prev => prev.map(a => a.id === selectedId ? { ...a, status: decision } : a));
+
+    // If this application was sponsored, update the invite outcome and
+    // restore the inviter's quota on acceptance.
+    if (app?.inviteCode) {
+      const inviteCode = app.inviteCode;
+      const matchedInvite = invites.find(i => i.code === inviteCode);
+      const inviteOutcome = decision === 'APPROVED' ? 'ACCEPTED' : 'REJECTED';
+      setInvites(prev => prev.map(inv =>
+        inv.code === inviteCode
+          ? { ...inv, outcome: inviteOutcome }
+          : inv
+      ));
+      if (decision === 'APPROVED' && matchedInvite && matchedInvite.issuedByMemberId === currentMember.id) {
+        setCurrentMember(prev => {
+          const nextRemaining = Math.min(INVITE_LIFETIME_CAP - prev.invitesEverIssued + (prev.invitesRemaining + 1), prev.invitesRemaining + 1);
+          // Count accepted sponsorships AFTER this decision
+          const acceptedSoFar = invites.filter(i => i.issuedByMemberId === prev.id && i.outcome === 'ACCEPTED').length + 1;
+          const nowPatron = prev.patronSince ?? (acceptedSoFar >= 3 ? Date.now() : null);
+          return {
+            ...prev,
+            invitesRemaining: nextRemaining,
+            patronSince: nowPatron,
+          };
+        });
+      }
+    }
+
     const nextPending = applications.find(a => a.status === 'PENDING' && a.id !== selectedId);
     setSelectedId(nextPending?.id ?? null);
     setBrief(null);
@@ -102,7 +135,14 @@ export function AdminView() {
                   onClick={() => handleSelectRow(app.id)}
                   className={`grid grid-cols-1 md:grid-cols-[100px_1fr_1fr_1fr_80px] gap-4 p-4 items-center cursor-pointer group transition-colors ${isSelected ? 'bg-accent/10' : 'hover:bg-white/5'} ${isDecided ? 'opacity-50' : ''}`}
                 >
-                  <div className="font-sans text-[11px] text-text-dim">{app.id}</div>
+                  <div className="font-sans text-[11px] text-text-dim flex items-center gap-2">
+                    {app.id}
+                    {app.inviteCode && (
+                      <span className="font-caps text-[7px] tracking-[0.15em] text-accent uppercase border border-accent/40 px-1.5 py-[1px]" title={`Sponsored by ${app.sponsorMemberNumber} · ${app.sponsorName}`}>
+                        SPON
+                      </span>
+                    )}
+                  </div>
                   <div>
                     <div className={`font-sans font-light text-text-main text-[14px] ${isDecided ? 'line-through' : ''}`}>{app.name}, {app.age}</div>
                   </div>
@@ -129,7 +169,22 @@ export function AdminView() {
           {selected ? (
             <>
               <h3 className="font-display text-3xl md:text-4xl font-light text-text-main mb-1 relative z-10">{selected.name}, {selected.age}</h3>
-              <div className="font-serif italic text-text-dim text-[14px] mb-8 relative z-10">{selected.position} @ {selected.company}</div>
+              <div className="font-serif italic text-text-dim text-[14px] mb-4 md:mb-6 relative z-10">{selected.position} @ {selected.company}</div>
+
+              {selected.inviteCode && (
+                <div className="mb-6 md:mb-8 relative z-10 border border-accent/30 bg-accent/5 px-4 py-3 flex items-center gap-3">
+                  <span className="w-1.5 h-1.5 rounded-full bg-accent" />
+                  <div className="flex-1 min-w-0">
+                    <div className="font-caps text-[8px] tracking-[0.3em] text-accent uppercase mb-0.5">Sponsored by</div>
+                    <div className="font-sans text-[12px] text-text-main truncate">
+                      {selected.sponsorMemberNumber ?? '—'} · <span className="italic text-text-dim">{selected.sponsorName ?? '—'}</span>
+                    </div>
+                  </div>
+                  <div className="font-mono text-[10px] text-text-dim tracking-widest shrink-0 hidden sm:block">
+                    {selected.inviteCode}
+                  </div>
+                </div>
+              )}
 
               <div className="space-y-8 flex-1 relative z-10">
                 <div>

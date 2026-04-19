@@ -1,8 +1,10 @@
-import { createContext, useContext, useState, useMemo, ReactNode, Dispatch, SetStateAction } from 'react';
+import { createContext, useContext, useState, useMemo, ReactNode, Dispatch, SetStateAction, useEffect } from 'react';
 import type {
   Accord,
   ActiveIntents,
   Application,
+  CurrentMember,
+  Invite,
   OutboundRequest,
   PendingIntroduction,
   View,
@@ -50,6 +52,15 @@ interface AppContextValue {
   lastApplicationId: string | null;
   setLastApplicationId: Dispatch<SetStateAction<string | null>>;
 
+  // Invite system
+  invites: Invite[];
+  setInvites: Dispatch<SetStateAction<Invite[]>>;
+  currentMember: CurrentMember;
+  setCurrentMember: Dispatch<SetStateAction<CurrentMember>>;
+  pendingInviteCode: string | null;
+  pendingInvite: Invite | null;
+  clearPendingInvite: () => void;
+
   resetDemoData: () => void;
 }
 
@@ -57,6 +68,16 @@ const AppContext = createContext<AppContextValue | null>(null);
 
 const DEFAULT_DISPATCH = "Сайн байна уу, таны профайл дээрх үзэл бодол сонирхол татлаа. Удахгүй болох арга хэмжээнүүдийн нэг дээр уулзаж ярилцах саналтай байна.";
 const DEFAULT_INTENTS: ActiveIntents = { network: true, social: true, romance: false };
+
+const DEFAULT_MEMBER: CurrentMember = {
+  id: '8092',
+  name: 'Түмэн-Эрдэнэ',
+  memberNumber: 'No. 0247',
+  role: 'Creative Director',
+  invitesRemaining: 3,
+  invitesEverIssued: 0,
+  patronSince: null,
+};
 
 export function AppProvider({ children }: { children: ReactNode }) {
   // view is ephemeral — user always starts on landing on reload
@@ -78,6 +99,31 @@ export function AppProvider({ children }: { children: ReactNode }) {
   // Per-device: last application ID the user submitted from this browser
   const [lastApplicationId, setLastApplicationId] = useLocalStorage<string | null>('noblr:lastApplicationId', null);
 
+  // Invite system: shared globally (demo); patron identity is per-device.
+  const [invites, setInvites] = useSupabaseState<Invite[]>('invites', []);
+  const [currentMember, setCurrentMember] = useLocalStorage<CurrentMember>('noblr:currentMember', DEFAULT_MEMBER);
+  const [pendingInviteCode, setPendingInviteCode] = useState<string | null>(null);
+
+  // Parse ?i=<code> from URL on mount and strip it from the address bar.
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    const params = new URLSearchParams(window.location.search);
+    const code = params.get('i');
+    if (code) {
+      setPendingInviteCode(code.toUpperCase());
+      params.delete('i');
+      const next = `${window.location.pathname}${params.toString() ? `?${params.toString()}` : ''}${window.location.hash}`;
+      window.history.replaceState({}, '', next);
+    }
+  }, []);
+
+  const pendingInvite = useMemo(() => {
+    if (!pendingInviteCode) return null;
+    return invites.find(i => i.code === pendingInviteCode) ?? null;
+  }, [pendingInviteCode, invites]);
+
+  const clearPendingInvite = () => setPendingInviteCode(null);
+
   const resetDemoData = () => {
     setApplications(MOCK_APPLICATIONS);
     setPendingIntroductions(PENDING_INTRODUCTIONS);
@@ -89,6 +135,9 @@ export function AppProvider({ children }: { children: ReactNode }) {
     setEventFilledOverrides({});
     setOutboundRequests([]);
     setArchivedProfileIds([]);
+    setInvites([]);
+    setCurrentMember(DEFAULT_MEMBER);
+    setLastApplicationId(null);
   };
 
   const value = useMemo<AppContextValue>(() => ({
@@ -104,6 +153,11 @@ export function AppProvider({ children }: { children: ReactNode }) {
     outboundRequests, setOutboundRequests,
     archivedProfileIds, setArchivedProfileIds,
     lastApplicationId, setLastApplicationId,
+    invites, setInvites,
+    currentMember, setCurrentMember,
+    pendingInviteCode,
+    pendingInvite,
+    clearPendingInvite,
     resetDemoData,
   }), [
     view,
@@ -118,6 +172,10 @@ export function AppProvider({ children }: { children: ReactNode }) {
     outboundRequests,
     archivedProfileIds,
     lastApplicationId,
+    invites,
+    currentMember,
+    pendingInviteCode,
+    pendingInvite,
   ]);
 
   return <AppContext.Provider value={value}>{children}</AppContext.Provider>;

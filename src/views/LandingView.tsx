@@ -1,13 +1,13 @@
 import { motion } from 'motion/react';
 import { useState } from 'react';
-import { ArrowRight } from 'lucide-react';
+import { ArrowRight, Lock } from 'lucide-react';
 import { PRESS_DATA } from '../data/press';
 import { NoiseOverlay } from '../components/ui/NoiseOverlay';
 import { useAppContext } from '../context/AppContext';
 import { SelectionProcessModal } from './SelectionProcessModal';
 
 export function LandingView({ onApply, onAdmin }: { onApply: () => void, onAdmin?: () => void }) {
-  const { setView, lastApplicationId, applications } = useAppContext();
+  const { setView, lastApplicationId, applications, pendingInvite } = useAppContext();
   const hasPendingApplication = lastApplicationId
     ? applications.some(a => a.id === lastApplicationId)
     : false;
@@ -25,13 +25,33 @@ export function LandingView({ onApply, onAdmin }: { onApply: () => void, onAdmin
       {/* Hero Section */}
       <div className="w-full flex-1 flex flex-col items-center justify-center text-center px-5 sm:px-6 min-h-[85vh] relative z-10 pt-10 pb-20">
         <div className="max-w-4xl flex flex-col items-center w-full">
+          {pendingInvite && (
+            <motion.div
+              initial={{ opacity: 0, y: -8 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.1, ease: [0.25, 1, 0.5, 1] }}
+              className="mb-10 md:mb-12 w-full max-w-[420px] bg-accent/5 border border-accent/40 px-5 py-4 md:px-6 md:py-5 flex items-center gap-4"
+            >
+              <div className="w-8 h-8 md:w-9 md:h-9 rounded-full border border-accent/50 flex items-center justify-center shrink-0">
+                <Lock className="w-3.5 h-3.5 text-accent" />
+              </div>
+              <div className="text-left flex-1 min-w-0">
+                <div className="font-caps text-[9px] tracking-[0.3em] text-accent uppercase mb-1">Sponsored invitation</div>
+                <div className="font-display text-[15px] md:text-[16px] text-text-main leading-tight">
+                  <span className="font-sans text-text-dim text-[10px] tracking-[0.2em] uppercase mr-2">By</span>
+                  {pendingInvite.issuedByMemberNumber} · <span className="italic text-text-dim">{pendingInvite.issuedByName}</span>
+                </div>
+              </div>
+            </motion.div>
+          )}
+
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 1, delay: 0.2, ease: [0.25, 1, 0.5, 1] }}
             className="inline-block border border-accent text-accent px-5 py-2.5 text-[9px] tracking-[0.3em] uppercase mb-10 md:mb-12 font-caps"
           >
-            Хаалттай Нийгэмлэг
+            {pendingInvite ? 'Таныг Уриагаар Хүлээж Байна' : 'Хаалттай Нийгэмлэг'}
           </motion.div>
 
           <motion.h1

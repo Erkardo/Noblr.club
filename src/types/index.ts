@@ -74,6 +74,32 @@ export interface Application {
   date: string;
   intentStatement?: string;
   linkedin?: string;
+  inviteCode?: string;          // if sponsored
+  sponsorMemberNumber?: string; // e.g. "No. 0247"
+  sponsorName?: string;
+}
+
+export type InviteOutcome = 'PENDING' | 'ACCEPTED' | 'REJECTED';
+
+export interface Invite {
+  code: string;                            // NBLR-I-XXXXX
+  issuedByMemberId: string;                // internal id ("8092")
+  issuedByName: string;                    // display name
+  issuedByMemberNumber: string;            // "No. 0247"
+  issuedAt: number;                        // epoch ms
+  claimedByApplicationId: string | null;
+  claimedAt: number | null;
+  outcome: InviteOutcome;
+}
+
+export interface CurrentMember {
+  id: string;
+  name: string;
+  memberNumber: string;
+  role: string;
+  invitesRemaining: number;   // starts at 3, capped at 5
+  invitesEverIssued: number;
+  patronSince: number | null; // epoch ms once crossing 3 successful sponsorships
 }
 
 export interface ActiveIntents {

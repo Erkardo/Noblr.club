@@ -33,7 +33,7 @@ const INITIAL_FORM: FormState = {
 const MOTIVATION_MIN = 80;
 
 export function ApplicationView({ onComplete }: { onComplete: () => void }) {
-  const { setApplications, setLastApplicationId } = useAppContext();
+  const { setApplications, setLastApplicationId, pendingInvite, setInvites, clearPendingInvite } = useAppContext();
   const [step, setStep] = useState(1);
   const [isProcessing, setIsProcessing] = useState(false);
   const [form, setForm] = useState<FormState>(INITIAL_FORM);
@@ -82,8 +82,9 @@ export function ApplicationView({ onComplete }: { onComplete: () => void }) {
   };
 
   const submitApplication = () => {
+    const appId = `A-${Math.floor(5500 + Math.random() * 500)}`;
     const newApp: Application = {
-      id: `A-${Math.floor(5500 + Math.random() * 500)}`,
+      id: appId,
       name: form.name || 'Applicant',
       age: parseInt(form.age) || 28,
       company: form.company || '—',
@@ -92,9 +93,23 @@ export function ApplicationView({ onComplete }: { onComplete: () => void }) {
       date: 'just now',
       intentStatement: form.motivation,
       linkedin: form.linkedin,
+      inviteCode: pendingInvite?.code,
+      sponsorMemberNumber: pendingInvite?.issuedByMemberNumber,
+      sponsorName: pendingInvite?.issuedByName,
     };
     setApplications(prev => [newApp, ...prev]);
-    setLastApplicationId(newApp.id);
+    setLastApplicationId(appId);
+
+    // If this application was claimed via an invite, mark the invite consumed
+    // (outcome remains PENDING until admin decides).
+    if (pendingInvite) {
+      setInvites(prev => prev.map(inv =>
+        inv.code === pendingInvite.code
+          ? { ...inv, claimedByApplicationId: appId, claimedAt: Date.now() }
+          : inv
+      ));
+      clearPendingInvite();
+    }
   };
 
   const nextStep = (e: React.FormEvent) => {
@@ -153,6 +168,12 @@ export function ApplicationView({ onComplete }: { onComplete: () => void }) {
       <div className="grid grid-cols-1 md:grid-cols-12 gap-10 md:gap-24 items-start relative z-10 w-full">
         {/* Left Column: Progress & Info */}
         <div className="md:col-span-5 flex flex-col md:sticky md:top-32">
+          {pendingInvite && (
+            <div className="mb-8 inline-flex items-center gap-3 font-caps text-[9px] tracking-[0.3em] text-accent uppercase border-l border-accent pl-3 py-1">
+              <span className="w-1.5 h-1.5 rounded-full bg-accent animate-pulse" />
+              Sponsored • {pendingInvite.issuedByMemberNumber} · <span className="italic text-text-dim tracking-normal normal-case">{pendingInvite.issuedByName}</span>
+            </div>
+          )}
           <div className="flex gap-2 mb-10">
             {[...Array(totalSteps)].map((_, i) => (
               <div

@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { Check, Lock, Sparkles } from 'lucide-react';
 import { useAppContext } from '../../context/AppContext';
 import { generateText, isGeminiAvailable } from '../../services/gemini';
+import { InvitationsPanel } from '../../components/InvitationsPanel';
 
 type Tone = 'formal' | 'warm' | 'direct';
 
@@ -136,6 +137,11 @@ export function MyProfileTab() {
               </button>
             </div>
           </div>
+
+          <div className="w-full h-[1px] bg-accent-20" />
+
+          {/* Invitations */}
+          <InvitationsPanel />
 
           <div className="w-full h-[1px] bg-accent-20" />
 

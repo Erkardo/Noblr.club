@@ -8,8 +8,19 @@
   "theme_color": "#0A0A0A",
   "icons": [
     {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    },
+    {
       "src": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxOTIiIGhlaWdodD0iMTkyIiB2aWV3Qm94PSIwIDAgMTAwIDEyMCI+PGxpbmUgeDE9IjIwIiB5MT0iMjAiIHgyPSIyMCIgeTI9IjEwMCIgc3Ryb2tlPSIjOUE3RjU3IiBzdHJva2Utd2lkdGg9IjUiIHN0cm9rZS1saW5lY2FwPSJzcXVhcmUiLz48bGluZSB4MT0iODAiIHkxPSIyMCIgeDI9IjgwIiB5Mj0iMTAwIiBzdHJva2U9IiM5QTdGNTciIHN0cm9rZS13aWR0aD0iNSIgc3Ryb2tlLWxpbmVjYXA9InNxdWFyZSIvPjxsaW5lIHgxPSIyMCIgeTE9IjIwIiB4Mj0iODAiIHkyPSIxMDAiIHN0cm9rZT0iIzlBN0Y1NyIgc3Ryb2tlLXdpZHRoPSI1IiBzdHJva2UtbGluZWNhcD0ic3F1YXJlIi8+PC9zdmc+",
       "sizes": "192x192",
+      "type": "image/svg+xml"
+    },
+    {
+      "src": "/favicon.svg",
+      "sizes": "512x512",
       "type": "image/svg+xml"
     }
   ]

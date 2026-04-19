@@ -40,11 +40,12 @@ function AppShell() {
           <button
             onClick={() => view !== 'landing' && setView('landing')}
             disabled={view === 'landing'}
-            className="flex items-center gap-3 group"
-            aria-label="Noblr"
+            className="inline-flex items-center leading-none group"
+            aria-label="The Noblr club"
           >
-            <span className="text-text-main font-display text-[22px] tracking-[-0.005em] font-light leading-none pt-1 group-hover:tracking-[0.005em] transition-[letter-spacing] duration-500">Noblr</span>
-            <span className="hidden md:block h-[14px] w-px bg-accent-20 group-hover:bg-accent transition-colors duration-500" />
+            <span className="font-display italic font-light text-text-dim text-[9px] leading-none group-hover:text-text-main transition-colors duration-500">The</span>
+            <span className="font-display font-light text-text-main text-[24px] leading-none tracking-[-0.015em] mx-[0.1em] group-hover:tracking-[-0.010em] transition-[letter-spacing] duration-500">Noblr</span>
+            <span className="font-display italic font-light text-text-dim text-[9px] leading-none group-hover:text-text-main transition-colors duration-500">club</span>
           </button>
           {view === 'landing' && (
             <nav className="flex gap-8 items-center">

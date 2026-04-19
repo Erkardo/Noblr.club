@@ -15,13 +15,13 @@ export function LandingView({ onApply, onAdmin }: { onApply: () => void, onAdmin
       <NoiseOverlay position="fixed" />
 
       {/* Hero Section */}
-      <div className="w-full flex-1 flex flex-col items-center justify-center text-center px-6 min-h-[85vh] relative z-10 pt-10 pb-20">
-        <div className="max-w-4xl flex flex-col items-center">
+      <div className="w-full flex-1 flex flex-col items-center justify-center text-center px-5 sm:px-6 min-h-[85vh] relative z-10 pt-10 pb-20">
+        <div className="max-w-4xl flex flex-col items-center w-full">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 1, delay: 0.2, ease: [0.25, 1, 0.5, 1] }}
-            className="inline-block border border-accent text-accent px-5 py-2.5 text-[9px] tracking-[0.3em] uppercase mb-12 font-caps"
+            className="inline-block border border-accent text-accent px-5 py-2.5 text-[9px] tracking-[0.3em] uppercase mb-10 md:mb-12 font-caps"
           >
             Хаалттай Нийгэмлэг
           </motion.div>
@@ -30,7 +30,7 @@ export function LandingView({ onApply, onAdmin }: { onApply: () => void, onAdmin
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 1.2, delay: 0.4, ease: [0.25, 1, 0.5, 1] }}
-            className="text-6xl md:text-[80px] font-display text-text-main font-light leading-[1.05] tracking-[-0.02em] mb-8"
+            className="text-[40px] sm:text-5xl md:text-6xl lg:text-[80px] font-display text-text-main font-light leading-[1.05] tracking-[-0.02em] mb-6 md:mb-8"
           >
             Олонхид биш. <br/>
             <span className="text-text-dim italic font-serif">Шилдгүүдэд.</span>
@@ -40,7 +40,7 @@ export function LandingView({ onApply, onAdmin }: { onApply: () => void, onAdmin
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 1.2, delay: 0.6, ease: "easeOut" }}
-            className="text-text-dim text-[18px] max-w-[500px] leading-[1.6] mb-14 mx-auto font-serif font-light"
+            className="text-text-dim text-[15px] sm:text-[17px] md:text-[18px] max-w-[500px] leading-[1.6] mb-10 md:mb-14 mx-auto font-serif font-light"
           >
             Карер, боловсрол, үнэлэмжээрээ ижил түвшний хүмүүст зориулагдсан Монголын хамгийн өндөр шалгууртай танилцах клуб. Бид хүн бүрт нээлттэй биш.
           </motion.p>
@@ -49,14 +49,14 @@ export function LandingView({ onApply, onAdmin }: { onApply: () => void, onAdmin
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 1, delay: 0.8, ease: [0.25, 1, 0.5, 1] }}
-            className="flex items-center justify-center gap-8"
+            className="flex flex-col sm:flex-row items-center justify-center gap-5 sm:gap-8 w-full sm:w-auto"
           >
             <button
               onClick={onApply}
-              className="group relative bg-accent text-bg-base px-10 py-5 text-[11px] font-caps tracking-[0.2em] uppercase overflow-hidden hover:bg-white transition-all duration-500 flex items-center gap-4"
+              className="group relative bg-accent text-bg-base px-8 sm:px-10 py-4 sm:py-5 text-[10px] sm:text-[11px] font-caps tracking-[0.2em] uppercase overflow-hidden hover:bg-white transition-all duration-500 flex items-center justify-center gap-3 sm:gap-4 w-full sm:w-auto"
             >
               <span>Гишүүнчлэлийн хүсэлт илгээх</span>
-              <ArrowRight className="w-4 h-4 transform group-hover:translate-x-1 transition-transform duration-300" />
+              <ArrowRight className="w-4 h-4 transform group-hover:translate-x-1 transition-transform duration-300 shrink-0" />
             </button>
 
             <button
@@ -122,8 +122,8 @@ export function LandingView({ onApply, onAdmin }: { onApply: () => void, onAdmin
             className="flex flex-col items-start"
           >
             <div className="font-caps text-[9px] tracking-[0.3em] text-accent uppercase mb-8">The Standard</div>
-            <div className="font-display text-[140px] md:text-[180px] leading-none text-text-main font-light mb-4 tracking-tighter">
-              13<span className="text-accent text-[80px] md:text-[100px] align-top relative top-4">%</span>
+            <div className="font-display text-[96px] sm:text-[120px] md:text-[140px] lg:text-[180px] leading-none text-text-main font-light mb-4 tracking-tighter">
+              13<span className="text-accent text-[56px] sm:text-[70px] md:text-[80px] lg:text-[100px] align-top relative top-4">%</span>
             </div>
             <div className="font-caps text-[11px] tracking-[0.2em] text-white uppercase mb-6 mt-4">Элсэх магадлал</div>
             <p className="font-serif italic text-[16px] text-text-dim leading-[1.8] max-w-sm">

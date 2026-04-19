@@ -27,8 +27,8 @@ function AppShell() {
   }, [view]);
 
   return (
-    <div className="min-h-screen bg-bg-base font-sans text-text-main relative overflow-hidden flex flex-col p-[20px]">
-      <div className="absolute inset-[20px] pointer-events-none border border-accent-20 z-0" />
+    <div className="min-h-screen bg-bg-base font-sans text-text-main relative overflow-hidden flex flex-col p-[12px] md:p-[20px]">
+      <div className="absolute inset-[12px] md:inset-[20px] pointer-events-none border border-accent-20 z-0" />
       {/* Background ambient lighting */}
       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[500px] bg-accent-20 opacity-20 blur-[120px] rounded-full pointer-events-none" />
 

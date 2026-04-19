@@ -50,7 +50,7 @@ export function DailySelectionTab() {
           animate={{ opacity: 1, x: 0, filter: 'blur(0px)' }}
           exit={{ opacity: 0, x: -50, filter: 'blur(5px)' }}
           transition={{ duration: 0.8, ease: [0.25, 1, 0.5, 1] }}
-          className="w-full border border-accent-20 bg-bg-base/30 backdrop-blur-sm p-8 md:p-12 relative overflow-hidden shadow-2xl"
+          className="w-full border border-accent-20 bg-bg-base/30 backdrop-blur-sm p-5 md:p-12 relative overflow-hidden shadow-2xl"
         >
           {/* Dossier Header */}
           <div className="flex justify-between items-end border-b border-accent-20 pb-4 mb-12 relative z-10 w-full">
@@ -61,7 +61,7 @@ export function DailySelectionTab() {
             </div>
           </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 relative z-10">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-16 relative z-10">
             {/* Image Column */}
             <div className="lg:col-span-5 relative w-full aspect-[3/4] md:aspect-auto md:h-[600px] border border-accent-20 p-2 bg-[#0E0C0A]">
               <div className="absolute top-4 -right-8 font-caps text-[9px] tracking-[0.3em] text-accent uppercase rotate-90 origin-left hidden lg:block opacity-60">
@@ -76,7 +76,7 @@ export function DailySelectionTab() {
             {/* Editorial Text Column */}
             <div className="lg:col-span-7 flex flex-col justify-center">
               <div className="font-caps text-[9px] tracking-[0.2em] text-accent uppercase mb-4">Introduction</div>
-              <h2 className="font-display text-5xl md:text-7xl font-light text-text-main leading-[0.9] tracking-[-0.02em] mb-4">
+              <h2 className="font-display text-4xl md:text-6xl lg:text-7xl font-light text-text-main leading-[0.9] tracking-[-0.02em] mb-4">
                 {currentProfile.name}, <span className="text-text-dim italic">{currentProfile.age}</span>
               </h2>
 

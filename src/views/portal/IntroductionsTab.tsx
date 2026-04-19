@@ -76,8 +76,8 @@ export function IntroductionsTab() {
       {activeAccord ? (
         <div className="w-full border border-accent-20 bg-[#0A0A0A] relative shadow-2xl flex flex-col min-h-[500px]">
           {/* Header */}
-          <div className="px-8 py-5 border-b border-accent-20 flex justify-between items-center bg-[#070707] z-10 shrink-0">
-            <div className="flex items-center gap-6">
+          <div className="px-4 md:px-8 py-4 md:py-5 border-b border-accent-20 flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3 bg-[#070707] z-10 shrink-0">
+            <div className="flex items-center gap-4 md:gap-6">
               <button onClick={() => setActiveConversation(null)} className="text-[10px] uppercase font-caps tracking-[0.2em] text-text-dim hover:text-white transition-colors flex items-center gap-2 group">
                 <ArrowRight className="w-3 h-3 rotate-180 transform group-hover:-translate-x-1 transition-transform" />
                 Буцах
@@ -102,7 +102,7 @@ export function IntroductionsTab() {
           </div>
 
           {/* Dispatch Area */}
-          <div className="flex-1 p-8 md:p-12 flex flex-col justify-center">
+          <div className="flex-1 p-5 md:p-12 flex flex-col justify-center">
             <div className="font-caps text-[9px] tracking-[0.3em] text-text-dim/60 uppercase mb-6 flex items-center gap-4">
               Initial Dispatch
               <div className="h-[1px] flex-1 bg-gradient-to-r from-accent-20 to-transparent" />
@@ -138,13 +138,13 @@ export function IntroductionsTab() {
                   <Lock className="w-4 h-4" /> Coordinates Authorized
                 </div>
 
-                <div className="bg-[#0A0A0A] border border-accent-20 p-6 flex items-center justify-between">
-                  <pre className="font-mono text-[14px] text-text-main leading-loose whitespace-pre-wrap">
+                <div className="bg-[#0A0A0A] border border-accent-20 p-5 md:p-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                  <pre className="font-mono text-[13px] md:text-[14px] text-text-main leading-loose whitespace-pre-wrap flex-1 min-w-0 break-all">
                     {activeAccord.coordinates}
                   </pre>
                   <button
                     onClick={() => handleCopyCoordinates(activeAccord)}
-                    className="text-[10px] font-caps tracking-[0.2em] text-accent hover:text-white uppercase transition-colors px-4 py-2 border border-accent/30 hover:border-accent flex items-center gap-2"
+                    className="text-[10px] font-caps tracking-[0.2em] text-accent hover:text-white uppercase transition-colors px-4 py-2 border border-accent/30 hover:border-accent flex items-center justify-center gap-2 shrink-0"
                   >
                     {copiedAccordId === activeAccord.id ? <><Check className="w-3 h-3" /> Copied</> : 'Copy'}
                   </button>
@@ -168,7 +168,7 @@ export function IntroductionsTab() {
             </p>
           </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-16">
             {/* Column 1: Verified Accords (Matches) */}
           <div>
             <div className="font-caps text-[9px] tracking-[0.3em] text-accent uppercase mb-8 border-b border-accent-20 pb-4">

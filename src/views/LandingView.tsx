@@ -2,8 +2,10 @@ import { motion } from 'motion/react';
 import { ArrowRight } from 'lucide-react';
 import { PRESS_DATA } from '../data/press';
 import { NoiseOverlay } from '../components/ui/NoiseOverlay';
+import { useAppContext } from '../context/AppContext';
 
 export function LandingView({ onApply, onAdmin }: { onApply: () => void, onAdmin?: () => void }) {
+  const { setView } = useAppContext();
   return (
     <motion.div
       initial={{ opacity: 0 }}
@@ -238,6 +240,10 @@ export function LandingView({ onApply, onAdmin }: { onApply: () => void, onAdmin
         <div className="flex items-center gap-2">
           <span>&copy; 2024 Noblr Private Club &mdash; Ulaanbaatar</span>
           <button onClick={onAdmin} className="opacity-0 hover:opacity-100 px-2 py-1 bg-white/5 transition-opacity" title="Review Committee">SYS</button>
+        </div>
+        <div className="flex items-center gap-5">
+          <button onClick={() => setView('privacy')} className="hover:text-text-main transition-colors">Privacy</button>
+          <button onClick={() => setView('terms')} className="hover:text-text-main transition-colors">Terms</button>
         </div>
         <div>Pending applications: <span className="text-white">1,422</span></div>
         <div className="font-serif italic text-accent tracking-normal capitalize text-[11px]">100% Identity Verification Required</div>

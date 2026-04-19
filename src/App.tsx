@@ -7,6 +7,8 @@ import { WaitlistView } from './views/WaitlistView';
 import { LoginView } from './views/LoginView';
 import { AdminView } from './views/AdminView';
 import { PortalView } from './views/portal/PortalView';
+import { PrivacyView } from './views/PrivacyView';
+import { TermsView } from './views/TermsView';
 import { AppProvider, useAppContext } from './context/AppContext';
 
 export default function App() {
@@ -54,7 +56,7 @@ function AppShell() {
             </button>
           </nav>
         )}
-        {(view === 'apply' || view === 'waitlist' || view === 'login' || view === 'admin') && (
+        {(view === 'apply' || view === 'waitlist' || view === 'login' || view === 'admin' || view === 'privacy' || view === 'terms') && (
           <button
             onClick={() => setView('landing')}
             className="w-10 h-10 rounded-full flex items-center justify-center text-text-dim hover:text-text-main border border-transparent hover:border-accent-20 transition-all duration-300"
@@ -84,6 +86,8 @@ function AppShell() {
           {view === 'login' && <LoginView key="login" onLogin={() => setView('portal')} />}
           {view === 'portal' && <PortalView key="portal" />}
           {view === 'admin' && <AdminView key="admin" />}
+          {view === 'privacy' && <PrivacyView key="privacy" />}
+          {view === 'terms' && <TermsView key="terms" />}
         </AnimatePresence>
       </main>
     </div>

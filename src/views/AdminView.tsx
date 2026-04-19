@@ -61,7 +61,7 @@ export function AdminView() {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      className="flex-1 flex flex-col w-full max-w-6xl mx-auto py-8 z-20 px-8"
+      className="flex-1 flex flex-col w-full max-w-6xl mx-auto py-6 md:py-8 z-20 px-4 md:px-8"
     >
       <div className="flex flex-col md:flex-row justify-between items-start md:items-end border-b border-accent-20 pb-6 mb-8 gap-4">
         <div>
@@ -122,13 +122,13 @@ export function AdminView() {
           </div>
         </div>
 
-        <div className="border border-accent-20 bg-[#0E0C0A] p-8 flex flex-col relative overflow-hidden">
+        <div className="border border-accent-20 bg-[#0E0C0A] p-5 md:p-8 flex flex-col relative overflow-hidden">
           <div className="absolute top-0 right-0 w-32 h-32 bg-accent/5 rounded-full blur-2xl pointer-events-none translate-x-10 -translate-y-10" />
           <div className="font-caps text-[9px] tracking-[0.2em] text-accent uppercase mb-6 relative z-10">Application Details</div>
 
           {selected ? (
             <>
-              <h3 className="font-display text-4xl font-light text-text-main mb-1 relative z-10">{selected.name}, {selected.age}</h3>
+              <h3 className="font-display text-3xl md:text-4xl font-light text-text-main mb-1 relative z-10">{selected.name}, {selected.age}</h3>
               <div className="font-serif italic text-text-dim text-[14px] mb-8 relative z-10">{selected.position} @ {selected.company}</div>
 
               <div className="space-y-8 flex-1 relative z-10">

@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+  <defs>
+    <filter id="n">
+      <feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="3"/>
+      <feColorMatrix values="0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0.02 0"/>
+    </filter>
+    <radialGradient id="g" cx="50%" cy="0%" r="60%">
+      <stop offset="0%" stop-color="#9A7F57" stop-opacity="0.18"/>
+      <stop offset="60%" stop-color="#9A7F57" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1200" height="630" fill="#0A0908"/>
+  <rect width="1200" height="630" fill="url(#g)"/>
+  <rect width="1200" height="630" filter="url(#n)" opacity="0.5"/>
+
+  <!-- Inner border frame -->
+  <rect x="24" y="24" width="1152" height="582" fill="none" stroke="#9A7F57" stroke-opacity="0.2" stroke-width="1"/>
+
+  <!-- Top caps label -->
+  <text x="600" y="92" text-anchor="middle" font-family="Tenor Sans, serif" font-size="16" letter-spacing="8" fill="#9A7F57" fill-opacity="0.8">BY INVITATION</text>
+
+  <!-- Center wordmark -->
+  <text x="600" y="260" text-anchor="middle" font-family="Bodoni Moda, Didot, serif" font-size="140" font-weight="300" fill="#EFE9DA" letter-spacing="-2">Noblr</text>
+
+  <!-- Divider accent -->
+  <line x1="560" y1="300" x2="640" y2="300" stroke="#9A7F57" stroke-width="1"/>
+
+  <!-- Mongolian hero line 1 -->
+  <text x="600" y="380" text-anchor="middle" font-family="Bodoni Moda, Didot, serif" font-size="60" font-weight="300" fill="#EFE9DA" letter-spacing="-1">Олонхид биш.</text>
+
+  <!-- Mongolian hero line 2 italic -->
+  <text x="600" y="450" text-anchor="middle" font-family="Fraunces, Georgia, serif" font-size="60" font-weight="300" font-style="italic" fill="#9C9483" letter-spacing="-0.5">Шилдгүүдэд.</text>
+
+  <!-- Bottom footer caps -->
+  <text x="600" y="568" text-anchor="middle" font-family="Tenor Sans, serif" font-size="14" letter-spacing="6" fill="#4F4A3F">ULAANBAATAR — MMXXVI</text>
+</svg>

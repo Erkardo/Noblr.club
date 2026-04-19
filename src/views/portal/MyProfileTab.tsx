@@ -42,7 +42,7 @@ export function MyProfileTab() {
       transition={{ duration: 0.8 }}
       className="flex flex-col gap-12"
     >
-      <div className="flex flex-col lg:flex-row gap-16 items-start">
+      <div className="flex flex-col lg:flex-row gap-10 lg:gap-16 items-start">
         {/* Column 1: Identity & Card */}
         <div className="w-full lg:w-[340px] shrink-0 space-y-8">
           {/* Member Card */}

@@ -18,7 +18,7 @@ export function PortalView() {
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       transition={{ duration: 1 }}
-      className="flex-1 flex flex-col w-full max-w-5xl mx-auto py-8 px-4 md:px-8 mt-12 mb-20 md:mb-0 z-20"
+      className="flex-1 flex flex-col w-full max-w-5xl mx-auto py-6 md:py-8 px-4 md:px-8 mt-6 md:mt-12 mb-24 md:mb-0 z-20"
     >
       {/* Desktop Tabs */}
       <div className="hidden md:flex border-b border-accent-20 mb-12 overflow-x-auto hide-scrollbar whitespace-nowrap">

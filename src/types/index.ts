@@ -1,4 +1,4 @@
-export type View = 'landing' | 'apply' | 'waitlist' | 'login' | 'portal' | 'admin';
+export type View = 'landing' | 'apply' | 'waitlist' | 'login' | 'portal' | 'admin' | 'privacy' | 'terms';
 
 export type PortalTab = 'daily' | 'events' | 'introductions' | 'profile';
 

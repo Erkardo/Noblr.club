@@ -146,10 +146,10 @@ export function ApplicationView({ onComplete }: { onComplete: () => void }) {
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -20 }}
       transition={{ duration: 0.8, ease: [0.25, 1, 0.5, 1] }}
-      className="flex-1 flex flex-col justify-center px-8 py-16 w-full max-w-6xl mx-auto"
+      className="flex-1 flex flex-col justify-center px-4 md:px-8 py-10 md:py-16 w-full max-w-6xl mx-auto"
     >
       <NoiseOverlay />
-      <div className="grid grid-cols-1 md:grid-cols-12 gap-16 md:gap-24 items-start relative z-10 w-full">
+      <div className="grid grid-cols-1 md:grid-cols-12 gap-10 md:gap-24 items-start relative z-10 w-full">
         {/* Left Column: Progress & Info */}
         <div className="md:col-span-5 flex flex-col md:sticky md:top-32">
           <div className="flex gap-2 mb-10">
@@ -163,7 +163,7 @@ export function ApplicationView({ onComplete }: { onComplete: () => void }) {
             ))}
           </div>
           <h2 className="text-[10px] uppercase tracking-[0.3em] font-caps text-text-dim mb-4">Chapter 0{step}</h2>
-          <h3 className="font-display text-4xl md:text-[56px] font-light text-text-main leading-[1.05] tracking-[-0.02em] mb-8">
+          <h3 className="font-display text-[40px] md:text-[56px] font-light text-text-main leading-[1.05] tracking-[-0.02em] mb-8 whitespace-pre-line">
             {step === 1 && "Суурь\nМэдээлэл"}
             {step === 2 && "Статус &\nБаталгаа"}
             {step === 3 && "Хорооны\nҮнэлгээ"}
@@ -176,7 +176,7 @@ export function ApplicationView({ onComplete }: { onComplete: () => void }) {
         </div>
 
         {/* Right Column: Form Container */}
-        <form onSubmit={nextStep} className="md:col-span-7 flex flex-col w-full bg-bg-base/20 border border-accent-20 p-10 backdrop-blur-sm">
+        <form onSubmit={nextStep} className="md:col-span-7 flex flex-col w-full bg-bg-base/20 border border-accent-20 p-6 md:p-10 backdrop-blur-sm">
           <div className="min-h-[400px]">
             <AnimatePresence mode="wait">
               {step === 1 && (

@@ -49,7 +49,7 @@ export function PrivateEventsTab() {
             </div>
 
             {/* Content Section */}
-            <div className="p-8 md:p-12 md:w-3/5 flex flex-col justify-between relative z-20">
+            <div className="p-5 md:p-12 md:w-3/5 flex flex-col justify-between relative z-20">
               <div>
                 <div className="flex justify-between items-start mb-6">
                   <div className="font-caps text-[10px] tracking-[0.25em] text-accent uppercase">{evt.date}</div>
@@ -113,7 +113,7 @@ export function PrivateEventsTab() {
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           {PAST_EVENTS.map((evt, i) => (
-            <div key={i} className="group border border-accent-20 bg-bg-base/30 relative flex flex-col p-8 md:p-12">
+            <div key={i} className="group border border-accent-20 bg-bg-base/30 relative flex flex-col p-5 md:p-12">
               <div className="absolute top-0 right-0 p-4 opacity-5 font-display text-8xl leading-none select-none pointer-events-none">X</div>
               <div className="flex justify-between items-start mb-8">
                 <div className="font-caps text-[10px] tracking-[0.25em] text-accent/50 uppercase">{evt.date}</div>

@@ -78,7 +78,10 @@ export interface Application {
   sponsorMemberNumber?: string; // e.g. "No. 0247"
   sponsorName?: string;
   // extended screening fields
-  contact?: string;
+  birthday?: string;             // ISO YYYY-MM-DD
+  gender?: 'male' | 'female';
+  phone?: string;
+  email?: string;
   instagram?: string;
   facebook?: string;
   experience?: string;          // '3-5' | '5-10' | '10-15' | '15+'

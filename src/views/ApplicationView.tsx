@@ -13,8 +13,10 @@ type ExperienceBracket = '3-5' | '5-10' | '10-15' | '15+';
 interface FormState {
   // I — Identity
   name: string;
-  age: string;
-  contact: string;
+  birthday: string;   // ISO YYYY-MM-DD
+  gender: 'male' | 'female' | '';
+  phone: string;
+  email: string;
   // II — Digital presence (username only, prefix shown inline)
   instagram: string;
   facebook: string;
@@ -32,7 +34,7 @@ interface FormState {
 }
 
 const INITIAL_FORM: FormState = {
-  name: '', age: '', contact: '',
+  name: '', birthday: '', gender: '', phone: '', email: '',
   instagram: '', facebook: '', linkedin: '',
   position: '', company: '', experience: '', education: '',
   intent: '', motivation: '', influences: '',
@@ -42,6 +44,21 @@ const INITIAL_FORM: FormState = {
 const MOTIVATION_MIN = 100;
 const INFLUENCES_MIN = 80;
 const MIN_AGE = 26;
+
+// Compute age from ISO birthday (YYYY-MM-DD)
+function computeAge(iso: string): number {
+  if (!iso) return 0;
+  const birth = new Date(iso);
+  if (isNaN(birth.getTime())) return 0;
+  const now = new Date();
+  let age = now.getFullYear() - birth.getFullYear();
+  const monthDiff = now.getMonth() - birth.getMonth();
+  if (monthDiff < 0 || (monthDiff === 0 && now.getDate() < birth.getDate())) age--;
+  return age;
+}
+
+const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+const PHONE_MIN_DIGITS = 8;
 
 const STEP_LABELS = ['I', 'II', 'III', 'IV'];
 const STEP_TITLES = ['Танилт', 'Дижитал\nоршихуй', 'Байр\nсуурь', 'Зан\nүнэлэмж'];
@@ -83,10 +100,17 @@ export function ApplicationView({ onComplete }: { onComplete: () => void }) {
     const next: Partial<Record<keyof FormState, string>> = {};
     if (current === 1) {
       if (!form.name.trim()) next.name = 'Нэр оруулна уу.';
-      const ageNum = parseInt(form.age);
-      if (!form.age) next.age = 'Нас оруулна уу.';
-      else if (ageNum < MIN_AGE) next.age = `Доод нас ${MIN_AGE}.`;
-      if (!form.contact.trim()) next.contact = 'Утас эсвэл имэйл оруулна уу.';
+      if (!form.birthday) next.birthday = 'Төрсөн өдрөө сонгоно уу.';
+      else {
+        const age = computeAge(form.birthday);
+        if (age < MIN_AGE) next.birthday = `Доод нас ${MIN_AGE}.`;
+      }
+      if (!form.gender) next.gender = 'Хүйс сонгоно уу.';
+      const phoneDigits = form.phone.replace(/\D/g, '');
+      if (!form.phone.trim()) next.phone = 'Утасны дугаар оруулна уу.';
+      else if (phoneDigits.length < PHONE_MIN_DIGITS) next.phone = 'Утасны дугаар бүрэн биш.';
+      if (!form.email.trim()) next.email = 'Имэйл оруулна уу.';
+      else if (!EMAIL_REGEX.test(form.email.trim())) next.email = 'Имэйл форматтай биш.';
     }
     if (current === 2) {
       if (!form.instagram.trim()) next.instagram = 'Instagram username шаардлагатай.';
@@ -115,10 +139,11 @@ export function ApplicationView({ onComplete }: { onComplete: () => void }) {
 
   const submitApplication = () => {
     const appId = `A-${Math.floor(5500 + Math.random() * 500)}`;
+    const computedAge = computeAge(form.birthday) || 28;
     const newApp: Application = {
       id: appId,
       name: form.name || 'Applicant',
-      age: parseInt(form.age) || 28,
+      age: computedAge,
       company: form.company || '—',
       position: form.position || '—',
       status: 'PENDING',
@@ -128,7 +153,10 @@ export function ApplicationView({ onComplete }: { onComplete: () => void }) {
       inviteCode: pendingInvite?.code,
       sponsorMemberNumber: pendingInvite?.issuedByMemberNumber,
       sponsorName: pendingInvite?.issuedByName,
-      contact: form.contact,
+      birthday: form.birthday,
+      gender: form.gender || undefined,
+      phone: form.phone,
+      email: form.email,
       instagram: form.instagram ? `instagram.com/${form.instagram}` : undefined,
       facebook: form.facebook ? `facebook.com/${form.facebook}` : undefined,
       experience: form.experience || undefined,
@@ -259,16 +287,55 @@ export function ApplicationView({ onComplete }: { onComplete: () => void }) {
                   animate={{ opacity: 1, x: 0 }}
                   exit={{ opacity: 0, x: -20 }}
                   transition={{ duration: 0.5, ease: [0.25, 1, 0.5, 1] }}
-                  className="space-y-10"
+                  className="space-y-8"
                 >
                   <Field label="Овог, нэр" error={errors.name}>
                     <input required type="text" placeholder="Bat-Erdene T." value={form.name} onChange={e => update('name', e.target.value)} className="w-full py-2 text-[18px] text-text-main placeholder-text-dim/30 font-sans font-light" />
                   </Field>
-                  <Field label="Нас" error={errors.age} hint={`≥ ${MIN_AGE}`}>
-                    <input required type="number" min={MIN_AGE} placeholder="31" value={form.age} onChange={e => update('age', e.target.value)} className="w-full py-2 text-[18px] text-text-main placeholder-text-dim/30 font-sans font-light" />
+
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
+                    <Field
+                      label="Төрсөн өдөр"
+                      error={errors.birthday}
+                      hint={form.birthday && computeAge(form.birthday) >= MIN_AGE ? `${computeAge(form.birthday)} нас` : `≥ ${MIN_AGE}`}
+                    >
+                      <input
+                        required
+                        type="date"
+                        value={form.birthday}
+                        onChange={e => update('birthday', e.target.value)}
+                        max={new Date().toISOString().split('T')[0]}
+                        className="w-full py-2 text-[16px] text-text-main placeholder-text-dim/30 font-sans font-light appearance-none [color-scheme:dark]"
+                      />
+                    </Field>
+
+                    <div className="group space-y-3">
+                      <label className="text-[10px] uppercase tracking-[0.25em] font-caps text-text-dim group-focus-within:text-accent transition-colors">Хүйс</label>
+                      <div className="grid grid-cols-2 gap-2">
+                        {([
+                          { value: 'male' as const, label: 'Эрэгтэй' },
+                          { value: 'female' as const, label: 'Эмэгтэй' },
+                        ]).map(opt => (
+                          <button
+                            key={opt.value}
+                            type="button"
+                            onClick={() => update('gender', opt.value)}
+                            className={`py-3 border text-[12px] font-sans transition-colors ${form.gender === opt.value ? 'border-accent text-text-main bg-accent/5' : 'border-accent-20 text-text-dim hover:border-accent/40 hover:text-text-main'}`}
+                          >
+                            {opt.label}
+                          </button>
+                        ))}
+                      </div>
+                      {errors.gender && <div className="font-sans text-[11px] text-[#FF4A4A]">{errors.gender}</div>}
+                    </div>
+                  </div>
+
+                  <Field label="Гар утас" error={errors.phone}>
+                    <input required type="tel" placeholder="+976 9911-XXXX" value={form.phone} onChange={e => update('phone', e.target.value)} className="w-full py-2 text-[16px] text-text-main placeholder-text-dim/30 font-sans font-light" />
                   </Field>
-                  <Field label="Холбоо барих" error={errors.contact} hint="Утас эсвэл имэйлийн аль нэгийг">
-                    <input required type="text" placeholder="+976 9911-XXXX эсвэл name@email.com" value={form.contact} onChange={e => update('contact', e.target.value)} className="w-full py-2 text-[16px] text-text-main placeholder-text-dim/30 font-sans font-light" />
+
+                  <Field label="Имэйл" error={errors.email}>
+                    <input required type="email" placeholder="name@email.com" value={form.email} onChange={e => update('email', e.target.value)} className="w-full py-2 text-[16px] text-text-main placeholder-text-dim/30 font-sans font-light" />
                   </Field>
                 </motion.div>
               )}

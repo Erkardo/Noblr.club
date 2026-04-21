@@ -236,10 +236,32 @@ export function AdminView() {
                   </div>
                 </div>
 
-                {selected.contact && (
-                  <div>
-                    <div className="font-caps text-[9px] tracking-[0.2em] text-text-dim uppercase mb-2">Contact</div>
-                    <div className="font-mono text-[12px] text-text-main tracking-wide break-all">{selected.contact}</div>
+                {(selected.phone || selected.email || selected.gender || selected.birthday) && (
+                  <div className="grid grid-cols-2 gap-4">
+                    {selected.birthday && (
+                      <div>
+                        <div className="font-caps text-[8px] tracking-[0.2em] text-text-dim uppercase mb-1">Төрсөн өдөр</div>
+                        <div className="font-mono text-[12px] text-text-main">{selected.birthday}</div>
+                      </div>
+                    )}
+                    {selected.gender && (
+                      <div>
+                        <div className="font-caps text-[8px] tracking-[0.2em] text-text-dim uppercase mb-1">Хүйс</div>
+                        <div className="font-sans text-[13px] text-text-main">{selected.gender === 'male' ? 'Эрэгтэй' : 'Эмэгтэй'}</div>
+                      </div>
+                    )}
+                    {selected.phone && (
+                      <div>
+                        <div className="font-caps text-[8px] tracking-[0.2em] text-text-dim uppercase mb-1">Утас</div>
+                        <div className="font-mono text-[12px] text-text-main tracking-wide break-all">{selected.phone}</div>
+                      </div>
+                    )}
+                    {selected.email && (
+                      <div>
+                        <div className="font-caps text-[8px] tracking-[0.2em] text-text-dim uppercase mb-1">Имэйл</div>
+                        <div className="font-mono text-[12px] text-text-main break-all">{selected.email}</div>
+                      </div>
+                    )}
                   </div>
                 )}
               </div>

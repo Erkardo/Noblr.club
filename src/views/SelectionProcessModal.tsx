@@ -1,5 +1,6 @@
 import { motion, AnimatePresence } from 'motion/react';
 import { useEffect, useState } from 'react';
+import type { FormEvent } from 'react';
 import { X, Check, Lock } from 'lucide-react';
 import { Spinner } from '../components/ui/Spinner';
 import { useAppContext } from '../context/AppContext';
@@ -9,7 +10,7 @@ export function SelectionProcessModal({ open, onClose, onApply }: {
   onClose: () => void;
   onApply: () => void;
 }) {
-  const { applications, lastApplicationId, setView } = useAppContext();
+  const { applications, lastApplicationId, setView, invites } = useAppContext();
 
   const pending = applications.filter(a => a.status === 'PENDING');
 
@@ -34,6 +35,9 @@ export function SelectionProcessModal({ open, onClose, onApply }: {
     ? applications.find(a => a.id === lastApplicationId) ?? null
     : null;
 
+  const [redeemInput, setRedeemInput] = useState('');
+  const [redeemError, setRedeemError] = useState<string | null>(null);
+
   // Build a mixed list: user's own app first (if exists), then recent others.
   // Anonymize IDs other than user's own to preserve the sense of privacy.
   const recent = (() => {
@@ -52,6 +56,22 @@ export function SelectionProcessModal({ open, onClose, onApply }: {
       onApply();
     }
     onClose();
+  };
+
+  const handleRedeem = (e: FormEvent) => {
+    e.preventDefault();
+    const code = redeemInput.trim().toUpperCase();
+    if (!code) return;
+    const match = invites.find(inv => inv.code === code);
+    if (!match) {
+      setRedeemError('Код олдсонгүй. Дахин шалгаарай.');
+      return;
+    }
+    if (match.claimedByApplicationId) {
+      setRedeemError('Энэ код аль хэдийн ашиглагдсан.');
+      return;
+    }
+    window.location.href = `${window.location.pathname}?i=${code}`;
   };
 
   return (
@@ -155,6 +175,75 @@ export function SelectionProcessModal({ open, onClose, onApply }: {
                     );
                   })}
                 </div>
+              )}
+            </div>
+
+            {/* Two paths — the emotional punch */}
+            <div className="mb-8">
+              <div className="font-caps text-[9px] tracking-[0.3em] text-text-dim uppercase mb-4">
+                Two paths to consideration
+              </div>
+              <div className="grid grid-cols-2 gap-px bg-accent-20 border border-accent-20">
+                <div className="bg-[#0A0908] p-4 md:p-5 flex flex-col items-center text-center opacity-70">
+                  <div className="font-caps text-[8px] tracking-[0.25em] text-text-dim uppercase mb-3">
+                    Walk-in
+                  </div>
+                  <div className="font-display text-[40px] md:text-[52px] leading-none text-text-main/80 font-light tabular-nums">
+                    ~5<span className="text-[22px] md:text-[28px] align-top text-text-dim">%</span>
+                  </div>
+                  <div className="font-caps text-[8px] tracking-[0.2em] text-text-dim uppercase mt-2 mb-3">
+                    accept
+                  </div>
+                  <div className="font-serif italic text-[11px] text-text-dim leading-snug">
+                    6+ сар<br />
+                    <span className="text-text-dim/60">капацитигаар</span>
+                  </div>
+                </div>
+                <div className="bg-[#0A0908] p-4 md:p-5 flex flex-col items-center text-center relative overflow-hidden">
+                  <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-accent to-transparent" />
+                  <div className="font-caps text-[8px] tracking-[0.25em] text-accent uppercase mb-3 flex items-center gap-1.5">
+                    <span className="w-1 h-1 rounded-full bg-accent animate-pulse" />
+                    Invited
+                  </div>
+                  <div className="font-display text-[40px] md:text-[52px] leading-none text-text-main font-light tabular-nums">
+                    ~42<span className="text-[22px] md:text-[28px] align-top text-accent">%</span>
+                  </div>
+                  <div className="font-caps text-[8px] tracking-[0.2em] text-accent uppercase mt-2 mb-3">
+                    accept
+                  </div>
+                  <div className="font-serif italic text-[11px] text-text-dim leading-snug">
+                    48–72 цаг<br />
+                    <span className="text-text-dim/60">priority pass</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Invite bridge */}
+            <div className="mb-8">
+              <p className="text-center font-serif italic text-[14px] md:text-[15px] text-text-main mb-2">
+                Та Noblr-ийн гишүүнтэй танил юу?
+              </p>
+              <p className="text-center font-sans text-[10px] text-text-dim tracking-[0.1em] mb-5">
+                Гишүүн бүрд <span className="text-accent">3 урилга</span> байдаг.
+              </p>
+              <form onSubmit={handleRedeem} className="flex flex-col sm:flex-row items-stretch justify-center gap-2 max-w-sm mx-auto">
+                <input
+                  value={redeemInput}
+                  onChange={(e) => { setRedeemInput(e.target.value.toUpperCase()); setRedeemError(null); }}
+                  placeholder="NBLR-I-XXXXX"
+                  className="flex-1 font-mono text-[12px] tracking-[0.15em] text-center py-2.5 border-b border-accent-20 focus:border-accent outline-none bg-transparent placeholder:text-text-dim/30"
+                />
+                <button
+                  type="submit"
+                  disabled={!redeemInput.trim()}
+                  className="font-caps text-[9px] tracking-[0.2em] text-accent uppercase border border-accent/40 px-5 py-2.5 hover:bg-accent hover:text-bg-base transition-colors whitespace-nowrap disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:bg-transparent disabled:hover:text-accent"
+                >
+                  Код оруулах
+                </button>
+              </form>
+              {redeemError && (
+                <div className="mt-3 text-center font-sans text-[10px] text-[#FF4A4A]">{redeemError}</div>
               )}
             </div>
 

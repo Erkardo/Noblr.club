@@ -1,6 +1,5 @@
 import { motion } from 'motion/react';
 import { useState } from 'react';
-import type { FormEvent } from 'react';
 import { ArrowRight, Lock } from 'lucide-react';
 import { PRESS_DATA } from '../data/press';
 import { NoiseOverlay } from '../components/ui/NoiseOverlay';
@@ -8,30 +7,11 @@ import { useAppContext } from '../context/AppContext';
 import { SelectionProcessModal } from './SelectionProcessModal';
 
 export function LandingView({ onApply, onAdmin }: { onApply: () => void, onAdmin?: () => void }) {
-  const { setView, lastApplicationId, applications, pendingInvite, invites } = useAppContext();
+  const { setView, lastApplicationId, applications, pendingInvite } = useAppContext();
   const hasPendingApplication = lastApplicationId
     ? applications.some(a => a.id === lastApplicationId)
     : false;
   const [showProcess, setShowProcess] = useState(false);
-  const [redeemInput, setRedeemInput] = useState('');
-  const [redeemError, setRedeemError] = useState<string | null>(null);
-
-  const handleRedeem = (e: FormEvent) => {
-    e.preventDefault();
-    const code = redeemInput.trim().toUpperCase();
-    if (!code) return;
-    const match = invites.find(inv => inv.code === code);
-    if (!match) {
-      setRedeemError('Код олдсонгүй. Дахин шалгаарай.');
-      return;
-    }
-    if (match.claimedByApplicationId) {
-      setRedeemError('Энэ код аль хэдийн ашиглагдсан.');
-      return;
-    }
-    // redirect with ?i= so URL parser in AppContext picks it up
-    window.location.href = `${window.location.pathname}?i=${code}`;
-  };
   return (
     <motion.div
       initial={{ opacity: 0 }}
@@ -131,115 +111,6 @@ export function LandingView({ onApply, onAdmin }: { onApply: () => void, onAdmin
             </motion.button>
           )}
         </div>
-      </div>
-
-      {/* Two Paths — Invited vs Walk-in */}
-      <div className="w-full max-w-5xl mx-auto py-20 md:py-28 px-5 md:px-6 relative z-10 border-t border-accent-20">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-80px" }}
-          transition={{ duration: 1 }}
-          className="text-center mb-12 md:mb-16"
-        >
-          <div className="font-caps text-[9px] tracking-[0.4em] text-accent uppercase mb-4">Two paths</div>
-          <h2 className="font-display text-3xl md:text-5xl font-light text-text-main leading-[1.1] tracking-tight">
-            Уригдсан. <span className="italic text-text-dim font-serif">Эсвэл хүлээнэ.</span>
-          </h2>
-        </motion.div>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-px bg-accent-20 border border-accent-20">
-          {/* Walk-in (dimmer) */}
-          <motion.div
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            viewport={{ once: true, margin: "-80px" }}
-            transition={{ duration: 1, delay: 0.1 }}
-            className="bg-bg-base p-7 md:p-10 flex flex-col items-center text-center opacity-70 hover:opacity-90 transition-opacity duration-500"
-          >
-            <div className="font-caps text-[9px] tracking-[0.3em] text-text-dim uppercase mb-6 border-b border-accent-20 pb-3 w-full">
-              Хүлээлгийн жагсаалт
-            </div>
-            <div className="font-display text-[64px] md:text-[88px] leading-none text-text-main/80 font-light tabular-nums mb-2">
-              ~5<span className="text-[36px] md:text-[48px] align-top text-text-dim">%</span>
-            </div>
-            <div className="font-caps text-[10px] tracking-[0.25em] text-text-dim uppercase mb-8">
-              Шалгарах магадлал
-            </div>
-            <div className="w-8 h-px bg-accent-20 mb-6" />
-            <div className="font-display text-xl md:text-2xl text-text-main/80 mb-1">6+ <span className="italic text-text-dim font-serif">сар</span></div>
-            <div className="font-sans text-[9px] tracking-[0.2em] text-text-dim uppercase mb-8">
-              Дундаж хүлээлт
-            </div>
-            <p className="font-serif italic text-[13px] text-text-dim leading-relaxed max-w-xs">
-              Капацити зөвшөөрвөл хянагдана. Уригдсан гишүүдийн дараа дарааллаар.
-            </p>
-          </motion.div>
-
-          {/* Invited (highlight) */}
-          <motion.div
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            viewport={{ once: true, margin: "-80px" }}
-            transition={{ duration: 1, delay: 0.2 }}
-            className="bg-bg-base p-7 md:p-10 flex flex-col items-center text-center relative overflow-hidden"
-          >
-            <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-accent to-transparent" />
-            <div className="font-caps text-[9px] tracking-[0.3em] text-accent uppercase mb-6 border-b border-accent/30 pb-3 w-full flex items-center justify-center gap-2">
-              <span className="w-1 h-1 rounded-full bg-accent animate-pulse" />
-              Урилгатай
-            </div>
-            <div className="font-display text-[64px] md:text-[88px] leading-none text-text-main font-light tabular-nums mb-2">
-              ~42<span className="text-[36px] md:text-[48px] align-top text-accent">%</span>
-            </div>
-            <div className="font-caps text-[10px] tracking-[0.25em] text-accent uppercase mb-8">
-              Шалгарах магадлал
-            </div>
-            <div className="w-8 h-px bg-accent mb-6" />
-            <div className="font-display text-xl md:text-2xl text-text-main mb-1">48–72 <span className="italic text-text-dim font-serif">цаг</span></div>
-            <div className="font-sans text-[9px] tracking-[0.2em] text-text-dim uppercase mb-8">
-              Хорооны үнэлгээ
-            </div>
-            <p className="font-serif italic text-[13px] text-text-dim leading-relaxed max-w-xs">
-              Priority pass. Sponsor таныг тогтоон vouch хийнэ.
-            </p>
-          </motion.div>
-        </div>
-
-        {/* Invite bridge */}
-        <motion.div
-          initial={{ opacity: 0, y: 16 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-80px" }}
-          transition={{ duration: 1, delay: 0.3 }}
-          className="mt-12 md:mt-16 text-center"
-        >
-          <p className="font-serif italic text-[16px] md:text-[18px] text-text-main mb-2">
-            Та Noblr-ийн гишүүнтэй танил юу?
-          </p>
-          <p className="font-sans text-[11px] text-text-dim tracking-[0.1em] mb-8">
-            Гишүүн бүрд <span className="text-accent">3 урилга</span> байдаг. Тэдний нэгийг асуугаарай.
-          </p>
-
-          <form onSubmit={handleRedeem} className="flex flex-col sm:flex-row items-stretch justify-center gap-3 max-w-md mx-auto">
-            <input
-              value={redeemInput}
-              onChange={(e) => { setRedeemInput(e.target.value.toUpperCase()); setRedeemError(null); }}
-              placeholder="NBLR-I-XXXXX"
-              className="flex-1 font-mono text-[13px] tracking-[0.15em] text-center py-3 border-b border-accent-20 focus:border-accent outline-none bg-transparent placeholder:text-text-dim/30"
-            />
-            <button
-              type="submit"
-              disabled={!redeemInput.trim()}
-              className="font-caps text-[10px] tracking-[0.2em] text-accent uppercase border border-accent/40 px-6 py-3 hover:bg-accent hover:text-bg-base transition-colors whitespace-nowrap disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:bg-transparent disabled:hover:text-accent"
-            >
-              Код оруулах
-            </button>
-          </form>
-          {redeemError && (
-            <div className="mt-4 font-sans text-[11px] text-[#FF4A4A]">{redeemError}</div>
-          )}
-        </motion.div>
       </div>
 
       {/* The Dimensions Section (Enigmatic) */}

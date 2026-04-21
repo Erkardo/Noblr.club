@@ -186,20 +186,62 @@ export function AdminView() {
                 </div>
               )}
 
-              <div className="space-y-8 flex-1 relative z-10">
+              <div className="space-y-6 flex-1 relative z-10">
+                {(selected.experience || selected.education) && (
+                  <div className="grid grid-cols-2 gap-4">
+                    {selected.experience && (
+                      <div>
+                        <div className="font-caps text-[8px] tracking-[0.2em] text-text-dim uppercase mb-1">Карерын нас</div>
+                        <div className="font-sans text-[13px] text-text-main">{selected.experience} жил</div>
+                      </div>
+                    )}
+                    {selected.education && (
+                      <div>
+                        <div className="font-caps text-[8px] tracking-[0.2em] text-text-dim uppercase mb-1">Боловсрол</div>
+                        <div className="font-sans text-[13px] text-text-main">{selected.education}</div>
+                      </div>
+                    )}
+                  </div>
+                )}
+
                 <div>
                   <div className="font-caps text-[9px] tracking-[0.2em] text-text-dim uppercase mb-3">Intent Statement</div>
-                  <p className="font-serif font-light text-[15px] leading-[1.8] text-text-main/80 italic">
+                  <p className="font-serif font-light text-[14px] leading-[1.8] text-text-main/80 italic">
                     "{selected.intentStatement ?? '—'}"
                   </p>
                 </div>
 
+                {selected.influences && (
+                  <div>
+                    <div className="font-caps text-[9px] tracking-[0.2em] text-text-dim uppercase mb-3">Reflective</div>
+                    <p className="font-serif font-light text-[14px] leading-[1.8] text-text-main/80 italic">
+                      "{selected.influences}"
+                    </p>
+                  </div>
+                )}
+
                 <div>
-                  <div className="font-caps text-[9px] tracking-[0.2em] text-text-dim uppercase mb-3">Social Validation</div>
-                  <a href="#" className="font-sans font-light text-[13px] text-accent hover:underline flex items-center gap-2">
-                    {selected.linkedin ?? '—'}
-                  </a>
+                  <div className="font-caps text-[9px] tracking-[0.2em] text-text-dim uppercase mb-3">Social</div>
+                  <div className="flex flex-col gap-1.5 font-sans text-[12px]">
+                    {selected.instagram && (
+                      <a href={`https://${selected.instagram}`} target="_blank" rel="noopener noreferrer" className="text-accent hover:underline">{selected.instagram}</a>
+                    )}
+                    {selected.facebook && (
+                      <a href={`https://${selected.facebook}`} target="_blank" rel="noopener noreferrer" className="text-accent hover:underline">{selected.facebook}</a>
+                    )}
+                    {selected.linkedin && (
+                      <a href={`https://${selected.linkedin}`} target="_blank" rel="noopener noreferrer" className="text-accent hover:underline">{selected.linkedin}</a>
+                    )}
+                    {!selected.instagram && !selected.facebook && !selected.linkedin && <span className="text-text-dim">—</span>}
+                  </div>
                 </div>
+
+                {selected.contact && (
+                  <div>
+                    <div className="font-caps text-[9px] tracking-[0.2em] text-text-dim uppercase mb-2">Contact</div>
+                    <div className="font-mono text-[12px] text-text-main tracking-wide break-all">{selected.contact}</div>
+                  </div>
+                )}
               </div>
 
               {selected.status === 'PENDING' ? (

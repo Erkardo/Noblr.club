@@ -88,6 +88,14 @@ export interface Application {
   education?: string;
   influences?: string;           // reflective essay
   depositAccepted?: boolean;
+  // Issued at the moment of Committee approval. Persisted on the application
+  // so a visitor returning to Waitlist can see what was sent and, if needed,
+  // the Committee can resend. `emailSentAt` is null if sending failed.
+  memberNumber?: string;         // "No. 0249"
+  dispatchCode?: string;         // "NBLR-0249"
+  dispatchKey?: string;          // short welcome key, 6+ chars
+  emailSentAt?: number | null;   // epoch ms, or null if send failed
+  emailError?: string;           // last error message, if any
 }
 
 export type InviteOutcome = 'PENDING' | 'ACCEPTED' | 'REJECTED';
@@ -124,4 +132,34 @@ export interface OutboundRequest {
   profileId: string;
   intent: Intent;
   sentAt: number;
+}
+
+/**
+ * Auto-saved application draft. Lives in localStorage (per-device, not
+ * synced). We only persist what the visitor has typed — no derived
+ * state, no errors, no step validation. On mount of ApplicationView
+ * we rehydrate into local form state and, on successful submission,
+ * clear it.
+ */
+export interface ApplicationDraft {
+  step: number;                // 1..4
+  updatedAt: number;           // epoch ms
+  form: {
+    name?: string;
+    birthday?: string;
+    gender?: 'male' | 'female' | '';
+    phone?: string;
+    email?: string;
+    instagram?: string;
+    facebook?: string;
+    linkedin?: string;
+    position?: string;
+    company?: string;
+    experience?: '3-5' | '5-10' | '10-15' | '15+' | '';
+    education?: string;
+    intent?: 'network' | 'social' | 'romance' | '';
+    motivation?: string;
+    influences?: string;
+    depositAccepted?: boolean;
+  };
 }

@@ -1,10 +1,19 @@
 import { motion } from 'motion/react';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { ArrowRight, Lock } from 'lucide-react';
-import { PRESS_DATA } from '../data/press';
 import { NoiseOverlay } from '../components/ui/NoiseOverlay';
 import { useAppContext } from '../context/AppContext';
 import { SelectionProcessModal } from './SelectionProcessModal';
+import { QuarterlyDrop } from '../components/landing/QuarterlyDrop';
+import { DossierPreview } from '../components/landing/DossierPreview';
+import { PricingLadder } from '../components/landing/PricingLadder';
+import { MemberWhispers } from '../components/landing/MemberWhispers';
+import { QuarterlyBrief } from '../components/landing/QuarterlyBrief';
+import { ResumeApplicationBanner } from '../components/landing/ResumeApplicationBanner';
+import { useLocalStorage } from '../hooks/useLocalStorage';
+import { useCountdown } from '../hooks/useCountdown';
+import { getNextDropClose, getAcceptanceStats } from '../lib/dropWindow';
+import type { ApplicationDraft } from '../types';
 
 export function LandingView({ onApply, onAdmin }: { onApply: () => void, onAdmin?: () => void }) {
   const { setView, lastApplicationId, applications, pendingInvite } = useAppContext();
@@ -12,6 +21,21 @@ export function LandingView({ onApply, onAdmin }: { onApply: () => void, onAdmin
     ? applications.some(a => a.id === lastApplicationId)
     : false;
   const [showProcess, setShowProcess] = useState(false);
+
+  // Sunk-cost mechanic: a draft the visitor started and walked away from.
+  // Only surface it if they haven't yet submitted (otherwise they see the
+  // "My dossier status" track instead — which is the higher-priority path).
+  const [draft, setDraft] = useLocalStorage<ApplicationDraft | null>('noblr:applicationDraft', null);
+  const hasDraft = !!draft && !hasPendingApplication && hasAnyFormContent(draft);
+
+  // Live drop countdown for the hero pill — compact version of the full
+  // countdown that lives further down the page.
+  const dropTarget = useMemo(() => getNextDropClose(), []);
+  const { days, hours, minutes } = useCountdown(dropTarget);
+
+  // Live acceptance stats — drive the footer counter and Standards section.
+  const stats = useMemo(() => getAcceptanceStats(applications), [applications]);
+
   return (
     <motion.div
       initial={{ opacity: 0 }}
@@ -43,6 +67,14 @@ export function LandingView({ onApply, onAdmin }: { onApply: () => void, onAdmin
                 </div>
               </div>
             </motion.div>
+          )}
+
+          {hasDraft && draft && (
+            <ResumeApplicationBanner
+              draft={draft}
+              onResume={onApply}
+              onDiscard={() => setDraft(null)}
+            />
           )}
 
           <motion.div
@@ -96,25 +128,46 @@ export function LandingView({ onApply, onAdmin }: { onApply: () => void, onAdmin
             </button>
           </motion.div>
 
+          {/* Urgency pill — compact countdown */}
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.8, delay: 1 }}
+            className="mt-10 flex flex-wrap items-center justify-center gap-x-4 gap-y-2 font-caps text-[9px] tracking-[0.3em] text-text-dim uppercase"
+          >
+            <span className="inline-flex items-center gap-2">
+              <span className="w-1.5 h-1.5 rounded-full bg-accent animate-pulse" />
+              Хаалга хаагдана
+            </span>
+            <span className="text-text-main">
+              {days}<span className="text-text-dim">d</span> {String(hours).padStart(2, '0')}<span className="text-text-dim">h</span> {String(minutes).padStart(2, '0')}<span className="text-text-dim">m</span>
+            </span>
+            <span className="opacity-40">·</span>
+            <span>Acceptance <span className="text-accent">{stats.rate}%</span></span>
+          </motion.div>
+
           {hasPendingApplication && (
             <motion.button
               type="button"
               onClick={() => setView('waitlist')}
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              transition={{ duration: 0.8, delay: 1.1 }}
-              className="mt-10 font-caps text-[10px] tracking-[0.25em] text-accent/80 uppercase hover:text-accent transition-colors flex items-center gap-2 group"
+              transition={{ duration: 0.8, delay: 1.2 }}
+              className="mt-8 font-caps text-[10px] tracking-[0.25em] text-accent/80 uppercase hover:text-accent transition-colors flex items-center gap-2 group"
             >
               <span className="w-1.5 h-1.5 rounded-full bg-accent animate-pulse" />
-              Миний dossier статус
+              Миний dossier статус · Committee 48–72 цагт
               <ArrowRight className="w-3 h-3 transform group-hover:translate-x-1 transition-transform" />
             </motion.button>
           )}
         </div>
       </div>
 
+      {/* Quarterly Drop — URGENCY */}
+      <QuarterlyDrop onApply={onApply} />
+
       {/* The Dimensions Section (Enigmatic) */}
-      <div className="w-full max-w-5xl mx-auto py-24 px-6 relative z-10">
+      <div className="w-full max-w-5xl mx-auto py-24 px-6 relative z-10 border-t border-accent-20">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -153,6 +206,9 @@ export function LandingView({ onApply, onAdmin }: { onApply: () => void, onAdmin
         </div>
       </div>
 
+      {/* Dossier Preview — CURIOSITY GAP */}
+      <DossierPreview onLogin={() => setView('login')} />
+
       {/* Standards & Process Section */}
       <div className="w-full max-w-6xl mx-auto py-32 px-6 relative z-10 border-t border-accent-20">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-20 lg:gap-32 items-start">
@@ -167,11 +223,11 @@ export function LandingView({ onApply, onAdmin }: { onApply: () => void, onAdmin
           >
             <div className="font-caps text-[9px] tracking-[0.3em] text-accent uppercase mb-8">The Standard</div>
             <div className="font-display text-[96px] sm:text-[120px] md:text-[140px] lg:text-[180px] leading-none text-text-main font-light mb-4 tracking-tighter">
-              13<span className="text-accent text-[56px] sm:text-[70px] md:text-[80px] lg:text-[100px] align-top relative top-4">%</span>
+              {stats.rate}<span className="text-accent text-[56px] sm:text-[70px] md:text-[80px] lg:text-[100px] align-top relative top-4">%</span>
             </div>
             <div className="font-caps text-[11px] tracking-[0.2em] text-white uppercase mb-6 mt-4">Элсэх магадлал</div>
             <p className="font-serif italic text-[16px] text-text-dim leading-[1.8] max-w-sm">
-              Гишүүнчлэлийн хүсэлт илгээсэн нийт хүмүүсийн ердөө дунджаар 13 хувь нь л бидний шалгуурыг давж, урилга хүлээн авдаг. Бидний хувьд тооноос илүү чанар үргэлж чухал.
+              Гишүүнчлэлийн хүсэлт илгээсэн нийт хүмүүсийн ердөө {stats.rate} хувь нь л бидний шалгуурыг давж, урилга хүлээн авдаг. Бидний хувьд тооноос илүү чанар үргэлж чухал.
             </p>
           </motion.div>
 
@@ -235,28 +291,14 @@ export function LandingView({ onApply, onAdmin }: { onApply: () => void, onAdmin
         </div>
       </div>
 
-      {/* Press Section */}
-      <div className="w-full max-w-6xl mx-auto py-32 px-6 relative z-10 border-t border-accent-20">
-        <h3 className="font-caps tracking-[0.3em] text-[10px] text-text-dim text-center uppercase mb-16">
-          In The Press
-        </h3>
+      {/* Pricing Ladder — ANCHORING */}
+      <PricingLadder onApply={onApply} />
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-1 md:gap-px bg-accent-20 border border-accent-20 rounded-sm">
-          {PRESS_DATA.map((press, i) => (
-            <div key={i} className="relative aspect-[4/5] overflow-hidden group bg-[#0A0A0A] flex flex-col items-center justify-center p-8 text-center cursor-default">
-              <div className="absolute inset-0 bg-gradient-to-t from-[#0A0A0A] via-[#0A0A0A]/80 to-[#0A0A0A]/40 z-10 transition-opacity duration-700 group-hover:opacity-90" />
-              <img src={press.image} alt={press.logo} className="absolute inset-0 w-full h-full object-cover filter grayscale-[60%] brightness-75 group-hover:scale-105 transition-transform duration-1000 opacity-60" />
+      {/* Member Whispers — TRIBAL BELONGING / SOCIAL PROOF */}
+      <MemberWhispers />
 
-              <div className="relative z-20 flex flex-col items-center gap-8 translate-y-4 group-hover:translate-y-0 transition-transform duration-700">
-                <div className={`${press.font} text-white opacity-90 drop-shadow-2xl`}>{press.logo}</div>
-                <p className="font-serif italic text-[15px] leading-relaxed text-white/90 font-light max-w-xs drop-shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-700 delay-100">
-                  {press.quote}
-                </p>
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
+      {/* Quarterly Brief — RECIPROCITY GIFT */}
+      <QuarterlyBrief />
 
       {/* Philosophy Statement */}
       <div className="w-full max-w-5xl mx-auto py-32 md:py-48 px-6 relative z-10 text-center flex flex-col justify-center items-center">
@@ -288,7 +330,7 @@ export function LandingView({ onApply, onAdmin }: { onApply: () => void, onAdmin
           <button onClick={() => setView('privacy')} className="hover:text-text-main transition-colors">Privacy</button>
           <button onClick={() => setView('terms')} className="hover:text-text-main transition-colors">Terms</button>
         </div>
-        <div>Pending applications: <span className="text-white">1,422</span></div>
+        <div>Pending applications: <span className="text-white">{Math.max(1422, 1422 + stats.pending)}</span></div>
         <div className="font-serif italic text-accent tracking-normal capitalize text-[11px]">100% Identity Verification Required</div>
       </motion.div>
 
@@ -298,5 +340,32 @@ export function LandingView({ onApply, onAdmin }: { onApply: () => void, onAdmin
         onApply={onApply}
       />
     </motion.div>
+  );
+}
+
+/**
+ * A draft with only empty strings everywhere is effectively "nothing" —
+ * we don't want the resume banner bouncing up the first time someone
+ * clicks Apply and then bounces back without typing. This returns true
+ * iff the visitor typed at least one meaningful character.
+ */
+function hasAnyFormContent(draft: ApplicationDraft): boolean {
+  const f = draft.form;
+  return !!(
+    (f.name && f.name.trim()) ||
+    (f.email && f.email.trim()) ||
+    (f.phone && f.phone.trim()) ||
+    (f.birthday && f.birthday.trim()) ||
+    f.gender ||
+    (f.instagram && f.instagram.trim()) ||
+    (f.facebook && f.facebook.trim()) ||
+    (f.linkedin && f.linkedin.trim()) ||
+    (f.position && f.position.trim()) ||
+    (f.company && f.company.trim()) ||
+    f.experience ||
+    (f.education && f.education.trim()) ||
+    f.intent ||
+    (f.motivation && f.motivation.trim()) ||
+    (f.influences && f.influences.trim())
   );
 }

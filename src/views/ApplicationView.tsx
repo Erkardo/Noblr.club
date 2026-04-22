@@ -1,11 +1,12 @@
 import { motion, AnimatePresence } from 'motion/react';
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Check, Sparkles } from 'lucide-react';
 import { NoiseOverlay } from '../components/ui/NoiseOverlay';
 import { Spinner } from '../components/ui/Spinner';
 import { useAppContext } from '../context/AppContext';
+import { useLocalStorage } from '../hooks/useLocalStorage';
 import { generateText, isGeminiAvailable } from '../services/gemini';
-import type { Application } from '../types';
+import type { Application, ApplicationDraft } from '../types';
 
 type IntentValue = 'network' | 'social' | 'romance';
 type ExperienceBracket = '3-5' | '5-10' | '10-15' | '15+';
@@ -82,14 +83,36 @@ function cleanHandle(raw: string, prefix: string): string {
 
 export function ApplicationView({ onComplete }: { onComplete: () => void }) {
   const { setApplications, setLastApplicationId, pendingInvite, setInvites, clearPendingInvite } = useAppContext();
-  const [step, setStep] = useState(1);
+  const [draft, setDraft] = useLocalStorage<ApplicationDraft | null>('noblr:applicationDraft', null);
+
+  // Rehydrate from draft if present — we do this lazily during useState
+  // init so the first render already shows the user where they left off.
+  const [step, setStep] = useState<number>(() => (draft?.step && draft.step >= 1 && draft.step <= 4 ? draft.step : 1));
   const [isProcessing, setIsProcessing] = useState(false);
-  const [form, setForm] = useState<FormState>(INITIAL_FORM);
+  const [form, setForm] = useState<FormState>(() => {
+    if (!draft?.form) return INITIAL_FORM;
+    return { ...INITIAL_FORM, ...draft.form } as FormState;
+  });
   const [errors, setErrors] = useState<Partial<Record<keyof FormState, string>>>({});
   const [isDrafting, setIsDrafting] = useState(false);
   const [draftError, setDraftError] = useState<string | null>(null);
   const geminiReady = isGeminiAvailable();
   const totalSteps = 4;
+
+  // Auto-save the draft. We debounce through a short timeout so a burst
+  // of keystrokes writes once — localStorage is cheap, but React also
+  // batches state updates and we'd rather not thrash.
+  const saveTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  useEffect(() => {
+    if (isProcessing) return; // don't save mid-submit
+    if (saveTimerRef.current) clearTimeout(saveTimerRef.current);
+    saveTimerRef.current = setTimeout(() => {
+      setDraft({ step, form, updatedAt: Date.now() });
+    }, 400);
+    return () => {
+      if (saveTimerRef.current) clearTimeout(saveTimerRef.current);
+    };
+  }, [step, form, isProcessing, setDraft]);
 
   const update = <K extends keyof FormState>(field: K, value: FormState[K]) => {
     setForm(prev => ({ ...prev, [field]: value }));
@@ -175,6 +198,10 @@ export function ApplicationView({ onComplete }: { onComplete: () => void }) {
       ));
       clearPendingInvite();
     }
+
+    // The draft has served its purpose — clear it so a future visit
+    // doesn't show a stale "resume application" prompt.
+    setDraft(null);
   };
 
   const nextStep = (e: React.FormEvent) => {
@@ -188,7 +215,7 @@ export function ApplicationView({ onComplete }: { onComplete: () => void }) {
       setTimeout(() => {
         setIsProcessing(false);
         onComplete();
-      }, 4500);
+      }, 5400);
     }
   };
 
@@ -230,7 +257,15 @@ export function ApplicationView({ onComplete }: { onComplete: () => void }) {
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1.6 }}>Cross-referencing vetting database...</motion.div>
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 2.3 }}>Dispatching to Review Committee...</motion.div>
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 2.9 }} className="text-accent">Dossier sealed.</motion.div>
-          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 3.4 }} className="font-serif italic tracking-normal normal-case text-[13px] text-text-dim mt-6 max-w-sm text-center">
+          <motion.div
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 3.4, duration: 0.8 }}
+            className="font-display italic tracking-normal normal-case text-[18px] md:text-[20px] text-text-main mt-8 max-w-md text-center font-light leading-snug"
+          >
+            &ldquo;Таныг бид ийм хүмүүсээс л хүлээж байсан.&rdquo;
+          </motion.div>
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 4.0 }} className="font-serif italic tracking-normal normal-case text-[13px] text-text-dim mt-4 max-w-sm text-center">
             Хорооноос 48–72 цагийн дотор шифрлэгдсэн имэйлээр хариу илгээнэ. Статусаа аль ч үед энэ хаягаар буцан харж болно.
           </motion.div>
         </div>

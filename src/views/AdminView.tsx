@@ -1,8 +1,9 @@
 import { motion } from 'motion/react';
 import { useState } from 'react';
-import { ArrowRight, ArrowUpDown, Check, Download, RotateCcw, Search, Sparkles, X } from 'lucide-react';
+import { ArrowRight, ArrowUpDown, Check, Copy, Download, Mail, RotateCcw, Search, Sparkles, Undo2, X } from 'lucide-react';
 import { useAppContext } from '../context/AppContext';
 import { generateText, isGeminiAvailable } from '../services/gemini';
+import { issueCredentials } from '../lib/credentials';
 import type { Accord, Application } from '../types';
 
 const BRIEF_SYSTEM = `You are advising the Noblr private society's admissions committee. Given a candidate dossier, produce a concise brief in Mongolian Cyrillic with exactly three sections: "Давуу тал" (2-3 bullet points), "Анхаарах" (2-3 bullet points), and "Зөвлөмж" (one-line recommendation: Accept / Hold / Decline with a short justification). Tone: Monocle-level measured editorial, confident but not flattering. Keep the entire brief under 140 words.`;
@@ -25,6 +26,12 @@ export function AdminView() {
   const [filter, setFilter] = useState<AdminFilter>('pending');
   const [search, setSearch] = useState('');
   const [sortNewest, setSortNewest] = useState(true);
+  // Track in-flight invite email sends per application ID so the UI
+  // can show a spinner on the right app — multiple apps can be mid-send
+  // if an admin burns through the queue fast.
+  const [sendingIds, setSendingIds] = useState<Set<string>>(new Set());
+  // Transient "Copied" flash for the credentials clipboard action.
+  const [copiedFlash, setCopiedFlash] = useState<string | null>(null);
   const selected = applications.find(a => a.id === selectedId) ?? null;
   const pendingCount = applications.filter(a => a.status === 'PENDING').length;
   const sponsoredPendingCount = applications.filter(a => a.status === 'PENDING' && !!a.inviteCode).length;
@@ -80,14 +87,172 @@ export function AdminView() {
     URL.revokeObjectURL(url);
   };
 
-  const handleDecision = (decision: 'APPROVED' | 'REJECTED') => {
+  /**
+   * Call the server-side invite dispatcher. Kept out of handleDecision
+   * so it can also be invoked as a "Resend" action from the detail pane
+   * without re-running the approval side effects.
+   */
+  const dispatchInvite = async (app: Application): Promise<{ ok: boolean; error?: string }> => {
+    if (!app.email) {
+      return { ok: false, error: 'Applicant email missing — cannot dispatch.' };
+    }
+    if (!app.memberNumber || !app.dispatchCode || !app.dispatchKey) {
+      return { ok: false, error: 'Credentials missing on application.' };
+    }
+    try {
+      const res = await fetch('/api/send-invite', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          applicantEmail: app.email,
+          applicantName: app.name,
+          memberNumber: app.memberNumber,
+          dispatchCode: app.dispatchCode,
+          dispatchKey: app.dispatchKey,
+          sponsorMemberNumber: app.sponsorMemberNumber,
+          sponsorName: app.sponsorName,
+        }),
+      });
+      const payload = (await res.json().catch(() => ({}))) as { ok?: boolean; error?: string };
+      if (!res.ok) {
+        return { ok: false, error: payload.error || `HTTP ${res.status}` };
+      }
+      return { ok: true };
+    } catch (err) {
+      return { ok: false, error: err instanceof Error ? err.message : String(err) };
+    }
+  };
+
+  const handleResendInvite = async (app: Application) => {
+    setSendingIds(prev => new Set(prev).add(app.id));
+    const result = await dispatchInvite(app);
+    setApplications(prev => prev.map(a =>
+      a.id === app.id
+        ? {
+            ...a,
+            emailSentAt: result.ok ? Date.now() : a.emailSentAt ?? null,
+            emailError: result.ok ? undefined : result.error,
+          }
+        : a
+    ));
+    setSendingIds(prev => {
+      const next = new Set(prev);
+      next.delete(app.id);
+      return next;
+    });
+  };
+
+  /**
+   * Legacy path: the Committee approved this application before we wired up
+   * the invite system. There are no credentials on file, so Resend has
+   * nothing to send. This handler mints credentials in-place and then
+   * dispatches — one click from "just a status flag" to "delivered."
+   */
+  const handleIssueAndSend = async (app: Application) => {
+    const creds = issueCredentials(applications);
+    const updated: Application = {
+      ...app,
+      memberNumber: creds.memberNumber,
+      dispatchCode: creds.dispatchCode,
+      dispatchKey: creds.dispatchKey,
+      emailSentAt: null,
+      emailError: undefined,
+    };
+    setApplications(prev => prev.map(a => a.id === app.id ? updated : a));
+
+    setSendingIds(prev => new Set(prev).add(app.id));
+    const result = await dispatchInvite(updated);
+    setApplications(prev => prev.map(a =>
+      a.id === app.id
+        ? {
+            ...a,
+            emailSentAt: result.ok ? Date.now() : null,
+            emailError: result.ok ? undefined : result.error,
+          }
+        : a
+    ));
+    setSendingIds(prev => {
+      const next = new Set(prev);
+      next.delete(app.id);
+      return next;
+    });
+  };
+
+  const handleCopyCredentials = async (app: Application) => {
+    if (!app.memberNumber || !app.dispatchCode || !app.dispatchKey) return;
+    const origin = typeof window !== 'undefined' ? window.location.origin : 'https://noblr.club';
+    const block = [
+      `Noblr — Member credentials`,
+      ``,
+      `Member Number:   ${app.memberNumber}`,
+      `Dispatch Code:   ${app.dispatchCode}`,
+      `Dispatch Key:    ${app.dispatchKey}`,
+      ``,
+      `Login:           ${origin}/#login`,
+    ].join('\n');
+    try {
+      await navigator.clipboard.writeText(block);
+      setCopiedFlash(app.id);
+      setTimeout(() => setCopiedFlash(prev => (prev === app.id ? null : prev)), 2000);
+    } catch {
+      // Clipboard API can fail in non-secure contexts; fall back to
+      // nothing (we don't want to disturb the admin with a prompt).
+    }
+  };
+
+  /**
+   * Undo a decision. Clears credentials and email state so reverting to
+   * PENDING gives the Committee a truly clean re-review — not a ghost
+   * "already sent" flag on a now-undecided dossier. The sponsored-invite
+   * side-effects from the original decision are deliberately NOT unwound
+   * (sponsor quota changes, accord creation) — that's a separate, more
+   * invasive cleanup the admin can do manually if needed.
+   */
+  const handleRevertToPending = (app: Application) => {
+    if (!window.confirm('Буцаах уу? Credentials болон email статус арилна. Decision flag дахин PENDING болно.')) return;
+    setApplications(prev => prev.map(a =>
+      a.id === app.id
+        ? {
+            ...a,
+            status: 'PENDING',
+            memberNumber: undefined,
+            dispatchCode: undefined,
+            dispatchKey: undefined,
+            emailSentAt: undefined,
+            emailError: undefined,
+          }
+        : a
+    ));
+    setBrief(null);
+    setBriefError(null);
+  };
+
+  const handleDecision = async (decision: 'APPROVED' | 'REJECTED') => {
     if (!selectedId) return;
     const app = applications.find(a => a.id === selectedId);
-    setApplications(prev => prev.map(a => a.id === selectedId ? { ...a, status: decision } : a));
+    if (!app) return;
+
+    // On approval, mint credentials synchronously so the update to
+    // `applications` carries them — the email dispatcher reads them back
+    // off the app object, and the Waitlist view shows them (masked) to
+    // the applicant on return.
+    let updatedApp: Application = { ...app, status: decision };
+    if (decision === 'APPROVED' && !app.memberNumber) {
+      const creds = issueCredentials(applications);
+      updatedApp = {
+        ...updatedApp,
+        memberNumber: creds.memberNumber,
+        dispatchCode: creds.dispatchCode,
+        dispatchKey: creds.dispatchKey,
+        emailSentAt: null,
+      };
+    }
+
+    setApplications(prev => prev.map(a => a.id === selectedId ? updatedApp : a));
 
     // If this application was sponsored, update the invite outcome and
     // restore the inviter's quota on acceptance.
-    if (app?.inviteCode) {
+    if (app.inviteCode) {
       const inviteCode = app.inviteCode;
       const matchedInvite = invites.find(i => i.code === inviteCode);
       const inviteOutcome = decision === 'APPROVED' ? 'ACCEPTED' : 'REJECTED';
@@ -111,19 +276,17 @@ export function AdminView() {
 
         // Auto-create a verified accord between sponsor and the newly approved
         // member so sponsor sees them in Introductions.
-        if (app) {
-          const newAccord: Accord = {
-            id: app.id.replace('A-', ''),
-            name: app.name,
-            role: app.position || '—',
-            intent: 'Sponsored Introduction',
-            unread: true,
-            status: 'Pending Exchange',
-            dispatch: `${app.name} таны spon-оор орсон шинэ гишүүн. Тавтай морилно уу.`,
-            coordinates: null,
-          };
-          setVerifiedAccords(prev => [newAccord, ...prev]);
-        }
+        const newAccord: Accord = {
+          id: app.id.replace('A-', ''),
+          name: app.name,
+          role: app.position || '—',
+          intent: 'Sponsored Introduction',
+          unread: true,
+          status: 'Pending Exchange',
+          dispatch: `${app.name} таны spon-оор орсон шинэ гишүүн. Тавтай морилно уу.`,
+          coordinates: null,
+        };
+        setVerifiedAccords(prev => [newAccord, ...prev]);
       }
     }
 
@@ -131,6 +294,29 @@ export function AdminView() {
     setSelectedId(nextPending?.id ?? null);
     setBrief(null);
     setBriefError(null);
+
+    // Dispatch the welcome email asynchronously. We don't block the admin
+    // on this — UI updates immediately with status=APPROVED, and the email
+    // lands (or errors) a moment later, at which point a small indicator
+    // in the detail pane reflects the outcome.
+    if (decision === 'APPROVED' && updatedApp.email) {
+      setSendingIds(prev => new Set(prev).add(updatedApp.id));
+      const result = await dispatchInvite(updatedApp);
+      setApplications(prev => prev.map(a =>
+        a.id === updatedApp.id
+          ? {
+              ...a,
+              emailSentAt: result.ok ? Date.now() : null,
+              emailError: result.ok ? undefined : result.error,
+            }
+          : a
+      ));
+      setSendingIds(prev => {
+        const next = new Set(prev);
+        next.delete(updatedApp.id);
+        return next;
+      });
+    }
   };
 
   const handleSelectRow = (id: string) => {
@@ -435,10 +621,121 @@ export function AdminView() {
                   </div>
                 </div>
               ) : (
-                <div className="mt-12 pt-6 border-t border-accent-20 relative z-10">
+                <div className="mt-12 pt-6 border-t border-accent-20 relative z-10 space-y-5">
                   <div className={`font-caps text-[10px] tracking-[0.2em] uppercase flex items-center justify-center gap-2 py-3 ${selected.status === 'APPROVED' ? 'text-accent' : 'text-[#FF4A4A]'}`}>
                     {selected.status === 'APPROVED' ? <Check className="w-3 h-3" /> : <X className="w-3 h-3" />}
                     {selected.status}
+                  </div>
+
+                  {selected.status === 'APPROVED' && !selected.memberNumber && (
+                    /* Legacy approved — no credentials yet */
+                    <div className="border border-accent/30 bg-gradient-to-b from-accent/[0.08] via-transparent to-transparent p-5 space-y-4">
+                      <div className="font-caps text-[9px] tracking-[0.25em] text-accent uppercase">
+                        Credentials хараахан олгогдоогүй
+                      </div>
+                      <p className="font-serif italic text-[13px] text-text-dim leading-relaxed">
+                        Энэ dossier-ийг Resend системийг холбохоос өмнө хорооноос зөвшөөрсөн.
+                        Одоо member number, dispatch code, dispatch key үүсгээд welcome email-ийг илгээж болно.
+                      </p>
+                      <button
+                        onClick={() => handleIssueAndSend(selected)}
+                        disabled={sendingIds.has(selected.id) || !selected.email}
+                        title={!selected.email ? 'Applicant email missing' : ''}
+                        className="w-full bg-accent text-bg-base py-3 text-[10px] font-caps tracking-[0.25em] uppercase hover:bg-white transition-colors flex items-center justify-center gap-2 disabled:opacity-40 disabled:cursor-not-allowed"
+                      >
+                        <Mail className="w-3 h-3" />
+                        {sendingIds.has(selected.id) ? 'Dispatching...' : 'Issue credentials & send'}
+                      </button>
+                      {!selected.email && (
+                        <div className="font-sans text-[11px] text-[#FF4A4A] border-l-2 border-[#FF4A4A]/60 pl-3 py-1">
+                          Applicant email дутмал — файл эвдэрсэн эсвэл хуучин демо өргөдөл. Буцаагаад дахин авах шаардлагатай.
+                        </div>
+                      )}
+                    </div>
+                  )}
+
+                  {selected.status === 'APPROVED' && selected.memberNumber && (
+                    <div className="border border-accent/20 bg-[#0A0A0A] p-5 space-y-4">
+                      <div className="flex items-baseline justify-between">
+                        <div className="font-caps text-[9px] tracking-[0.25em] text-accent uppercase">
+                          Issued credentials
+                        </div>
+                        {selected.emailSentAt ? (
+                          <div className="font-caps text-[9px] tracking-[0.2em] text-accent/70 uppercase flex items-center gap-1.5">
+                            <Mail className="w-3 h-3" />
+                            Sent {formatRelativeTime(selected.emailSentAt)}
+                          </div>
+                        ) : sendingIds.has(selected.id) ? (
+                          <div className="font-caps text-[9px] tracking-[0.2em] text-accent/70 uppercase flex items-center gap-1.5">
+                            <div className="w-2.5 h-2.5 rounded-full border border-accent border-t-transparent animate-spin" />
+                            Dispatching
+                          </div>
+                        ) : selected.emailError ? (
+                          <div className="font-caps text-[9px] tracking-[0.2em] text-[#FF4A4A] uppercase">
+                            Failed
+                          </div>
+                        ) : (
+                          <div className="font-caps text-[9px] tracking-[0.2em] text-text-dim uppercase">
+                            Queued
+                          </div>
+                        )}
+                      </div>
+
+                      <div className="grid grid-cols-1 gap-3">
+                        <CredRow label="Member Number" value={selected.memberNumber} mono={false} />
+                        {selected.dispatchCode && <CredRow label="Dispatch Code" value={selected.dispatchCode} mono />}
+                        {selected.dispatchKey && <CredRow label="Dispatch Key" value={selected.dispatchKey} mono />}
+                      </div>
+
+                      {selected.emailError && (
+                        <div className="font-sans text-[11px] text-[#FF4A4A] border-l-2 border-[#FF4A4A]/60 pl-3 py-1 leading-relaxed break-words">
+                          {selected.emailError}
+                        </div>
+                      )}
+
+                      <div className="grid grid-cols-2 gap-2 pt-1">
+                        <button
+                          onClick={() => handleResendInvite(selected)}
+                          disabled={sendingIds.has(selected.id) || !selected.email}
+                          title={!selected.email ? 'Applicant email missing' : ''}
+                          className="border border-accent/30 bg-accent/5 py-3 text-[10px] font-caps tracking-[0.2em] text-accent uppercase hover:bg-accent/10 transition-colors flex items-center justify-center gap-2 disabled:opacity-40 disabled:cursor-not-allowed"
+                        >
+                          <Mail className="w-3 h-3" />
+                          {sendingIds.has(selected.id)
+                            ? 'Sending...'
+                            : selected.emailSentAt
+                            ? 'Resend email'
+                            : selected.emailError
+                            ? 'Retry send'
+                            : 'Send email'}
+                        </button>
+                        <button
+                          onClick={() => handleCopyCredentials(selected)}
+                          className="border border-accent-20 py-3 text-[10px] font-caps tracking-[0.2em] text-text-main uppercase hover:bg-white/5 transition-colors flex items-center justify-center gap-2"
+                        >
+                          {copiedFlash === selected.id ? (
+                            <><Check className="w-3 h-3 text-accent" /> Copied</>
+                          ) : (
+                            <><Copy className="w-3 h-3" /> Copy block</>
+                          )}
+                        </button>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Secondary destructive action — revert to PENDING.
+                     Kept visually quiet so it isn't a one-click accident. */}
+                  <div className="pt-3 flex items-center justify-between">
+                    <div className="font-caps text-[8px] tracking-[0.25em] text-text-dim/60 uppercase">
+                      {selected.status === 'APPROVED' ? 'Mistake? Revert to re-review.' : 'Reconsider? Send back to queue.'}
+                    </div>
+                    <button
+                      onClick={() => handleRevertToPending(selected)}
+                      className="font-caps text-[9px] tracking-[0.25em] text-text-dim hover:text-text-main uppercase flex items-center gap-1.5 transition-colors"
+                    >
+                      <Undo2 className="w-3 h-3" />
+                      Revert to pending
+                    </button>
                   </div>
                 </div>
               )}
@@ -453,4 +750,30 @@ export function AdminView() {
       </div>
     </motion.div>
   );
+}
+
+/* ————— helpers ————— */
+
+function CredRow({ label, value, mono }: { label: string; value: string; mono: boolean }) {
+  return (
+    <div className="flex items-baseline justify-between gap-4 border-b border-accent-20 pb-2">
+      <div className="font-caps text-[8px] tracking-[0.25em] text-text-dim uppercase shrink-0">{label}</div>
+      <div
+        className={`text-[13px] text-text-main text-right tracking-wider break-all ${mono ? 'font-mono' : 'font-sans'}`}
+      >
+        {value}
+      </div>
+    </div>
+  );
+}
+
+function formatRelativeTime(ts: number): string {
+  const diff = Date.now() - ts;
+  const min = Math.floor(diff / 60_000);
+  if (min < 1) return 'just now';
+  if (min < 60) return `${min}m ago`;
+  const hr = Math.floor(min / 60);
+  if (hr < 24) return `${hr}h ago`;
+  const day = Math.floor(hr / 24);
+  return `${day}d ago`;
 }

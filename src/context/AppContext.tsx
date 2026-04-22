@@ -119,7 +119,11 @@ export function AppProvider({ children }: { children: ReactNode }) {
 
   const pendingInvite = useMemo(() => {
     if (!pendingInviteCode) return null;
-    return invites.find(i => i.code === pendingInviteCode) ?? null;
+    const match = invites.find(i => i.code === pendingInviteCode);
+    if (!match) return null;
+    if (match.claimedByApplicationId) return null;
+    if (match.expiresAt && Date.now() > match.expiresAt) return null;
+    return match;
   }, [pendingInviteCode, invites]);
 
   const clearPendingInvite = () => setPendingInviteCode(null);

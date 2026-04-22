@@ -8,6 +8,16 @@ import { GoogleGenAI } from '@google/genai';
 const apiKey = process.env.GEMINI_API_KEY;
 const client = apiKey ? new GoogleGenAI({ apiKey }) : null;
 
+if (!client && typeof console !== 'undefined') {
+  console.info(
+    '%c[Noblr] Gemini disabled',
+    'color: #9A7F57; font-weight: bold;',
+    '\n  AI features (Draft, Committee Brief, Refine dispatch) are hidden.',
+    '\n  Enable by setting GEMINI_API_KEY in .env.local (local) or Vercel env (production).',
+    '\n  Get a key: https://aistudio.google.com/apikey'
+  );
+}
+
 let lastCallAt = 0;
 const MIN_INTERVAL_MS = 2000;
 

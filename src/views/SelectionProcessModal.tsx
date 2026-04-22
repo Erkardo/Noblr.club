@@ -71,6 +71,10 @@ export function SelectionProcessModal({ open, onClose, onApply }: {
       setRedeemError('Энэ код аль хэдийн ашиглагдсан.');
       return;
     }
+    if (match.expiresAt && Date.now() > match.expiresAt) {
+      setRedeemError('Энэ кодын хугацаа дууссан.');
+      return;
+    }
     window.location.href = `${window.location.pathname}?i=${code}`;
   };
 

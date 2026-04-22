@@ -1,6 +1,6 @@
 import { motion } from 'motion/react';
 import { useState } from 'react';
-import { Check, Lock, Sparkles } from 'lucide-react';
+import { Check, Lock, Pencil, Sparkles } from 'lucide-react';
 import { useAppContext } from '../../context/AppContext';
 import { generateText, isGeminiAvailable } from '../../services/gemini';
 import { InvitationsPanel } from '../../components/InvitationsPanel';
@@ -14,12 +14,33 @@ export function MyProfileTab() {
     phantomMode, setPhantomMode,
     activeIntents, setActiveIntents,
     dispatchTemplate, setDispatchTemplate,
+    currentMember, setCurrentMember, setView,
   } = useAppContext();
   const [isEditingDispatch, setIsEditingDispatch] = useState(false);
   const [tone, setTone] = useState<Tone>('warm');
   const [refining, setRefining] = useState(false);
   const [refineError, setRefineError] = useState<string | null>(null);
+  const [isEditingProfile, setIsEditingProfile] = useState(false);
+  const [profileDraft, setProfileDraft] = useState({ name: currentMember.name, role: currentMember.role });
   const geminiReady = isGeminiAvailable();
+
+  const memberSinceYear = new Date().getFullYear();
+
+  const handleSaveProfile = () => {
+    setCurrentMember(prev => ({
+      ...prev,
+      name: profileDraft.name.trim() || prev.name,
+      role: profileDraft.role.trim() || prev.role,
+    }));
+    setIsEditingProfile(false);
+  };
+
+  const handleDeactivate = () => {
+    if (!window.confirm('Account deactivation is irreversible for this device. Continue?')) return;
+    // Clear personal state and return to landing
+    setPhantomMode(false);
+    setView('landing');
+  };
 
   const handleRefine = async () => {
     setRefining(true);
@@ -57,18 +78,72 @@ export function MyProfileTab() {
             <div className="absolute top-0 right-0 w-32 h-32 bg-accent/5 rounded-full blur-2xl pointer-events-none translate-x-10 -translate-y-10" />
             <div className="flex justify-between items-start relative z-10 w-full">
               <div className="font-display text-[22px] font-light tracking-[-0.005em]">Noblr</div>
-              <div className="font-sans text-[9px] tracking-[0.2em] uppercase text-text-dim/50">ID: 8092</div>
+              <div className="flex items-center gap-2">
+                {currentMember.patronSince && (
+                  <span className="font-caps text-[8px] tracking-[0.25em] text-accent uppercase border border-accent/50 px-1.5 py-[1px] flex items-center gap-1">
+                    <Sparkles className="w-2 h-2" /> Patron
+                  </span>
+                )}
+                <div className="font-sans text-[9px] tracking-[0.2em] uppercase text-text-dim/50">{currentMember.memberNumber}</div>
+              </div>
             </div>
             <div className="flex justify-between items-end relative z-10">
               <div>
-                <div className="font-display text-[18px] font-light mb-1 text-white">Түмэн-Эрдэнэ</div>
-                <div className="font-serif italic text-[12px] text-text-dim">Creative Director</div>
+                <div className="font-display text-[18px] font-light mb-1 text-white">{currentMember.name}</div>
+                <div className="font-serif italic text-[12px] text-text-dim">{currentMember.role}</div>
               </div>
               <div className="font-sans text-[9px] tracking-[0.2em] uppercase text-text-dim text-right leading-relaxed">
-                Member<br/>since 2026
+                Member<br/>since {memberSinceYear}
               </div>
             </div>
           </div>
+
+          {/* Edit profile panel */}
+          {isEditingProfile ? (
+            <div className="p-5 border border-accent/50 bg-accent/5 space-y-4">
+              <div className="font-caps text-[9px] tracking-[0.3em] text-accent uppercase">Edit Dossier</div>
+              <div className="space-y-2">
+                <label className="text-[10px] uppercase tracking-[0.25em] font-caps text-text-dim">Name</label>
+                <input
+                  value={profileDraft.name}
+                  onChange={e => setProfileDraft(p => ({ ...p, name: e.target.value }))}
+                  className="w-full py-2 text-[15px] text-text-main font-sans font-light"
+                  placeholder="Full name"
+                />
+              </div>
+              <div className="space-y-2">
+                <label className="text-[10px] uppercase tracking-[0.25em] font-caps text-text-dim">Role</label>
+                <input
+                  value={profileDraft.role}
+                  onChange={e => setProfileDraft(p => ({ ...p, role: e.target.value }))}
+                  className="w-full py-2 text-[15px] text-text-main font-sans font-light"
+                  placeholder="Creative Director..."
+                />
+              </div>
+              <div className="flex gap-2 pt-2">
+                <button
+                  onClick={() => { setProfileDraft({ name: currentMember.name, role: currentMember.role }); setIsEditingProfile(false); }}
+                  className="flex-1 font-caps text-[10px] tracking-[0.2em] text-text-dim uppercase border border-accent-20 py-2 hover:text-text-main transition-colors"
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={handleSaveProfile}
+                  className="flex-1 font-caps text-[10px] tracking-[0.2em] text-bg-base uppercase bg-accent py-2 hover:bg-white transition-colors"
+                >
+                  Save
+                </button>
+              </div>
+            </div>
+          ) : (
+            <button
+              onClick={() => setIsEditingProfile(true)}
+              className="w-full font-caps text-[10px] tracking-[0.2em] text-text-dim uppercase hover:text-accent transition-colors pb-1 border-b border-accent-20 hover:border-accent flex items-center justify-center gap-2"
+            >
+              <Pencil className="w-3 h-3" />
+              Edit Dossier
+            </button>
+          )}
 
           <div className="p-6 border border-accent-20 bg-bg-base/30 space-y-4">
             <div className="flex justify-between items-center pb-4 border-b border-accent-20">
@@ -203,7 +278,10 @@ export function MyProfileTab() {
           </div>
 
           <div className="pt-8">
-             <button className="font-caps text-[10px] tracking-[0.2em] text-[#FF4A4A]/70 hover:text-[#FF4A4A] uppercase pb-1 transition-colors flex items-center gap-2">
+             <button
+               onClick={handleDeactivate}
+               className="font-caps text-[10px] tracking-[0.2em] text-[#FF4A4A]/70 hover:text-[#FF4A4A] uppercase pb-1 transition-colors flex items-center gap-2"
+             >
                <Lock className="w-3 h-3" /> Request Account Deactivation
              </button>
           </div>

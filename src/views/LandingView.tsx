@@ -280,10 +280,11 @@ export function LandingView({ onApply, onAdmin }: { onApply: () => void, onAdmin
         className="w-full flex flex-col md:flex-row gap-6 justify-between items-center text-[9px] uppercase tracking-[0.2em] text-text-dim border-t border-accent-20 pt-10 pb-8 px-12 font-caps mt-auto relative z-10"
       >
         <div className="flex items-center gap-2">
-          <span>&copy; 2024 Noblr Private Club &mdash; Ulaanbaatar</span>
+          <span>&copy; {new Date().getFullYear()} Noblr Private Club &mdash; Ulaanbaatar</span>
           <button onClick={onAdmin} className="opacity-0 hover:opacity-100 px-2 py-1 bg-white/5 transition-opacity" title="Review Committee">SYS</button>
         </div>
         <div className="flex items-center gap-5">
+          <button onClick={() => setView('about')} className="hover:text-text-main transition-colors">About</button>
           <button onClick={() => setView('privacy')} className="hover:text-text-main transition-colors">Privacy</button>
           <button onClick={() => setView('terms')} className="hover:text-text-main transition-colors">Terms</button>
         </div>

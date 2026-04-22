@@ -1,4 +1,4 @@
-export type View = 'landing' | 'apply' | 'waitlist' | 'login' | 'portal' | 'admin' | 'privacy' | 'terms';
+export type View = 'landing' | 'apply' | 'waitlist' | 'login' | 'portal' | 'admin' | 'privacy' | 'terms' | 'about';
 
 export type PortalTab = 'daily' | 'events' | 'introductions' | 'profile';
 
@@ -98,6 +98,7 @@ export interface Invite {
   issuedByName: string;                    // display name
   issuedByMemberNumber: string;            // "No. 0247"
   issuedAt: number;                        // epoch ms
+  expiresAt?: number;                      // epoch ms — 30 days after issuedAt
   claimedByApplicationId: string | null;
   claimedAt: number | null;
   outcome: InviteOutcome;

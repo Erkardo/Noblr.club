@@ -1,8 +1,9 @@
 import { motion } from 'motion/react';
 import { useState } from 'react';
-import { ArrowRight, Check, RotateCcw, Sparkles, X } from 'lucide-react';
+import { ArrowRight, ArrowUpDown, Check, Download, RotateCcw, Search, Sparkles, X } from 'lucide-react';
 import { useAppContext } from '../context/AppContext';
 import { generateText, isGeminiAvailable } from '../services/gemini';
+import type { Accord, Application } from '../types';
 
 const BRIEF_SYSTEM = `You are advising the Noblr private society's admissions committee. Given a candidate dossier, produce a concise brief in Mongolian Cyrillic with exactly three sections: "Давуу тал" (2-3 bullet points), "Анхаарах" (2-3 bullet points), and "Зөвлөмж" (one-line recommendation: Accept / Hold / Decline with a short justification). Tone: Monocle-level measured editorial, confident but not flattering. Keep the entire brief under 140 words.`;
 
@@ -14,6 +15,7 @@ export function AdminView() {
   const {
     applications, setApplications, resetDemoData,
     invites, setInvites, currentMember, setCurrentMember,
+    setVerifiedAccords,
   } = useAppContext();
   const firstPendingId = applications.find(a => a.status === 'PENDING')?.id ?? applications[0]?.id ?? null;
   const [selectedId, setSelectedId] = useState<string | null>(firstPendingId);
@@ -21,6 +23,8 @@ export function AdminView() {
   const [briefLoading, setBriefLoading] = useState(false);
   const [briefError, setBriefError] = useState<string | null>(null);
   const [filter, setFilter] = useState<AdminFilter>('pending');
+  const [search, setSearch] = useState('');
+  const [sortNewest, setSortNewest] = useState(true);
   const selected = applications.find(a => a.id === selectedId) ?? null;
   const pendingCount = applications.filter(a => a.status === 'PENDING').length;
   const sponsoredPendingCount = applications.filter(a => a.status === 'PENDING' && !!a.inviteCode).length;
@@ -30,14 +34,51 @@ export function AdminView() {
   const geminiReady = isGeminiAvailable();
 
   const filtered = (() => {
+    let list: Application[];
     switch (filter) {
-      case 'pending':   return applications.filter(a => a.status === 'PENDING');
-      case 'sponsored': return applications.filter(a => !!a.inviteCode);
-      case 'walkin':    return applications.filter(a => !a.inviteCode);
-      case 'approved':  return applications.filter(a => a.status === 'APPROVED');
-      case 'rejected':  return applications.filter(a => a.status === 'REJECTED');
+      case 'pending':   list = applications.filter(a => a.status === 'PENDING'); break;
+      case 'sponsored': list = applications.filter(a => !!a.inviteCode); break;
+      case 'walkin':    list = applications.filter(a => !a.inviteCode); break;
+      case 'approved':  list = applications.filter(a => a.status === 'APPROVED'); break;
+      case 'rejected':  list = applications.filter(a => a.status === 'REJECTED'); break;
     }
+    const q = search.trim().toLowerCase();
+    if (q) {
+      list = list.filter(a =>
+        a.name.toLowerCase().includes(q) ||
+        a.company.toLowerCase().includes(q) ||
+        a.position.toLowerCase().includes(q) ||
+        a.id.toLowerCase().includes(q)
+      );
+    }
+    // sort by original index as proxy for recency (newer apps are prepended)
+    const indexMap = new Map(applications.map((a, i) => [a.id, i]));
+    list.sort((a, b) => {
+      const ai = indexMap.get(a.id) ?? 0;
+      const bi = indexMap.get(b.id) ?? 0;
+      return sortNewest ? ai - bi : bi - ai;
+    });
+    return list;
   })();
+
+  const handleExportCSV = () => {
+    const headers = ['id', 'name', 'age', 'position', 'company', 'status', 'date', 'education', 'experience', 'email', 'phone', 'instagram', 'facebook', 'linkedin', 'inviteCode', 'sponsorMemberNumber', 'sponsorName'];
+    const rows = filtered.map(a => headers.map(h => {
+      const v = (a as unknown as Record<string, unknown>)[h];
+      if (v == null) return '';
+      return String(v).replace(/"/g, '""');
+    }));
+    const csv = [headers.join(','), ...rows.map(r => r.map(c => `"${c}"`).join(','))].join('\n');
+    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `noblr-applications-${filter}-${new Date().toISOString().split('T')[0]}.csv`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  };
 
   const handleDecision = (decision: 'APPROVED' | 'REJECTED') => {
     if (!selectedId) return;
@@ -67,6 +108,22 @@ export function AdminView() {
             patronSince: nowPatron,
           };
         });
+
+        // Auto-create a verified accord between sponsor and the newly approved
+        // member so sponsor sees them in Introductions.
+        if (app) {
+          const newAccord: Accord = {
+            id: app.id.replace('A-', ''),
+            name: app.name,
+            role: app.position || '—',
+            intent: 'Sponsored Introduction',
+            unread: true,
+            status: 'Pending Exchange',
+            dispatch: `${app.name} таны spon-оор орсон шинэ гишүүн. Тавтай морилно уу.`,
+            coordinates: null,
+          };
+          setVerifiedAccords(prev => [newAccord, ...prev]);
+        }
       }
     }
 
@@ -151,6 +208,41 @@ export function AdminView() {
             <span className={`font-sans text-[10px] tabular-nums ${filter === tab.key ? 'text-accent' : 'text-text-dim/60'}`}>{tab.count}</span>
           </button>
         ))}
+      </div>
+
+      {/* Search + sort + export */}
+      <div className="flex flex-col md:flex-row gap-3 mb-4">
+        <div className="flex-1 flex items-center border border-accent-20 focus-within:border-accent transition-colors px-3">
+          <Search className="w-3.5 h-3.5 text-text-dim shrink-0" />
+          <input
+            type="text"
+            value={search}
+            onChange={e => setSearch(e.target.value)}
+            placeholder="Нэр, компани, албан тушаал, ID..."
+            className="flex-1 py-2 ml-2 text-[13px] text-text-main placeholder-text-dim/40 font-sans font-light bg-transparent border-0 outline-none focus:ring-0"
+          />
+          {search && (
+            <button onClick={() => setSearch('')} className="text-text-dim hover:text-text-main" aria-label="Clear">
+              <X className="w-3.5 h-3.5" />
+            </button>
+          )}
+        </div>
+        <button
+          onClick={() => setSortNewest(s => !s)}
+          className="font-caps text-[10px] tracking-[0.2em] text-text-dim hover:text-text-main uppercase border border-accent-20 hover:border-accent px-4 py-2 transition-colors flex items-center gap-2"
+          title="Toggle sort order"
+        >
+          <ArrowUpDown className="w-3 h-3" />
+          {sortNewest ? 'Newest' : 'Oldest'}
+        </button>
+        <button
+          onClick={handleExportCSV}
+          disabled={filtered.length === 0}
+          className="font-caps text-[10px] tracking-[0.2em] text-text-dim hover:text-accent uppercase border border-accent-20 hover:border-accent px-4 py-2 transition-colors flex items-center gap-2 disabled:opacity-40 disabled:cursor-not-allowed"
+        >
+          <Download className="w-3 h-3" />
+          CSV
+        </button>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-[1fr_450px] gap-8">

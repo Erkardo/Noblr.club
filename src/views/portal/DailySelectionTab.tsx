@@ -5,6 +5,13 @@ import { MOCK_PROFILES } from '../../data/profiles';
 import { useAppContext } from '../../context/AppContext';
 import type { Intent } from '../../types';
 
+function getWeekOfYear(): number {
+  const now = new Date();
+  const start = new Date(now.getFullYear(), 0, 1);
+  const diff = (now.getTime() - start.getTime()) / (24 * 60 * 60 * 1000);
+  return Math.ceil((diff + start.getDay() + 1) / 7);
+}
+
 export function DailySelectionTab() {
   const {
     phantomMode,
@@ -54,9 +61,14 @@ export function DailySelectionTab() {
         >
           {/* Dossier Header */}
           <div className="flex justify-between items-end border-b border-accent-20 pb-4 mb-12 relative z-10 w-full">
-            <div className="font-caps text-[9px] tracking-[0.3em] text-text-dim uppercase">The Daily Dossier</div>
+            <div>
+              <div className="font-caps text-[9px] tracking-[0.3em] text-text-dim uppercase">The Monday Dossier</div>
+              <div className="font-serif italic text-[11px] text-accent/80 mt-1">
+                Week of {new Date().toLocaleDateString('mn-MN', { day: '2-digit', month: 'short' })}
+              </div>
+            </div>
             <div className="font-sans text-[10px] tracking-[0.1em] text-accent uppercase text-right">
-              Vol. IV &mdash; Issue 109<br/>
+              Vol. IV &mdash; Issue {getWeekOfYear()}<br/>
               Curated for you
             </div>
           </div>
@@ -159,9 +171,12 @@ export function DailySelectionTab() {
           animate={{ opacity: 1 }}
           className="flex flex-col items-center justify-center py-32 text-center"
         >
-          <div className="font-display text-3xl font-light text-text-main mb-4">Жагсаалт дууслаа</div>
-          <div className="font-serif italic text-text-dim text-[16px]">
-            Та өнөөдрийн онцгойプロфайлуудтай танилцаж дууслаа. Өдөр бүр шинэ сонголтууд нэмэгдэнэ.
+          <div className="font-caps text-[10px] tracking-[0.3em] text-accent uppercase mb-4">Next Dossier — Monday 08:00</div>
+          <div className="font-display text-3xl md:text-4xl font-light text-text-main mb-4 max-w-md leading-tight">
+            Энэ долоо хоногийн <span className="italic text-text-dim">танилцуулга дууслаа.</span>
+          </div>
+          <div className="font-serif italic text-text-dim text-[15px] max-w-md leading-relaxed">
+            Даваа гарагийн өглөө 08:00 цагт шинэ dossier илгээгдэнэ. Хүлээлт бол Noblr-ийн ёс заншил — бид хурдан биш, чанарлаг харьцаа барьдаг.
           </div>
         </motion.div>
       )}

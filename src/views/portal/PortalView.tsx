@@ -1,16 +1,23 @@
 import { motion, AnimatePresence } from 'motion/react';
 import { useState } from 'react';
-import { Compass, Calendar, Inbox, User } from 'lucide-react';
+import { Compass, Calendar, Inbox, User, X } from 'lucide-react';
 import { useAppContext } from '../../context/AppContext';
+import { useLocalStorage } from '../../hooks/useLocalStorage';
 import { DailySelectionTab } from './DailySelectionTab';
 import { PrivateEventsTab } from './PrivateEventsTab';
 import { IntroductionsTab } from './IntroductionsTab';
 import { MyProfileTab } from './MyProfileTab';
+import { Watermark } from '../../components/ui/Watermark';
 import type { PortalTab } from '../../types';
 
 export function PortalView() {
-  const { pendingIntroductions: PENDING_INTRODUCTIONS, verifiedAccords: VERIFIED_ACCORDS } = useAppContext();
+  const {
+    pendingIntroductions: PENDING_INTRODUCTIONS,
+    verifiedAccords: VERIFIED_ACCORDS,
+    currentMember,
+  } = useAppContext();
   const [activeTab, setActiveTab] = useState<PortalTab>('daily');
+  const [welcomeSeen, setWelcomeSeen] = useLocalStorage<boolean>('noblr:portalWelcomeSeen', false);
 
   return (
     <motion.div
@@ -20,6 +27,31 @@ export function PortalView() {
       transition={{ duration: 1 }}
       className="flex-1 flex flex-col w-full max-w-5xl mx-auto py-6 md:py-8 px-4 md:px-8 mt-6 md:mt-12 mb-24 md:mb-0 z-20"
     >
+      <Watermark />
+      {!welcomeSeen && (
+        <motion.div
+          initial={{ opacity: 0, y: -8 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+          className="mb-8 border border-accent/40 bg-gradient-to-r from-accent/10 via-transparent to-transparent p-5 md:p-6 relative"
+        >
+          <button
+            onClick={() => setWelcomeSeen(true)}
+            className="absolute top-3 right-3 w-7 h-7 flex items-center justify-center text-text-dim hover:text-text-main"
+            aria-label="Dismiss"
+          >
+            <X className="w-4 h-4" />
+          </button>
+          <div className="font-caps text-[9px] tracking-[0.3em] text-accent uppercase mb-2">Welcome, {currentMember.memberNumber}</div>
+          <div className="font-display text-[22px] md:text-[26px] font-light text-text-main leading-tight mb-2">
+            Dossier идэвхжсэн. <span className="italic text-text-dim">Нийгэмлэгт тавтай морилно уу.</span>
+          </div>
+          <p className="font-serif italic text-text-dim text-[13px] leading-relaxed max-w-lg">
+            Daily Dossier долоо хоногийн даваа гарагт шинэчлэгдэнэ. Танилцуулга хүлээн авахдаа 72 цагийн дотор шийдвэр гарга. Дипшч илгээхэд нэг удаа, бодит амьдрал дээр нэг удаа. Баталгаатай чимээгүй байдлаас эхэлнэ.
+          </p>
+        </motion.div>
+      )}
+
       {/* Desktop Tabs */}
       <div className="hidden md:flex border-b border-accent-20 mb-12 overflow-x-auto hide-scrollbar whitespace-nowrap">
         <button

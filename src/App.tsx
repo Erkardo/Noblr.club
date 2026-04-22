@@ -9,6 +9,7 @@ import { AdminView } from './views/AdminView';
 import { PortalView } from './views/portal/PortalView';
 import { PrivacyView } from './views/PrivacyView';
 import { TermsView } from './views/TermsView';
+import { AboutView } from './views/AboutView';
 import { AppProvider, useAppContext } from './context/AppContext';
 
 export default function App() {
@@ -20,8 +21,13 @@ export default function App() {
 }
 
 function AppShell() {
-  const { view, setView, pendingIntroductions, verifiedAccords } = useAppContext();
+  const { view, setView, pendingIntroductions, verifiedAccords, setPhantomMode } = useAppContext();
   const hasUnread = pendingIntroductions.length > 0 || verifiedAccords.some(a => a.unread);
+
+  const handleLogout = () => {
+    setPhantomMode(false);
+    setView('landing');
+  };
 
   // Simple smooth scroll to top when changing views
   useEffect(() => {
@@ -58,7 +64,7 @@ function AppShell() {
               </button>
             </nav>
           )}
-          {(view === 'apply' || view === 'waitlist' || view === 'login' || view === 'admin' || view === 'privacy' || view === 'terms') && (
+          {(view === 'apply' || view === 'waitlist' || view === 'login' || view === 'admin' || view === 'privacy' || view === 'terms' || view === 'about') && (
             <button
               onClick={() => setView('landing')}
               className="w-10 h-10 rounded-full flex items-center justify-center text-text-dim hover:text-text-main border border-transparent hover:border-accent-20 transition-all duration-300"
@@ -69,7 +75,7 @@ function AppShell() {
           )}
           {view === 'portal' && (
             <button
-              onClick={() => setView('landing')}
+              onClick={handleLogout}
               className="relative font-caps text-[10px] tracking-[0.2em] text-text-dim hover:text-text-main transition-colors uppercase border-b border-accent-20 pb-0.5"
             >
               Log Out
@@ -91,6 +97,7 @@ function AppShell() {
           {view === 'admin' && <AdminView key="admin" />}
           {view === 'privacy' && <PrivacyView key="privacy" />}
           {view === 'terms' && <TermsView key="terms" />}
+          {view === 'about' && <AboutView key="about" />}
         </AnimatePresence>
       </main>
     </div>

@@ -7,6 +7,7 @@ import type { Invite, InviteOutcome } from '../types';
 const INVITE_BASE_QUOTA = 3;
 const INVITE_LIFETIME_CAP = 5;
 const PATRON_THRESHOLD = 3;
+const INVITE_LIFETIME_MS = 30 * 24 * 60 * 60 * 1000; // 30 days
 
 const CODE_ALPHABET = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789'; // skip 0/O/1/I
 function generateInviteCode(): string {
@@ -45,12 +46,14 @@ export function InvitationsPanel() {
   const handleGenerate = () => {
     if (!canIssue) return;
     const code = generateInviteCode();
+    const now = Date.now();
     const newInvite: Invite = {
       code,
       issuedByMemberId: currentMember.id,
       issuedByName: currentMember.name,
       issuedByMemberNumber: currentMember.memberNumber,
-      issuedAt: Date.now(),
+      issuedAt: now,
+      expiresAt: now + INVITE_LIFETIME_MS,
       claimedByApplicationId: null,
       claimedAt: null,
       outcome: 'PENDING',
@@ -227,21 +230,38 @@ export function InvitationsPanel() {
                 inv.outcome === 'ACCEPTED' ? 'text-accent' :
                 inv.outcome === 'REJECTED' ? 'text-[#FF4A4A]' :
                 'text-text-dim';
+              const now = Date.now();
+              const expiresAt = inv.expiresAt ?? (inv.issuedAt + INVITE_LIFETIME_MS);
+              const daysLeft = Math.max(0, Math.ceil((expiresAt - now) / (24 * 60 * 60 * 1000)));
+              const isExpired = inv.outcome === 'PENDING' && !inv.claimedByApplicationId && now > expiresAt;
+              const expiryLabel = inv.outcome !== 'PENDING' || inv.claimedByApplicationId
+                ? null
+                : isExpired
+                  ? 'хугацаа дууссан'
+                  : daysLeft <= 3
+                    ? `${daysLeft} хоног үлдсэн`
+                    : `${daysLeft} хоногийн дараа хугацаа дуусна`;
               return (
-                <div key={inv.code} className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2 py-4 border-b border-accent-20/40">
+                <div key={inv.code} className={`flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2 py-4 border-b border-accent-20/40 ${isExpired ? 'opacity-60' : ''}`}>
                   <div className="flex-1 min-w-0">
                     <div className="font-mono text-[13px] text-text-main tracking-widest break-all">{inv.code}</div>
-                    <div className="font-sans text-[10px] text-text-dim/70 mt-1">
-                      {new Date(inv.issuedAt).toLocaleDateString('mn-MN')}
+                    <div className="font-sans text-[10px] text-text-dim/70 mt-1 flex items-center gap-2 flex-wrap">
+                      <span>{new Date(inv.issuedAt).toLocaleDateString('mn-MN')}</span>
+                      {expiryLabel && (
+                        <span className={`${isExpired ? 'text-[#FF4A4A]/80' : daysLeft <= 3 ? 'text-accent/80' : 'text-text-dim/60'}`}>
+                          · {expiryLabel}
+                        </span>
+                      )}
                     </div>
                   </div>
                   <div className="flex items-center gap-3 shrink-0">
-                    <span className={`font-caps text-[9px] tracking-[0.2em] uppercase ${outcomeColor}`}>
-                      {outcomeLabel[inv.outcome]}
+                    <span className={`font-caps text-[9px] tracking-[0.2em] uppercase ${isExpired ? 'text-[#FF4A4A]/70' : outcomeColor}`}>
+                      {isExpired ? 'Expired' : outcomeLabel[inv.outcome]}
                     </span>
                     <button
                       onClick={() => handleCopy(inv.code)}
-                      className="text-[10px] font-caps tracking-[0.2em] text-text-dim hover:text-accent uppercase transition-colors px-3 py-1.5 border border-accent-20 hover:border-accent flex items-center gap-1.5"
+                      disabled={isExpired}
+                      className="text-[10px] font-caps tracking-[0.2em] text-text-dim hover:text-accent uppercase transition-colors px-3 py-1.5 border border-accent-20 hover:border-accent flex items-center gap-1.5 disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:text-text-dim disabled:hover:border-accent-20"
                     >
                       {copiedCode === inv.code ? <><Check className="w-3 h-3" /> Copied</> : <><Copy className="w-3 h-3" /> Copy</>}
                     </button>

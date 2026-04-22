@@ -110,6 +110,40 @@ export function InvitationsPanel() {
         </div>
       </div>
 
+      {/* Patron rewards reveal */}
+      {isPatron && (
+        <motion.div
+          initial={{ opacity: 0, y: 8 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8 }}
+          className="mb-8 border border-accent/40 bg-gradient-to-b from-accent/10 to-transparent p-5 md:p-6"
+        >
+          <div className="flex items-center gap-2 mb-4">
+            <Sparkles className="w-3 h-3 text-accent" />
+            <span className="font-caps text-[10px] tracking-[0.3em] text-accent uppercase">Patron Rewards Unlocked</span>
+          </div>
+          <div className="space-y-3">
+            <Reward
+              title="Founders' Dinner"
+              desc="Жилд нэг удаа, дээд 12 Патрон founder-тай шөнийн зоогт хамтрах эрх."
+            />
+            <Reward
+              title="Priority Rotation"
+              desc="Таны Dossier шинэ гишүүдэд эхний 72 цагт харагдана."
+            />
+            <Reward
+              title="Extended Invite Quota"
+              desc={`Хэвлэгдсэн хязгаар ${INVITE_LIFETIME_CAP}-д хүрэх эрх. Амжилттай урилга бүр тогтворжно.`}
+            />
+          </div>
+          {currentMember.patronSince && (
+            <div className="mt-5 pt-4 border-t border-accent/20 font-caps text-[9px] tracking-[0.25em] text-accent/70 uppercase">
+              Patron since {new Date(currentMember.patronSince).toLocaleDateString('mn-MN', { year: 'numeric', month: 'short' })}
+            </div>
+          )}
+        </motion.div>
+      )}
+
       {/* Quota bar */}
       <div className="flex gap-[3px] mb-8">
         {[...Array(INVITE_LIFETIME_CAP)].map((_, i) => {
@@ -218,6 +252,18 @@ export function InvitationsPanel() {
           </div>
         </div>
       )}
+    </div>
+  );
+}
+
+function Reward({ title, desc }: { title: string; desc: string }) {
+  return (
+    <div className="flex items-start gap-3">
+      <Check className="w-3 h-3 text-accent mt-1 shrink-0" />
+      <div className="flex-1">
+        <div className="font-caps text-[10px] tracking-[0.2em] text-text-main uppercase mb-0.5">{title}</div>
+        <div className="font-serif italic text-[12px] text-text-dim leading-relaxed">{desc}</div>
+      </div>
     </div>
   );
 }

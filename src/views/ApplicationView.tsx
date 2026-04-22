@@ -188,7 +188,7 @@ export function ApplicationView({ onComplete }: { onComplete: () => void }) {
       setTimeout(() => {
         setIsProcessing(false);
         onComplete();
-      }, 3500);
+      }, 4500);
     }
   };
 
@@ -223,12 +223,16 @@ export function ApplicationView({ onComplete }: { onComplete: () => void }) {
             className="w-1/2 h-full bg-accent absolute top-0 left-0"
           />
         </div>
-        <div className="flex flex-col gap-4 font-caps text-[10px] text-accent/60 uppercase tracking-[0.3em] items-center">
+        <div className="flex flex-col gap-3 font-caps text-[10px] text-accent/60 uppercase tracking-[0.3em] items-center">
           <Spinner className="mb-4" />
-          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.2 }}>Generating Identity Hash...</motion.div>
-          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1.0 }}>Verifying social footprint...</motion.div>
-          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1.8 }}>Dispatching to Review Committee...</motion.div>
-          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 2.5 }}>Sealing Dossier...</motion.div>
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.2 }}>Generating identity hash...</motion.div>
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.9 }}>Verifying social footprint...</motion.div>
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1.6 }}>Cross-referencing vetting database...</motion.div>
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 2.3 }}>Dispatching to Review Committee...</motion.div>
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 2.9 }} className="text-accent">Dossier sealed.</motion.div>
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 3.4 }} className="font-serif italic tracking-normal normal-case text-[13px] text-text-dim mt-6 max-w-sm text-center">
+            Хорооноос 48–72 цагийн дотор шифрлэгдсэн имэйлээр хариу илгээнэ. Статусаа аль ч үед энэ хаягаар буцан харж болно.
+          </motion.div>
         </div>
       </motion.div>
     );

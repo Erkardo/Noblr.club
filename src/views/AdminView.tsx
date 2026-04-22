@@ -8,6 +8,8 @@ const BRIEF_SYSTEM = `You are advising the Noblr private society's admissions co
 
 const INVITE_LIFETIME_CAP = 5;
 
+type AdminFilter = 'pending' | 'sponsored' | 'walkin' | 'approved' | 'rejected';
+
 export function AdminView() {
   const {
     applications, setApplications, resetDemoData,
@@ -18,9 +20,24 @@ export function AdminView() {
   const [brief, setBrief] = useState<string | null>(null);
   const [briefLoading, setBriefLoading] = useState(false);
   const [briefError, setBriefError] = useState<string | null>(null);
+  const [filter, setFilter] = useState<AdminFilter>('pending');
   const selected = applications.find(a => a.id === selectedId) ?? null;
   const pendingCount = applications.filter(a => a.status === 'PENDING').length;
+  const sponsoredPendingCount = applications.filter(a => a.status === 'PENDING' && !!a.inviteCode).length;
+  const walkinPendingCount = applications.filter(a => a.status === 'PENDING' && !a.inviteCode).length;
+  const approvedCount = applications.filter(a => a.status === 'APPROVED').length;
+  const rejectedCount = applications.filter(a => a.status === 'REJECTED').length;
   const geminiReady = isGeminiAvailable();
+
+  const filtered = (() => {
+    switch (filter) {
+      case 'pending':   return applications.filter(a => a.status === 'PENDING');
+      case 'sponsored': return applications.filter(a => !!a.inviteCode);
+      case 'walkin':    return applications.filter(a => !a.inviteCode);
+      case 'approved':  return applications.filter(a => a.status === 'APPROVED');
+      case 'rejected':  return applications.filter(a => a.status === 'REJECTED');
+    }
+  })();
 
   const handleDecision = (decision: 'APPROVED' | 'REJECTED') => {
     if (!selectedId) return;
@@ -116,6 +133,26 @@ export function AdminView() {
         </div>
       </div>
 
+      {/* Filter tabs */}
+      <div className="flex gap-1 mb-6 overflow-x-auto hide-scrollbar -mx-4 px-4 md:mx-0 md:px-0">
+        {([
+          { key: 'pending',   label: 'Pending',   count: pendingCount },
+          { key: 'sponsored', label: 'Sponsored', count: sponsoredPendingCount > 0 ? sponsoredPendingCount : applications.filter(a => !!a.inviteCode).length },
+          { key: 'walkin',    label: 'Walk-ins',  count: walkinPendingCount > 0 ? walkinPendingCount : applications.filter(a => !a.inviteCode).length },
+          { key: 'approved',  label: 'Approved',  count: approvedCount },
+          { key: 'rejected',  label: 'Rejected',  count: rejectedCount },
+        ] as const).map(tab => (
+          <button
+            key={tab.key}
+            onClick={() => setFilter(tab.key)}
+            className={`font-caps text-[10px] tracking-[0.2em] uppercase pb-2 px-4 border-b-2 transition-colors whitespace-nowrap flex items-center gap-2 ${filter === tab.key ? 'text-text-main border-accent' : 'text-text-dim border-transparent hover:text-text-main'}`}
+          >
+            {tab.label}
+            <span className={`font-sans text-[10px] tabular-nums ${filter === tab.key ? 'text-accent' : 'text-text-dim/60'}`}>{tab.count}</span>
+          </button>
+        ))}
+      </div>
+
       <div className="grid grid-cols-1 lg:grid-cols-[1fr_450px] gap-8">
         <div className="border border-accent-20 bg-bg-base/30 backdrop-blur-sm overflow-hidden h-fit">
           <div className="hidden md:grid grid-cols-[100px_1fr_1fr_1fr_80px] gap-4 p-4 border-b border-accent-20 bg-accent/5 font-caps text-[9px] uppercase tracking-[0.2em] text-text-dim">
@@ -126,7 +163,12 @@ export function AdminView() {
             <div className="text-right">Action</div>
           </div>
           <div className="divide-y divide-accent-20">
-            {applications.map((app) => {
+            {filtered.length === 0 && (
+              <div className="p-8 text-center font-serif italic text-text-dim text-[13px]">
+                Энэ ангилалд өргөдөл алга.
+              </div>
+            )}
+            {filtered.map((app) => {
               const isSelected = app.id === selectedId;
               const isDecided = app.status !== 'PENDING';
               return (

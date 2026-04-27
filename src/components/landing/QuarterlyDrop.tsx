@@ -49,18 +49,18 @@ export function QuarterlyDrop({ onApply }: { onApply: () => void }) {
         whileInView={{ opacity: 1 }}
         viewport={{ once: true, margin: '-80px' }}
         transition={{ duration: 1 }}
-        className="mb-12 md:mb-16 flex flex-wrap items-center gap-x-6 gap-y-3 justify-center font-caps text-[9px] md:text-[10px] tracking-[0.25em] text-text-dim uppercase"
+        className="mb-12 md:mb-16 flex flex-wrap items-center gap-x-6 gap-y-3 justify-center font-caps text-[10px] md:text-[11px] tracking-[0.25em] text-text-main/75 uppercase"
       >
         <span className="inline-flex items-center gap-2">
           <span className="w-1.5 h-1.5 rounded-full bg-accent animate-pulse" />
-          {dropName} · Drop Open
+          <span className="text-text-main">{dropName}</span> · Drop Open
         </span>
-        <span className="opacity-40">·</span>
-        <span><span className="text-text-main">{stats.total || 387}</span> Applications</span>
-        <span className="opacity-40">·</span>
-        <span><span className="text-text-main">{sealedCount || 47}</span> Sealed Dossiers</span>
-        <span className="opacity-40">·</span>
-        <span>Acceptance <span className="text-accent">{stats.rate}%</span></span>
+        <span className="text-text-dim/50">·</span>
+        <span><span className="text-text-main">{stats.total.toLocaleString()}</span> Applications</span>
+        <span className="text-text-dim/50">·</span>
+        <span><span className="text-text-main">{sealedCount}</span> Sealed Dossiers</span>
+        <span className="text-text-dim/50">·</span>
+        <span>Acceptance <span className="text-accent font-medium">{stats.rate}%</span></span>
       </motion.div>
 
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-start">
@@ -91,7 +91,7 @@ export function QuarterlyDrop({ onApply }: { onApply: () => void }) {
             <span>Одоо өргөдөл илгээх</span>
             <ArrowRight className="w-4 h-4 transform group-hover:translate-x-1 transition-transform" />
           </button>
-          <div className="mt-5 font-caps text-[9px] tracking-[0.3em] text-text-dim/70 uppercase">
+          <div className="mt-5 font-caps text-[10px] tracking-[0.3em] text-text-main/65 uppercase">
             ~3 минут · ₮50,000 шалгаруулалтын хураамж
           </div>
         </motion.div>
@@ -117,13 +117,13 @@ export function QuarterlyDrop({ onApply }: { onApply: () => void }) {
                 >
                   {String(cell.value).padStart(2, '0')}
                 </div>
-                <div className="mt-4 md:mt-6 font-caps text-[8px] md:text-[9px] tracking-[0.3em] text-text-dim uppercase">
+                <div className="mt-4 md:mt-6 font-caps text-[9px] md:text-[10px] tracking-[0.3em] text-text-main/70 uppercase">
                   {cell.label}
                 </div>
               </div>
             ))}
           </div>
-          <div className="mt-6 flex items-center justify-between font-caps text-[9px] tracking-[0.25em] text-text-dim uppercase">
+          <div className="mt-6 flex items-center justify-between font-caps text-[10px] md:text-[11px] tracking-[0.25em] text-text-main/70 uppercase">
             <span>Ulaanbaatar · UTC+8</span>
             <span>
               Closes{' '}

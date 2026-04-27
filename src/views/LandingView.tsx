@@ -133,17 +133,17 @@ export function LandingView({ onApply, onAdmin }: { onApply: () => void, onAdmin
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.8, delay: 1 }}
-            className="mt-10 flex flex-wrap items-center justify-center gap-x-4 gap-y-2 font-caps text-[9px] tracking-[0.3em] text-text-dim uppercase"
+            className="mt-10 flex flex-wrap items-center justify-center gap-x-4 gap-y-2 font-caps text-[10px] md:text-[11px] tracking-[0.25em] text-text-main/75 uppercase"
           >
             <span className="inline-flex items-center gap-2">
               <span className="w-1.5 h-1.5 rounded-full bg-accent animate-pulse" />
               Хаалга хаагдана
             </span>
-            <span className="text-text-main">
-              {days}<span className="text-text-dim">d</span> {String(hours).padStart(2, '0')}<span className="text-text-dim">h</span> {String(minutes).padStart(2, '0')}<span className="text-text-dim">m</span>
+            <span className="text-text-main tabular-nums">
+              {days}<span className="text-text-dim/70">d</span> {String(hours).padStart(2, '0')}<span className="text-text-dim/70">h</span> {String(minutes).padStart(2, '0')}<span className="text-text-dim/70">m</span>
             </span>
-            <span className="opacity-40">·</span>
-            <span>Acceptance <span className="text-accent">{stats.rate}%</span></span>
+            <span className="text-text-dim/50">·</span>
+            <span>Acceptance <span className="text-accent font-medium">{stats.rate}%</span></span>
           </motion.div>
 
           {hasPendingApplication && (

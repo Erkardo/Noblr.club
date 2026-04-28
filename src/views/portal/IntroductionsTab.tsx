@@ -74,11 +74,11 @@ export function IntroductionsTab() {
       className="flex flex-col gap-12"
     >
       {activeAccord ? (
-        <div className="w-full border border-accent-20 bg-[#0A0A0A] relative shadow-2xl flex flex-col min-h-[500px]">
+        <div className="w-full border border-accent-20 bg-bg-2 relative shadow-2xl flex flex-col min-h-[500px]">
           {/* Header */}
-          <div className="px-4 md:px-8 py-4 md:py-5 border-b border-accent-20 flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3 bg-[#070707] z-10 shrink-0">
+          <div className="px-4 md:px-8 py-4 md:py-5 border-b border-accent-20 flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3 bg-bg-base z-10 shrink-0">
             <div className="flex items-center gap-4 md:gap-6">
-              <button onClick={() => setActiveConversation(null)} className="text-[10px] uppercase font-caps tracking-[0.2em] text-text-dim hover:text-white transition-colors flex items-center gap-2 group">
+              <button onClick={() => setActiveConversation(null)} className="text-[10px] uppercase font-caps tracking-[0.2em] text-text-dim hover:text-text-main transition-colors flex items-center gap-2 group">
                 <ArrowRight className="w-3 h-3 rotate-180 transform group-hover:-translate-x-1 transition-transform" />
                 Буцах
               </button>
@@ -114,13 +114,13 @@ export function IntroductionsTab() {
             </p>
 
             {activeAccord.status === "Pending Exchange" ? (
-              <div className="border border-accent-20 bg-bg-base/30 p-8 text-center flex flex-col items-center">
+              <div className="border border-accent-20 bg-bg-2/60 p-8 text-center flex flex-col items-center">
                 <div className="font-caps text-[10px] tracking-[0.2em] text-accent/80 uppercase mb-4">Action Required</div>
                 <p className="font-sans text-[12px] text-text-dim max-w-sm mb-6 leading-relaxed font-light">
                   Бид таны цагийг үнэлдэг. Noblr дээр эцэс төгсгөлгүй чатлах шаардлагагүй. Хэрвээ та уг хүсэлтийг зөвшөөрвөл хувийн холбоо барих мэдээллийг (Contact Coordinates) харилцан солилцож, амьд амьдрал дээр харилцаагаа үргэлжлүүлнэ үү.
                 </p>
                 <div className="flex gap-4">
-                  <button onClick={handleDeclineAccord} className="bg-transparent border border-accent-20 text-text-dim px-8 py-3 font-caps text-[10px] tracking-[0.2em] uppercase hover:text-white transition-colors">
+                  <button onClick={handleDeclineAccord} className="bg-transparent border border-accent-20 text-text-dim px-8 py-3 font-caps text-[10px] tracking-[0.2em] uppercase hover:text-text-main transition-colors">
                     Decline
                   </button>
                   <button onClick={handleAuthorizeExchange} className="bg-text-main text-bg-base px-8 py-3 font-caps text-[10px] tracking-[0.2em] uppercase hover:bg-accent transition-colors flex items-center gap-3 group">
@@ -138,13 +138,13 @@ export function IntroductionsTab() {
                   <Lock className="w-4 h-4" /> Coordinates Authorized
                 </div>
 
-                <div className="bg-[#0A0A0A] border border-accent-20 p-5 md:p-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                <div className="bg-bg-2 border border-accent-20 p-5 md:p-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                   <pre className="font-mono text-[13px] md:text-[14px] text-text-main leading-loose whitespace-pre-wrap flex-1 min-w-0 break-all">
                     {activeAccord.coordinates}
                   </pre>
                   <button
                     onClick={() => handleCopyCoordinates(activeAccord)}
-                    className="text-[10px] font-caps tracking-[0.2em] text-accent hover:text-white uppercase transition-colors px-4 py-2 border border-accent/30 hover:border-accent flex items-center justify-center gap-2 shrink-0"
+                    className="text-[10px] font-caps tracking-[0.2em] text-accent hover:text-text-main uppercase transition-colors px-4 py-2 border border-accent/30 hover:border-accent flex items-center justify-center gap-2 shrink-0"
                   >
                     {copiedAccordId === activeAccord.id ? <><Check className="w-3 h-3" /> Copied</> : 'Copy'}
                   </button>
@@ -179,11 +179,11 @@ export function IntroductionsTab() {
                 <button
                   key={i}
                   onClick={() => setActiveConversation(accord)}
-                  className="w-full text-left group border border-accent-20 bg-bg-base/30 hover:bg-[#0E0C0A] transition-colors p-6 flex items-center justify-between"
+                  className="w-full text-left group border border-accent-20 bg-bg-2/60 hover:bg-bg-2 transition-colors p-6 flex items-center justify-between"
                 >
                   <div>
                     <div className="flex items-center gap-3 mb-2">
-                      <h4 className="font-display text-2xl text-text-main tracking-tight group-hover:text-white transition-colors">{accord.name}</h4>
+                      <h4 className="font-display text-2xl text-text-main tracking-tight group-hover:text-text-main transition-colors">{accord.name}</h4>
                       {accord.unread && <div className="w-1.5 h-1.5 rounded-full bg-accent animate-pulse" />}
                     </div>
                     <div className="font-serif italic text-[14px] text-text-dim line-clamp-1">{accord.role}</div>
@@ -204,7 +204,7 @@ export function IntroductionsTab() {
             </div>
             <div className="flex flex-col gap-4 opacity-70">
               {PENDING_INTRODUCTIONS.map((pending, i) => (
-                <div key={i} className="w-full border border-accent-20 bg-bg-base/10 p-6 flex flex-col justify-between">
+                <div key={i} className="w-full border border-accent-20 bg-bg-2/40 p-6 flex flex-col justify-between">
                   <div>
                     <div className="flex justify-between items-start mb-2 relative">
                       <h4 className="font-display text-2xl text-text-main/50 tracking-tight select-none">
@@ -219,10 +219,10 @@ export function IntroductionsTab() {
                   </div>
 
                   <div className="flex items-center gap-4 mt-6 pt-6 border-t border-accent-20/50">
-                    <button onClick={() => handleDeclinePending(i)} className="flex-1 text-[9px] font-caps tracking-[0.2em] text-text-dim hover:text-[#FF4A4A] uppercase transition-colors text-left">
+                    <button onClick={() => handleDeclinePending(i)} className="flex-1 text-[9px] font-caps tracking-[0.2em] text-text-dim hover:text-error uppercase transition-colors text-left">
                       Decline
                     </button>
-                    <button onClick={() => handleAcceptPending(pending, i)} className="flex-1 text-[9px] font-caps tracking-[0.2em] text-accent hover:text-white uppercase transition-colors text-right">
+                    <button onClick={() => handleAcceptPending(pending, i)} className="flex-1 text-[9px] font-caps tracking-[0.2em] text-accent hover:text-text-main uppercase transition-colors text-right">
                       Accept & Reveal
                     </button>
                   </div>

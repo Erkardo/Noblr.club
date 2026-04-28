@@ -68,8 +68,8 @@ export function MyProfileTab() {
         {/* Column 1: Identity & Card */}
         <div className="w-full lg:w-[340px] shrink-0 space-y-8">
           {/* Member Card */}
-          <div className="w-full aspect-[1.618/1] bg-[#0E0C0A] border-[0.5px] border-accent/50 p-8 flex flex-col justify-between relative overflow-hidden shadow-2xl">
-            <div className={`absolute inset-0 bg-black/40 backdrop-blur-md z-20 flex items-center justify-center transition-opacity duration-500 ${phantomMode ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}>
+          <div className="w-full aspect-[1.618/1] bg-bg-2 border-[0.5px] border-accent/50 p-8 flex flex-col justify-between relative overflow-hidden shadow-2xl">
+            <div className={`absolute inset-0 bg-text-main/30 backdrop-blur-md z-20 flex items-center justify-center transition-opacity duration-500 ${phantomMode ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}>
               <div className="font-caps text-[10px] tracking-[0.3em] text-accent uppercase flex items-center gap-2">
                 <Lock className="w-3 h-3" /> Phantom Mode Engaged
               </div>
@@ -89,7 +89,7 @@ export function MyProfileTab() {
             </div>
             <div className="flex justify-between items-end relative z-10">
               <div>
-                <div className="font-display text-[18px] font-light mb-1 text-white">{currentMember.name}</div>
+                <div className="font-display text-[18px] font-light mb-1 text-text-main">{currentMember.name}</div>
                 <div className="font-serif italic text-[12px] text-text-dim">{currentMember.role}</div>
               </div>
               <div className="font-sans text-[9px] tracking-[0.2em] uppercase text-text-dim text-right leading-relaxed">
@@ -129,7 +129,7 @@ export function MyProfileTab() {
                 </button>
                 <button
                   onClick={handleSaveProfile}
-                  className="flex-1 font-caps text-[10px] tracking-[0.2em] text-bg-base uppercase bg-accent py-2 hover:bg-white transition-colors"
+                  className="flex-1 font-caps text-[10px] tracking-[0.2em] text-bg-base uppercase bg-accent py-2 hover:bg-accent-deep transition-colors"
                 >
                   Save
                 </button>
@@ -145,7 +145,7 @@ export function MyProfileTab() {
             </button>
           )}
 
-          <div className="p-6 border border-accent-20 bg-bg-base/30 space-y-4">
+          <div className="p-6 border border-accent-20 bg-bg-2/60 space-y-4">
             <div className="flex justify-between items-center pb-4 border-b border-accent-20">
               <div>
                 <div className="font-caps text-[10px] tracking-[0.2em] text-text-main uppercase mb-1">Phantom Mode</div>
@@ -161,7 +161,7 @@ export function MyProfileTab() {
 
             <div className="pt-2">
               <div className="font-caps text-[10px] tracking-[0.2em] text-text-dim uppercase mb-4">Membership Status</div>
-              <div className="flex items-center gap-3 text-white font-sans text-sm font-light">
+              <div className="flex items-center gap-3 text-text-main font-sans text-sm font-light">
                 <div className="w-2 h-2 rounded-full bg-accent" />
                 Active · Tier I
               </div>
@@ -202,7 +202,7 @@ export function MyProfileTab() {
 
               <button
                 onClick={() => setActiveIntents(prev => ({...prev, romance: !prev.romance}))}
-                className={`p-6 border text-left transition-colors ${activeIntents.romance ? 'border-[#FF4A4A] bg-[#FF4A4A]/5 text-[#FF4A4A]' : 'border-accent-20 opacity-50 hover:opacity-100 hover:border-accent/40'}`}
+                className={`p-6 border text-left transition-colors ${activeIntents.romance ? 'border-error bg-error/5 text-error' : 'border-accent-20 opacity-50 hover:opacity-100 hover:border-accent/40'}`}
               >
                 <div className="font-caps text-[10px] tracking-[0.2em] uppercase mb-2 flex justify-between">
                   Romantic
@@ -229,7 +229,7 @@ export function MyProfileTab() {
               </div>
               <button
                 onClick={() => setIsEditingDispatch(!isEditingDispatch)}
-                className="font-caps text-[10px] tracking-[0.2em] text-accent uppercase hover:text-white transition-colors pb-1 border-b border-accent/40 hover:border-accent"
+                className="font-caps text-[10px] tracking-[0.2em] text-accent uppercase hover:text-text-main transition-colors pb-1 border-b border-accent/40 hover:border-accent"
               >
                 {isEditingDispatch ? 'Save Signature' : 'Edit Signature'}
               </button>
@@ -240,7 +240,7 @@ export function MyProfileTab() {
                 <textarea
                   value={dispatchTemplate}
                   onChange={(e) => setDispatchTemplate(e.target.value)}
-                  className="w-full h-32 bg-[#0A0A0A] border border-accent p-6 font-serif italic text-text-main text-[15px] leading-relaxed resize-none focus:outline-none"
+                  className="w-full h-32 bg-bg-2 border border-accent p-6 font-serif italic text-text-main text-[15px] leading-relaxed resize-none focus:outline-none"
                 />
                 <div className="flex flex-wrap items-center gap-3 pt-2">
                   <span className="font-caps text-[9px] tracking-[0.2em] text-text-dim uppercase">Tone:</span>
@@ -259,16 +259,16 @@ export function MyProfileTab() {
                     onClick={handleRefine}
                     disabled={!geminiReady || refining}
                     title={geminiReady ? 'Gemini-ээр дипшч цэгцлэх' : 'Gemini API key тохируулаагүй'}
-                    className="ml-auto font-caps text-[9px] tracking-[0.2em] text-accent uppercase hover:text-white transition-colors pb-1 border-b border-accent/40 hover:border-accent flex items-center gap-2 disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:text-accent disabled:hover:border-accent/40"
+                    className="ml-auto font-caps text-[9px] tracking-[0.2em] text-accent uppercase hover:text-text-main transition-colors pb-1 border-b border-accent/40 hover:border-accent flex items-center gap-2 disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:text-accent disabled:hover:border-accent/40"
                   >
                     <Sparkles className="w-3 h-3" />
                     {refining ? 'Цэгцэлж байна...' : 'Refine with AI'}
                   </button>
                 </div>
-                {refineError && <div className="font-sans text-[11px] text-[#FF4A4A]">{refineError}</div>}
+                {refineError && <div className="font-sans text-[11px] text-error">{refineError}</div>}
               </div>
             ) : (
-              <div className="w-full bg-[#0E0C0A] border border-accent-20 p-6 relative">
+              <div className="w-full bg-bg-2 border border-accent-20 p-6 relative">
                 <div className="absolute top-0 left-0 w-[2px] h-full bg-accent/40" />
                 <p className="font-serif italic text-text-main text-[16px] leading-[1.8] font-light">
                   "{dispatchTemplate}"
@@ -280,7 +280,7 @@ export function MyProfileTab() {
           <div className="pt-8">
              <button
                onClick={handleDeactivate}
-               className="font-caps text-[10px] tracking-[0.2em] text-[#FF4A4A]/70 hover:text-[#FF4A4A] uppercase pb-1 transition-colors flex items-center gap-2"
+               className="font-caps text-[10px] tracking-[0.2em] text-error/70 hover:text-error uppercase pb-1 transition-colors flex items-center gap-2"
              >
                <Lock className="w-3 h-3" /> Request Account Deactivation
              </button>

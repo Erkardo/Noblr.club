@@ -365,7 +365,7 @@ export function AdminView() {
           <button
             onClick={handleReset}
             title="Reset demo data"
-            className="font-caps text-[9px] tracking-[0.2em] text-text-dim/60 uppercase hover:text-[#FF4A4A] transition-colors flex items-center gap-2"
+            className="font-caps text-[9px] tracking-[0.2em] text-text-dim/60 uppercase hover:text-error transition-colors flex items-center gap-2"
           >
             <RotateCcw className="w-3 h-3" />
             Reset
@@ -432,7 +432,7 @@ export function AdminView() {
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-[1fr_450px] gap-8">
-        <div className="border border-accent-20 bg-bg-base/30 backdrop-blur-sm overflow-hidden h-fit">
+        <div className="border border-accent-20 bg-bg-2/60 backdrop-blur-sm overflow-hidden h-fit">
           <div className="hidden md:grid grid-cols-[100px_1fr_1fr_1fr_80px] gap-4 p-4 border-b border-accent-20 bg-accent/5 font-caps text-[9px] uppercase tracking-[0.2em] text-text-dim">
             <div>ID</div>
             <div>Applicant</div>
@@ -453,7 +453,7 @@ export function AdminView() {
                 <div
                   key={app.id}
                   onClick={() => handleSelectRow(app.id)}
-                  className={`grid grid-cols-1 md:grid-cols-[100px_1fr_1fr_1fr_80px] gap-4 p-4 items-center cursor-pointer group transition-colors ${isSelected ? 'bg-accent/10' : 'hover:bg-white/5'} ${isDecided ? 'opacity-50' : ''}`}
+                  className={`grid grid-cols-1 md:grid-cols-[100px_1fr_1fr_1fr_80px] gap-4 p-4 items-center cursor-pointer group transition-colors ${isSelected ? 'bg-accent/10' : 'hover:bg-text-main/5'} ${isDecided ? 'opacity-50' : ''}`}
                 >
                   <div className="font-sans text-[11px] text-text-dim flex items-center gap-2">
                     {app.id}
@@ -470,7 +470,7 @@ export function AdminView() {
                     <div className="font-serif italic text-[13px] text-text-dim truncate pr-4">{app.position}</div>
                     <div className="font-sans text-[10px] text-text-dim/60 truncate pr-4">{app.company}</div>
                   </div>
-                  <div className={`font-caps text-[9px] tracking-[0.2em] uppercase ${app.status === 'APPROVED' ? 'text-accent' : app.status === 'REJECTED' ? 'text-[#FF4A4A]' : 'text-text-dim'}`}>
+                  <div className={`font-caps text-[9px] tracking-[0.2em] uppercase ${app.status === 'APPROVED' ? 'text-accent' : app.status === 'REJECTED' ? 'text-error' : 'text-text-dim'}`}>
                     {app.status === 'PENDING' ? app.date : app.status}
                   </div>
                   <div className="flex justify-start md:justify-end opacity-50 md:opacity-0 group-hover:opacity-100 transition-opacity mt-4 md:mt-0">
@@ -482,7 +482,7 @@ export function AdminView() {
           </div>
         </div>
 
-        <div className="border border-accent-20 bg-[#0E0C0A] p-5 md:p-8 flex flex-col relative overflow-hidden">
+        <div className="border border-accent-20 bg-bg-2 p-5 md:p-8 flex flex-col relative overflow-hidden">
           <div className="absolute top-0 right-0 w-32 h-32 bg-accent/5 rounded-full blur-2xl pointer-events-none translate-x-10 -translate-y-10" />
           <div className="font-caps text-[9px] tracking-[0.2em] text-accent uppercase mb-6 relative z-10">Application Details</div>
 
@@ -597,23 +597,23 @@ export function AdminView() {
                     <Sparkles className="w-3 h-3" />
                     {briefLoading ? 'Дүгнэж байна...' : 'Generate Committee Brief'}
                   </button>
-                  {briefError && <div className="font-sans text-[11px] text-[#FF4A4A]">{briefError}</div>}
+                  {briefError && <div className="font-sans text-[11px] text-error">{briefError}</div>}
                   {brief && (
-                    <div className="border border-accent/20 bg-[#0A0A0A] p-5 font-serif text-[13px] leading-[1.8] text-text-main/80 whitespace-pre-wrap">
+                    <div className="border border-accent/20 bg-bg-2 p-5 font-serif text-[13px] leading-[1.8] text-text-main/80 whitespace-pre-wrap">
                       {brief}
                     </div>
                   )}
                   <div className="flex flex-col sm:flex-row items-center gap-4">
                     <button
                       onClick={() => handleDecision('REJECTED')}
-                      className="w-full sm:flex-1 border border-accent-20 py-4 text-[10px] font-caps tracking-[0.2em] text-text-dim uppercase hover:bg-white/5 hover:text-[#FF4A4A] transition-colors flex items-center justify-center gap-2"
+                      className="w-full sm:flex-1 border border-accent-20 py-4 text-[10px] font-caps tracking-[0.2em] text-text-dim uppercase hover:bg-text-main/5 hover:text-error transition-colors flex items-center justify-center gap-2"
                     >
                       <X className="w-3 h-3" />
                       Reject
                     </button>
                     <button
                       onClick={() => handleDecision('APPROVED')}
-                      className="w-full sm:flex-1 bg-accent text-bg-base py-4 text-[10px] font-caps tracking-[0.2em] uppercase hover:bg-white transition-colors flex items-center justify-center gap-2"
+                      className="w-full sm:flex-1 bg-accent text-bg-base py-4 text-[10px] font-caps tracking-[0.2em] uppercase hover:bg-accent-deep transition-colors flex items-center justify-center gap-2"
                     >
                       <Check className="w-3 h-3" />
                       Approve
@@ -622,7 +622,7 @@ export function AdminView() {
                 </div>
               ) : (
                 <div className="mt-12 pt-6 border-t border-accent-20 relative z-10 space-y-5">
-                  <div className={`font-caps text-[10px] tracking-[0.2em] uppercase flex items-center justify-center gap-2 py-3 ${selected.status === 'APPROVED' ? 'text-accent' : 'text-[#FF4A4A]'}`}>
+                  <div className={`font-caps text-[10px] tracking-[0.2em] uppercase flex items-center justify-center gap-2 py-3 ${selected.status === 'APPROVED' ? 'text-accent' : 'text-error'}`}>
                     {selected.status === 'APPROVED' ? <Check className="w-3 h-3" /> : <X className="w-3 h-3" />}
                     {selected.status}
                   </div>
@@ -641,13 +641,13 @@ export function AdminView() {
                         onClick={() => handleIssueAndSend(selected)}
                         disabled={sendingIds.has(selected.id) || !selected.email}
                         title={!selected.email ? 'Applicant email missing' : ''}
-                        className="w-full bg-accent text-bg-base py-3 text-[10px] font-caps tracking-[0.25em] uppercase hover:bg-white transition-colors flex items-center justify-center gap-2 disabled:opacity-40 disabled:cursor-not-allowed"
+                        className="w-full bg-accent text-bg-base py-3 text-[10px] font-caps tracking-[0.25em] uppercase hover:bg-accent-deep transition-colors flex items-center justify-center gap-2 disabled:opacity-40 disabled:cursor-not-allowed"
                       >
                         <Mail className="w-3 h-3" />
                         {sendingIds.has(selected.id) ? 'Dispatching...' : 'Issue credentials & send'}
                       </button>
                       {!selected.email && (
-                        <div className="font-sans text-[11px] text-[#FF4A4A] border-l-2 border-[#FF4A4A]/60 pl-3 py-1">
+                        <div className="font-sans text-[11px] text-error border-l-2 border-error/60 pl-3 py-1">
                           Applicant email дутмал — файл эвдэрсэн эсвэл хуучин демо өргөдөл. Буцаагаад дахин авах шаардлагатай.
                         </div>
                       )}
@@ -655,7 +655,7 @@ export function AdminView() {
                   )}
 
                   {selected.status === 'APPROVED' && selected.memberNumber && (
-                    <div className="border border-accent/20 bg-[#0A0A0A] p-5 space-y-4">
+                    <div className="border border-accent/20 bg-bg-2 p-5 space-y-4">
                       <div className="flex items-baseline justify-between">
                         <div className="font-caps text-[9px] tracking-[0.25em] text-accent uppercase">
                           Issued credentials
@@ -671,7 +671,7 @@ export function AdminView() {
                             Dispatching
                           </div>
                         ) : selected.emailError ? (
-                          <div className="font-caps text-[9px] tracking-[0.2em] text-[#FF4A4A] uppercase">
+                          <div className="font-caps text-[9px] tracking-[0.2em] text-error uppercase">
                             Failed
                           </div>
                         ) : (
@@ -688,7 +688,7 @@ export function AdminView() {
                       </div>
 
                       {selected.emailError && (
-                        <div className="font-sans text-[11px] text-[#FF4A4A] border-l-2 border-[#FF4A4A]/60 pl-3 py-1 leading-relaxed break-words">
+                        <div className="font-sans text-[11px] text-error border-l-2 border-error/60 pl-3 py-1 leading-relaxed break-words">
                           {selected.emailError}
                         </div>
                       )}
@@ -711,7 +711,7 @@ export function AdminView() {
                         </button>
                         <button
                           onClick={() => handleCopyCredentials(selected)}
-                          className="border border-accent-20 py-3 text-[10px] font-caps tracking-[0.2em] text-text-main uppercase hover:bg-white/5 transition-colors flex items-center justify-center gap-2"
+                          className="border border-accent-20 py-3 text-[10px] font-caps tracking-[0.2em] text-text-main uppercase hover:bg-text-main/5 transition-colors flex items-center justify-center gap-2"
                         >
                           {copiedFlash === selected.id ? (
                             <><Check className="w-3 h-3 text-accent" /> Copied</>

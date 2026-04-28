@@ -81,7 +81,7 @@ export function PortalView() {
       </div>
 
       {/* Mobile Bottom Navigation */}
-      <div className="md:hidden fixed bottom-0 left-0 w-full bg-[#070707]/90 backdrop-blur-xl border-t border-accent-20 z-50 flex justify-around items-center px-2 py-4 pb-safe-offset-4">
+      <div className="md:hidden fixed bottom-0 left-0 w-full bg-bg-2/95 backdrop-blur-xl border-t border-accent-20 z-50 flex justify-around items-center px-2 py-4 pb-safe-offset-4">
         <button onClick={() => setActiveTab('daily')} className={`flex flex-col items-center gap-1.5 transition-colors ${activeTab === 'daily' ? 'text-text-main' : 'text-text-dim/60'}`}>
           <Compass className={`w-5 h-5 ${activeTab === 'daily' ? 'text-accent' : ''}`} />
           <span className="text-[7px] font-caps uppercase tracking-widest">Dossier</span>

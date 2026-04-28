@@ -158,7 +158,7 @@ export function PricingLadder({ onApply }: { onApply: () => void }) {
               onClick={onApply}
               className={`group w-full py-3.5 text-[10px] font-caps tracking-[0.25em] uppercase transition-colors flex items-center justify-center gap-3 ${
                 tier.featured
-                  ? 'bg-accent text-bg-base hover:bg-white'
+                  ? 'bg-accent text-bg-base hover:bg-accent-deep'
                   : 'border border-accent-20 text-text-main hover:border-accent hover:text-accent'
               }`}
             >

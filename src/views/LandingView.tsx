@@ -113,7 +113,7 @@ export function LandingView({ onApply, onAdmin }: { onApply: () => void, onAdmin
           >
             <button
               onClick={onApply}
-              className="group relative bg-accent text-bg-base px-8 sm:px-10 py-4 sm:py-5 text-[10px] sm:text-[11px] font-caps tracking-[0.2em] uppercase overflow-hidden hover:bg-white transition-all duration-500 flex items-center justify-center gap-3 sm:gap-4 w-full sm:w-auto"
+              className="group relative bg-accent text-bg-base px-8 sm:px-10 py-4 sm:py-5 text-[10px] sm:text-[11px] font-caps tracking-[0.2em] uppercase overflow-hidden hover:bg-accent-deep transition-all duration-500 flex items-center justify-center gap-3 sm:gap-4 w-full sm:w-auto"
             >
               <span>Гишүүнчлэлийн хүсэлт илгээх</span>
               <ArrowRight className="w-4 h-4 transform group-hover:translate-x-1 transition-transform duration-300 shrink-0" />
@@ -196,7 +196,7 @@ export function LandingView({ onApply, onAdmin }: { onApply: () => void, onAdmin
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: "-100px" }}
               transition={{ duration: 0.8, delay: i * 0.1 }}
-              className="bg-bg-base p-10 flex flex-col items-center text-center group hover:bg-[#0E0C0A] transition-colors duration-500"
+              className="bg-bg-2 p-10 flex flex-col items-center text-center group hover:bg-bg-3 transition-colors duration-500"
             >
               <div className="font-caps text-[9px] tracking-[0.2em] text-accent uppercase border-b border-accent/20 pb-2 mb-6 group-hover:border-accent transition-colors">{dim.tag}</div>
               <h3 className="font-serif italic text-xl text-text-main mb-3">{dim.title}</h3>
@@ -225,7 +225,7 @@ export function LandingView({ onApply, onAdmin }: { onApply: () => void, onAdmin
             <div className="font-display text-[96px] sm:text-[120px] md:text-[140px] lg:text-[180px] leading-none text-text-main font-light mb-4 tracking-tighter">
               {stats.rate}<span className="text-accent text-[56px] sm:text-[70px] md:text-[80px] lg:text-[100px] align-top relative top-4">%</span>
             </div>
-            <div className="font-caps text-[11px] tracking-[0.2em] text-white uppercase mb-6 mt-4">Элсэх магадлал</div>
+            <div className="font-caps text-[11px] tracking-[0.2em] text-text-main uppercase mb-6 mt-4">Элсэх магадлал</div>
             <p className="font-serif italic text-[16px] text-text-dim leading-[1.8] max-w-sm">
               Гишүүнчлэлийн хүсэлт илгээсэн нийт хүмүүсийн ердөө {stats.rate} хувь нь л бидний шалгуурыг давж, урилга хүлээн авдаг. Бидний хувьд тооноос илүү чанар үргэлж чухал.
             </p>
@@ -242,7 +242,7 @@ export function LandingView({ onApply, onAdmin }: { onApply: () => void, onAdmin
             {/* Split Criteria */}
             <div className="grid grid-cols-2 gap-8 lg:gap-12 pl-6 lg:pl-10 border-l border-accent-20">
               <div>
-                <div className="font-caps text-[9px] tracking-[0.2em] text-white uppercase mb-6 border-b border-accent-20 pb-3">Бид юу хайдаг вэ?</div>
+                <div className="font-caps text-[9px] tracking-[0.2em] text-text-main uppercase mb-6 border-b border-accent-20 pb-3">Бид юу хайдаг вэ?</div>
                 <ul className="space-y-4 font-serif font-light text-[14px] text-text-dim">
                   <li>&mdash; Оюуны өндөр цар хүрээ</li>
                   <li>&mdash; Тогтвортой карер, амжилт</li>
@@ -251,7 +251,7 @@ export function LandingView({ onApply, onAdmin }: { onApply: () => void, onAdmin
               </div>
               <div>
                 <div className="font-caps text-[9px] tracking-[0.2em] text-text-dim uppercase mb-6 border-b border-accent-20 pb-3">Юунаас татгалздаг вэ?</div>
-                <ul className="space-y-4 font-serif font-light text-[14px] text-text-dim/40">
+                <ul className="space-y-4 font-serif font-light text-[14px] text-text-dim-2">
                   <li>&mdash; Өнгөц, хуурамч байдал</li>
                   <li>&mdash; Бусдыг үл хүндлэх хандлага</li>
                   <li>&mdash; Тодорхой бус зорилго</li>
@@ -266,21 +266,21 @@ export function LandingView({ onApply, onAdmin }: { onApply: () => void, onAdmin
                 <div className="flex gap-6 items-start">
                   <div className="font-sans text-[10px] text-accent mt-1">01</div>
                   <div>
-                    <div className="font-caps text-[11px] text-white uppercase tracking-[0.1em] mb-2">Анкет баталгаажилт</div>
+                    <div className="font-caps text-[11px] text-text-main uppercase tracking-[0.1em] mb-2">Анкет баталгаажилт</div>
                     <div className="font-serif italic text-[14px] text-text-dim">100% хувийн мэдээлэл болон карерын баталгаажуулалт.</div>
                   </div>
                 </div>
                 <div className="flex gap-6 items-start">
                   <div className="font-sans text-[10px] text-accent mt-1">02</div>
                   <div>
-                    <div className="font-caps text-[11px] text-white uppercase tracking-[0.1em] mb-2">Хорооны үнэлгээ</div>
+                    <div className="font-caps text-[11px] text-text-main uppercase tracking-[0.1em] mb-2">Хорооны үнэлгээ</div>
                     <div className="font-serif italic text-[14px] text-text-dim">Хаалттай хороо 48-72 цагт хянан хэлэлцэнэ.</div>
                   </div>
                 </div>
                 <div className="flex gap-6 items-start">
                   <div className="font-sans text-[10px] text-accent mt-1">03</div>
                   <div>
-                    <div className="font-caps text-[11px] text-white uppercase tracking-[0.1em] mb-2">Эцсийн урилга</div>
+                    <div className="font-caps text-[11px] text-text-main uppercase tracking-[0.1em] mb-2">Эцсийн урилга</div>
                     <div className="font-serif italic text-[14px] text-text-dim">Шалгуур хангасан тусгай бүрэлдэхүүнд нэвтрэх эрх олгоно.</div>
                   </div>
                 </div>
@@ -323,14 +323,14 @@ export function LandingView({ onApply, onAdmin }: { onApply: () => void, onAdmin
       >
         <div className="flex items-center gap-2">
           <span>&copy; {new Date().getFullYear()} Noblr Private Club &mdash; Ulaanbaatar</span>
-          <button onClick={onAdmin} className="opacity-0 hover:opacity-100 px-2 py-1 bg-white/5 transition-opacity" title="Review Committee">SYS</button>
+          <button onClick={onAdmin} className="opacity-0 hover:opacity-100 px-2 py-1 bg-text-main/5 transition-opacity" title="Review Committee">SYS</button>
         </div>
         <div className="flex items-center gap-5">
           <button onClick={() => setView('about')} className="hover:text-text-main transition-colors">About</button>
           <button onClick={() => setView('privacy')} className="hover:text-text-main transition-colors">Privacy</button>
           <button onClick={() => setView('terms')} className="hover:text-text-main transition-colors">Terms</button>
         </div>
-        <div>Pending applications: <span className="text-white">{Math.max(1422, 1422 + stats.pending)}</span></div>
+        <div>Pending applications: <span className="text-text-main">{Math.max(1422, 1422 + stats.pending)}</span></div>
         <div className="font-serif italic text-accent tracking-normal capitalize text-[11px]">100% Identity Verification Required</div>
       </motion.div>
 

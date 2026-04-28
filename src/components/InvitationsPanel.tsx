@@ -166,12 +166,12 @@ export function InvitationsPanel() {
         <button
           onClick={handleGenerate}
           disabled={!canIssue}
-          className="flex-1 bg-accent text-bg-base py-4 px-6 font-caps text-[11px] tracking-[0.2em] uppercase hover:bg-white transition-colors flex items-center justify-center gap-3 disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:bg-accent"
+          className="flex-1 bg-accent text-bg-base py-4 px-6 font-caps text-[11px] tracking-[0.2em] uppercase hover:bg-accent-deep transition-colors flex items-center justify-center gap-3 disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:bg-accent"
         >
           <Sparkles className="w-3 h-3" />
           Generate Invitation
         </button>
-        <div className="flex-1 border border-accent-20 bg-bg-base/30 p-4 font-sans text-[12px] text-text-dim leading-relaxed">
+        <div className="flex-1 border border-accent-20 bg-bg-2/60 p-4 font-sans text-[12px] text-text-dim leading-relaxed">
           <span className="font-caps text-[9px] tracking-[0.25em] text-accent uppercase block mb-1">Patron дэвших</span>
           Амжилттай {PATRON_THRESHOLD} удаа → Патрон статус, жил бүрийн Founders' Dinner эрх.
           <span className="block font-sans text-[11px] text-text-main/70 mt-2">
@@ -201,7 +201,7 @@ export function InvitationsPanel() {
             <div className="flex flex-col sm:flex-row gap-3">
               <button
                 onClick={() => handleCopy(freshCode)}
-                className="flex-1 border border-accent-20 bg-bg-base/50 text-text-main py-3 px-5 font-caps text-[10px] tracking-[0.2em] uppercase hover:border-accent transition-colors flex items-center justify-center gap-2"
+                className="flex-1 border border-accent-20 bg-bg-2/70 text-text-main py-3 px-5 font-caps text-[10px] tracking-[0.2em] uppercase hover:border-accent transition-colors flex items-center justify-center gap-2"
               >
                 {copiedCode === freshCode ? <><Check className="w-3 h-3 text-accent" /> Copied</> : <><Copy className="w-3 h-3" /> Copy link</>}
               </button>
@@ -228,7 +228,7 @@ export function InvitationsPanel() {
             {myInvites.map(inv => {
               const outcomeColor =
                 inv.outcome === 'ACCEPTED' ? 'text-accent' :
-                inv.outcome === 'REJECTED' ? 'text-[#FF4A4A]' :
+                inv.outcome === 'REJECTED' ? 'text-error' :
                 'text-text-dim';
               const now = Date.now();
               const expiresAt = inv.expiresAt ?? (inv.issuedAt + INVITE_LIFETIME_MS);
@@ -248,14 +248,14 @@ export function InvitationsPanel() {
                     <div className="font-sans text-[10px] text-text-dim/70 mt-1 flex items-center gap-2 flex-wrap">
                       <span>{new Date(inv.issuedAt).toLocaleDateString('mn-MN')}</span>
                       {expiryLabel && (
-                        <span className={`${isExpired ? 'text-[#FF4A4A]/80' : daysLeft <= 3 ? 'text-accent/80' : 'text-text-dim/60'}`}>
+                        <span className={`${isExpired ? 'text-error/80' : daysLeft <= 3 ? 'text-accent/80' : 'text-text-dim/60'}`}>
                           · {expiryLabel}
                         </span>
                       )}
                     </div>
                   </div>
                   <div className="flex items-center gap-3 shrink-0">
-                    <span className={`font-caps text-[9px] tracking-[0.2em] uppercase ${isExpired ? 'text-[#FF4A4A]/70' : outcomeColor}`}>
+                    <span className={`font-caps text-[9px] tracking-[0.2em] uppercase ${isExpired ? 'text-error/70' : outcomeColor}`}>
                       {isExpired ? 'Expired' : outcomeLabel[inv.outcome]}
                     </span>
                     <button

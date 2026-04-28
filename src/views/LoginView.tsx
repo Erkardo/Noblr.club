@@ -61,7 +61,7 @@ export function LoginView({ onLogin }: { onLogin: () => void }) {
       className="flex-1 flex flex-col items-center justify-center text-center px-5 md:px-6"
     >
       <NoiseOverlay />
-      <div className="w-full max-w-md bg-bg-base/20 border border-accent-20 p-8 md:p-12 backdrop-blur-md relative z-10 text-left">
+      <div className="w-full max-w-md bg-bg-2/50 border border-accent-20 p-8 md:p-12 backdrop-blur-md relative z-10 text-left">
         <div className="flex items-center gap-3 mb-2">
           <Lock className="w-4 h-4 text-accent" />
           <span className="font-caps text-[9px] tracking-[0.3em] text-accent uppercase">Member access</span>
@@ -94,7 +94,7 @@ export function LoginView({ onLogin }: { onLogin: () => void }) {
           </div>
 
           {error && (
-            <div className="font-sans text-[12px] text-[#FF4A4A] border-l-2 border-[#FF4A4A]/60 pl-3 py-1">
+            <div className="font-sans text-[12px] text-error border-l-2 border-error/60 pl-3 py-1">
               {error}
             </div>
           )}
@@ -102,7 +102,7 @@ export function LoginView({ onLogin }: { onLogin: () => void }) {
           <button
             type="submit"
             disabled={verifying}
-            className="w-full bg-accent text-bg-base py-4 text-[11px] font-caps tracking-[0.2em] uppercase hover:bg-white transition-colors mt-6 flex items-center justify-center gap-3 disabled:opacity-70"
+            className="w-full bg-accent text-bg-base py-4 text-[11px] font-caps tracking-[0.2em] uppercase hover:bg-accent-deep transition-colors mt-6 flex items-center justify-center gap-3 disabled:opacity-70"
           >
             {verifying ? (
               <>

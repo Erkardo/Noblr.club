@@ -100,7 +100,7 @@ export function QuarterlyBrief() {
         >
           <div className="border border-accent-20 bg-gradient-to-br from-accent/[0.04] via-transparent to-transparent p-8 md:p-10">
             {/* Brief cover mockup */}
-            <div className="border border-accent/30 bg-bg-base/50 aspect-[5/3] flex flex-col items-center justify-center gap-3 mb-8 p-8 text-center">
+            <div className="border border-accent/30 bg-bg-2/70 aspect-[5/3] flex flex-col items-center justify-center gap-3 mb-8 p-8 text-center">
               <div className="font-caps text-[8px] tracking-[0.4em] text-accent uppercase">
                 Spring 2026 · Issue 14
               </div>
@@ -148,13 +148,13 @@ export function QuarterlyBrief() {
                   <button
                     type="submit"
                     disabled={submitting}
-                    className="group bg-accent text-bg-base px-6 py-3.5 text-[10px] font-caps tracking-[0.25em] uppercase hover:bg-white transition-colors flex items-center justify-center gap-3 disabled:opacity-50"
+                    className="group bg-accent text-bg-base px-6 py-3.5 text-[10px] font-caps tracking-[0.25em] uppercase hover:bg-accent-deep transition-colors flex items-center justify-center gap-3 disabled:opacity-50"
                   >
                     <span>{submitting ? 'Илгээж байна' : 'Хүлээн авах'}</span>
                     <ArrowRight className="w-3.5 h-3.5 transform group-hover:translate-x-1 transition-transform" />
                   </button>
                 </div>
-                {error && <div className="font-sans text-[11px] text-[#FF4A4A]">{error}</div>}
+                {error && <div className="font-sans text-[11px] text-error">{error}</div>}
                 <p className="font-caps text-[8px] tracking-[0.25em] text-text-dim/70 uppercase mt-4">
                   Үнэгүй · Захиалга цуцлах шаардлагагүй · Хэнд ч дамжуулахгүй
                 </p>

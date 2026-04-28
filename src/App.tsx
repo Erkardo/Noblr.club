@@ -37,11 +37,10 @@ function AppShell() {
   return (
     <div className="min-h-screen bg-bg-base font-sans text-text-main relative overflow-hidden flex flex-col p-[12px] md:p-[20px]">
       <div className="absolute inset-[12px] md:inset-[20px] pointer-events-none border border-accent-20 z-0" />
-      {/* Background ambient lighting */}
-      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[500px] bg-accent-20 opacity-20 blur-[120px] rounded-full pointer-events-none" />
 
-      {/* Navbar Minimal */}
-      <header className="relative z-20 w-full px-6 md:px-8 py-6 md:py-10 mix-blend-difference">
+      {/* Navbar Minimal — direct charcoal type, no blend tricks needed
+          on the cream palette. */}
+      <header className="relative z-20 w-full px-6 md:px-8 py-6 md:py-10">
         <div className="max-w-5xl mx-auto flex justify-between items-center">
           <button
             onClick={() => view !== 'landing' && setView('landing')}

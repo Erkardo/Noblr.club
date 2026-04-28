@@ -57,7 +57,7 @@ export function DailySelectionTab() {
           animate={{ opacity: 1, x: 0, filter: 'blur(0px)' }}
           exit={{ opacity: 0, x: -50, filter: 'blur(5px)' }}
           transition={{ duration: 0.8, ease: [0.25, 1, 0.5, 1] }}
-          className="w-full border border-accent-20 bg-bg-base/30 backdrop-blur-sm p-5 md:p-12 relative overflow-hidden shadow-2xl"
+          className="w-full border border-accent-20 bg-bg-2/60 backdrop-blur-sm p-5 md:p-12 relative overflow-hidden shadow-2xl"
         >
           {/* Dossier Header */}
           <div className="flex justify-between items-end border-b border-accent-20 pb-4 mb-12 relative z-10 w-full">
@@ -75,12 +75,12 @@ export function DailySelectionTab() {
 
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-16 relative z-10">
             {/* Image Column */}
-            <div className="lg:col-span-5 relative w-full aspect-[3/4] md:aspect-auto md:h-[600px] border border-accent-20 p-2 bg-[#0E0C0A]">
+            <div className="lg:col-span-5 relative w-full aspect-[3/4] md:aspect-auto md:h-[600px] border border-accent-20 p-2 bg-bg-2">
               <div className="absolute top-4 -right-8 font-caps text-[9px] tracking-[0.3em] text-accent uppercase rotate-90 origin-left hidden lg:block opacity-60">
                 Confidential
               </div>
               <img src={currentProfile.image} alt="Profile" className="w-full h-full object-cover filter brightness-90 contrast-125 sepia-[20%] grayscale-[30%]" />
-              <div className="absolute bottom-6 left-6 bg-bg-base/80 backdrop-blur-md px-4 py-2 border border-accent-20">
+              <div className="absolute bottom-6 left-6 bg-bg-2/90 backdrop-blur-md px-4 py-2 border border-accent-20">
                 <div className="font-sans text-[9px] tracking-[0.25em] text-text-main uppercase">Member {currentProfile.id}</div>
               </div>
             </div>
@@ -114,7 +114,7 @@ export function DailySelectionTab() {
                       exit={{ opacity: 0, y: -10 }}
                       className="flex items-center gap-6 w-full"
                     >
-                      <button onClick={handleArchive} className="text-[10px] font-caps tracking-[0.2em] text-text-dim hover:text-white uppercase transition-colors">
+                      <button onClick={handleArchive} className="text-[10px] font-caps tracking-[0.2em] text-text-dim hover:text-text-main uppercase transition-colors">
                         Archive & Pass
                       </button>
                       <button onClick={() => setIntentMode(true)} className="bg-text-main text-bg-base px-8 py-4 text-[10px] font-caps tracking-[0.2em] uppercase hover:bg-accent transition-colors ml-auto flex items-center gap-3 group">
@@ -132,24 +132,24 @@ export function DailySelectionTab() {
                     >
                       <div className="flex justify-between items-center mb-2">
                         <span className="font-caps text-[9px] tracking-[0.2em] text-text-dim uppercase">Define Connection Intent:</span>
-                        <button onClick={() => setIntentMode(false)} className="text-[10px] text-text-dim hover:text-white uppercase tracking-[0.1em]">Cancel</button>
+                        <button onClick={() => setIntentMode(false)} className="text-[10px] text-text-dim hover:text-text-main uppercase tracking-[0.1em]">Cancel</button>
                       </div>
                       <div className="grid grid-cols-1 gap-2">
-                        <button onClick={() => handleDispatch('network')} className="w-full border border-accent-20 bg-bg-base/50 hover:bg-white hover:text-bg-base hover:border-white text-left px-6 py-4 flex items-center justify-between group transition-all duration-300">
+                        <button onClick={() => handleDispatch('network')} className="w-full border border-accent-20 bg-bg-2/70 hover:bg-accent-deep hover:text-bg-base hover:border-white text-left px-6 py-4 flex items-center justify-between group transition-all duration-300">
                           <div>
                             <div className="font-caps text-[11px] tracking-[0.2em] uppercase mb-1 group-hover:text-bg-base">Professional Network</div>
                             <div className="font-serif italic text-text-dim text-[13px] group-hover:text-bg-base/70">Бизнесийн хүрээлэл, карер тэлэх</div>
                           </div>
                           <ArrowRight className="w-4 h-4 opacity-0 group-hover:opacity-100 group-hover:translate-x-1 transition-all" />
                         </button>
-                        <button onClick={() => handleDispatch('social')} className="w-full border border-accent-20 bg-bg-base/50 hover:bg-white hover:text-bg-base hover:border-white text-left px-6 py-4 flex items-center justify-between group transition-all duration-300">
+                        <button onClick={() => handleDispatch('social')} className="w-full border border-accent-20 bg-bg-2/70 hover:bg-accent-deep hover:text-bg-base hover:border-white text-left px-6 py-4 flex items-center justify-between group transition-all duration-300">
                           <div>
                             <div className="font-caps text-[11px] tracking-[0.2em] uppercase mb-1 group-hover:text-bg-base">Social Circle</div>
                             <div className="font-serif italic text-text-dim text-[13px] group-hover:text-bg-base/70">Найз нөхөд, сонирхол нэгтэн</div>
                           </div>
                           <ArrowRight className="w-4 h-4 opacity-0 group-hover:opacity-100 group-hover:translate-x-1 transition-all" />
                         </button>
-                        <button onClick={() => handleDispatch('romance')} className="w-full border border-accent-20 bg-bg-base/50 hover:bg-white hover:text-bg-base hover:border-white text-left px-6 py-4 flex items-center justify-between group transition-all duration-300">
+                        <button onClick={() => handleDispatch('romance')} className="w-full border border-accent-20 bg-bg-2/70 hover:bg-accent-deep hover:text-bg-base hover:border-white text-left px-6 py-4 flex items-center justify-between group transition-all duration-300">
                           <div>
                             <div className="font-caps text-[11px] tracking-[0.2em] uppercase mb-1 group-hover:text-bg-base">Romantic Interest</div>
                             <div className="font-serif italic text-text-dim text-[13px] group-hover:text-bg-base/70">Хувийн харилцаа, болзоо</div>
@@ -188,7 +188,7 @@ export function DailySelectionTab() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 10 }}
-            className="fixed bottom-24 md:bottom-8 left-1/2 -translate-x-1/2 z-50 bg-[#0E0C0A] border border-accent/40 px-6 py-3 font-caps text-[10px] tracking-[0.2em] text-accent uppercase shadow-xl flex items-center gap-3"
+            className="fixed bottom-24 md:bottom-8 left-1/2 -translate-x-1/2 z-50 bg-bg-2 border border-accent/40 px-6 py-3 font-caps text-[10px] tracking-[0.2em] text-accent uppercase shadow-xl flex items-center gap-3"
           >
             <Check className="w-3 h-3" />
             {toast}

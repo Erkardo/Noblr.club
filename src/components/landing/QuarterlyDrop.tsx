@@ -86,7 +86,7 @@ export function QuarterlyDrop({ onApply }: { onApply: () => void }) {
           </p>
           <button
             onClick={onApply}
-            className="group inline-flex items-center gap-3 bg-accent text-bg-base px-8 py-4 text-[10px] font-caps tracking-[0.25em] uppercase hover:bg-white transition-colors"
+            className="group inline-flex items-center gap-3 bg-accent text-bg-base px-8 py-4 text-[10px] font-caps tracking-[0.25em] uppercase hover:bg-accent-deep transition-colors"
           >
             <span>Одоо өргөдөл илгээх</span>
             <ArrowRight className="w-4 h-4 transform group-hover:translate-x-1 transition-transform" />

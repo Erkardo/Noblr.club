@@ -61,7 +61,7 @@ export function ResumeApplicationBanner({
       <div className="mt-5 flex items-center gap-4 pl-14">
         <button
           onClick={onResume}
-          className="group inline-flex items-center gap-3 bg-accent text-bg-base px-6 py-3 text-[10px] font-caps tracking-[0.25em] uppercase hover:bg-white transition-colors"
+          className="group inline-flex items-center gap-3 bg-accent text-bg-base px-6 py-3 text-[10px] font-caps tracking-[0.25em] uppercase hover:bg-accent-deep transition-colors"
         >
           <span>Үргэлжлүүлэх</span>
           <ArrowRight className="w-3.5 h-3.5 transform group-hover:translate-x-1 transition-transform" />

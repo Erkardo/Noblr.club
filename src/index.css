@@ -1,26 +1,46 @@
 @import url('https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,300;0,6..96,400;0,6..96,500;1,6..96,300;1,6..96,400&family=Fraunces:ital,opsz,wght@0,9..144,200;0,9..144,300;0,9..144,400;1,9..144,300&family=Space+Grotesk:wght@300;400;500&family=Tenor+Sans&display=swap');
 @import "tailwindcss";
 
+/*
+ * Editorial cream palette — Soho House / Aman / Casa Cipriani / Monocle
+ * register. The previous gold-on-black design read as crypto landing
+ * page; this register reads as old-world private club / heritage
+ * publication. Mongolian-coded oxblood accent ties to flag red and
+ * Buddhist temple register without being literal.
+ */
 @theme {
   --font-display: "Bodoni Moda", "Fraunces", serif;
   --font-serif: "Fraunces", "Bodoni Moda", serif;
   --font-sans: "Space Grotesk", "Inter", sans-serif;
   --font-caps: "Tenor Sans", "Space Grotesk", sans-serif;
-  
-  --color-bg-base: #0A0908;
-  --color-bg-2: #141210;
-  --color-accent: #9A7F57;
-  --color-accent-deep: #73593A;
-  
-  /* Map older variables to new brand colors for seamless integration */
-  --color-text-main: #EFE9DA;
-  --color-text-dim: #9C9483;
-  --color-text-dim-2: #4F4A3F;
-  --color-accent-20: rgba(239, 233, 218, 0.1);
+
+  /* Surfaces — warm paper layers, not blue-cool greys. */
+  --color-bg-base: #F5EFE2;       /* warm paper cream — page background */
+  --color-bg-2: #ECE4D0;          /* deeper cream — cards, surfaces */
+  --color-bg-3: #DCD2B8;          /* deepest cream — hover, active */
+  --color-bg-ink: #1A1612;        /* warm charcoal — inverse sections */
+
+  /* Accent — deep oxblood. Dignified, editorial, heritage-coded. */
+  --color-accent: #8E2C2A;
+  --color-accent-deep: #5C1B1A;
+  --color-accent-soft: #F0DEDA;   /* soft tint for accent-flooded blocks */
+
+  /* Type colors — warm charcoal hierarchy (no pure black). */
+  --color-text-main: #1A1612;     /* primary type */
+  --color-text-dim: #5C534B;      /* secondary type */
+  --color-text-dim-2: #8B8478;    /* faint type */
+
+  /* Hairline divider — charcoal at low opacity reads as a thin rule
+     on cream, which is the editorial pattern we want. */
+  --color-accent-20: rgba(26, 22, 18, 0.14);
+
+  /* Status — paper-safe red, deeper than digital #FF4A4A. */
+  --color-error: #B33A3A;
+  --color-success: #2D6048;
 }
 
 body {
-  @apply bg-bg-base text-text-main antialiased selection:bg-accent/30 selection:text-text-main min-h-screen overflow-x-hidden;
+  @apply bg-bg-base text-text-main antialiased selection:bg-accent/15 selection:text-text-main min-h-screen overflow-x-hidden;
   font-family: var(--font-serif);
   font-weight: 300;
 }
@@ -33,14 +53,15 @@ body {
 input, textarea, select {
   @apply bg-transparent border-0 border-b border-accent-20 focus:ring-0 focus:border-accent transition-colors duration-500 outline-none;
   font-family: var(--font-sans);
+  color: var(--color-text-main);
 }
 
 input:-webkit-autofill,
-input:-webkit-autofill:hover, 
-input:-webkit-autofill:focus, 
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
 input:-webkit-autofill:active{
-    -webkit-box-shadow: 0 0 0 30px #0A0908 inset !important;
-    -webkit-text-fill-color: #EFE9DA !important;
+    -webkit-box-shadow: 0 0 0 30px #F5EFE2 inset !important;
+    -webkit-text-fill-color: #1A1612 !important;
 }
 
 .noise-overlay {
@@ -48,7 +69,7 @@ input:-webkit-autofill:active{
   inset: 0;
   pointer-events: none;
   z-index: 50;
-  opacity: 0.15;
-  mix-blend-mode: overlay;
+  opacity: 0.06;
+  mix-blend-mode: multiply;
   background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
 }

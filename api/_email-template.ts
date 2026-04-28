@@ -4,7 +4,7 @@
  * HTML email rules are older than the web: nested <table> for layout,
  * inline styles for compatibility, no CSS vars, no web fonts beyond
  * the few that render everywhere. The look matches the site's register
- * — dark background, gold accent, serif display, restrained copy.
+ * — paper cream background, oxblood accent, serif display, restrained copy.
  *
  * A plain-text version is included for clients that strip HTML (or
  * users who prefer it). Keep the two in rough parity.
@@ -20,11 +20,14 @@ export interface InviteEmailInput {
   loginUrl: string;       // where to click to log in
 }
 
-const GOLD = '#9A7F57';
-const BG = '#0A0908';
-const INK = '#EFE9DA';
-const INK_DIM = '#9C9483';
-const DIVIDER = 'rgba(154, 127, 87, 0.2)';
+// Cream editorial palette — matches the site's @theme tokens. The email
+// must read as a sibling of the website, not a different brand.
+const ACCENT = '#8E2C2A';                    // oxblood
+const BG = '#F5EFE2';                        // warm paper cream
+const BG_2 = '#ECE4D0';                      // card cream
+const INK = '#1A1612';                       // warm charcoal
+const INK_DIM = '#5C534B';                   // warm gray
+const DIVIDER = 'rgba(26, 22, 18, 0.14)';    // hairline on cream
 
 export function renderInviteEmail(input: InviteEmailInput): { subject: string; html: string; text: string } {
   const { applicantName, memberNumber, dispatchCode, dispatchKey, sponsorMemberNumber, sponsorName, loginUrl } = input;
@@ -46,7 +49,7 @@ export function renderInviteEmail(input: InviteEmailInput): { subject: string; h
 <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:${BG};">
   <tr>
     <td align="center" style="padding:48px 16px;">
-      <table role="presentation" width="560" cellpadding="0" cellspacing="0" style="max-width:560px;width:100%;background:#0F0D0A;border:1px solid ${DIVIDER};">
+      <table role="presentation" width="560" cellpadding="0" cellspacing="0" style="max-width:560px;width:100%;background:#FFFFFF;border:1px solid ${DIVIDER};">
 
         <!-- Wordmark header -->
         <tr>
@@ -60,7 +63,7 @@ export function renderInviteEmail(input: InviteEmailInput): { subject: string; h
         <!-- Heading -->
         <tr>
           <td style="padding:48px 48px 0 48px;">
-            <div style="font-family:'Helvetica Neue',Arial,sans-serif;font-size:10px;letter-spacing:0.3em;color:${GOLD};text-transform:uppercase;margin-bottom:16px;">Committee Decision</div>
+            <div style="font-family:'Helvetica Neue',Arial,sans-serif;font-size:10px;letter-spacing:0.3em;color:${ACCENT};text-transform:uppercase;margin-bottom:16px;">Committee Decision</div>
             <div style="font-family:Georgia,serif;font-weight:300;color:${INK};font-size:32px;line-height:1.15;letter-spacing:-0.01em;margin:0;">Урилга<br><span style="font-style:italic;color:${INK_DIM};">баталгаажлаа.</span></div>
           </td>
         </tr>
@@ -87,7 +90,7 @@ export function renderInviteEmail(input: InviteEmailInput): { subject: string; h
         <!-- Credentials card -->
         <tr>
           <td style="padding:32px 48px 0 48px;">
-            <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#0B0907;border:1px solid ${DIVIDER};">
+            <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:${BG_2};border:1px solid ${DIVIDER};">
               <tr>
                 <td style="padding:28px 28px 16px 28px;border-bottom:1px solid ${DIVIDER};">
                   <div style="font-family:'Helvetica Neue',Arial,sans-serif;font-size:9px;letter-spacing:0.3em;color:${INK_DIM};text-transform:uppercase;margin-bottom:8px;">Member Number</div>
@@ -97,13 +100,13 @@ export function renderInviteEmail(input: InviteEmailInput): { subject: string; h
               <tr>
                 <td style="padding:20px 28px;border-bottom:1px solid ${DIVIDER};">
                   <div style="font-family:'Helvetica Neue',Arial,sans-serif;font-size:9px;letter-spacing:0.3em;color:${INK_DIM};text-transform:uppercase;margin-bottom:6px;">Dispatch Code</div>
-                  <div style="font-family:'Courier New',monospace;font-size:18px;color:${GOLD};letter-spacing:0.1em;">${escapeHtml(dispatchCode)}</div>
+                  <div style="font-family:'Courier New',monospace;font-size:18px;color:${ACCENT};letter-spacing:0.1em;">${escapeHtml(dispatchCode)}</div>
                 </td>
               </tr>
               <tr>
                 <td style="padding:20px 28px 28px 28px;">
                   <div style="font-family:'Helvetica Neue',Arial,sans-serif;font-size:9px;letter-spacing:0.3em;color:${INK_DIM};text-transform:uppercase;margin-bottom:6px;">Dispatch Key</div>
-                  <div style="font-family:'Courier New',monospace;font-size:18px;color:${GOLD};letter-spacing:0.15em;">${escapeHtml(dispatchKey)}</div>
+                  <div style="font-family:'Courier New',monospace;font-size:18px;color:${ACCENT};letter-spacing:0.15em;">${escapeHtml(dispatchKey)}</div>
                 </td>
               </tr>
             </table>
@@ -113,7 +116,7 @@ export function renderInviteEmail(input: InviteEmailInput): { subject: string; h
         <!-- Login button -->
         <tr>
           <td align="center" style="padding:36px 48px 16px 48px;">
-            <a href="${escapeAttr(loginUrl)}" style="display:inline-block;padding:16px 40px;background:${GOLD};color:${BG};text-decoration:none;font-family:'Helvetica Neue',Arial,sans-serif;font-size:10px;letter-spacing:0.25em;text-transform:uppercase;font-weight:500;">Enter Member Portal</a>
+            <a href="${escapeAttr(loginUrl)}" style="display:inline-block;padding:16px 40px;background:${ACCENT};color:${BG};text-decoration:none;font-family:'Helvetica Neue',Arial,sans-serif;font-size:10px;letter-spacing:0.25em;text-transform:uppercase;font-weight:500;">Enter Member Portal</a>
           </td>
         </tr>
 
@@ -121,7 +124,7 @@ export function renderInviteEmail(input: InviteEmailInput): { subject: string; h
         <tr>
           <td align="center" style="padding:0 48px 40px 48px;">
             <div style="font-family:Georgia,serif;font-style:italic;color:${INK_DIM};font-size:12px;line-height:1.6;">
-              эсвэл хуулж авна: <a href="${escapeAttr(loginUrl)}" style="color:${GOLD};text-decoration:none;border-bottom:1px dotted ${GOLD};">${escapeHtml(loginUrl)}</a>
+              эсвэл хуулж авна: <a href="${escapeAttr(loginUrl)}" style="color:${ACCENT};text-decoration:none;border-bottom:1px dotted ${ACCENT};">${escapeHtml(loginUrl)}</a>
             </div>
           </td>
         </tr>

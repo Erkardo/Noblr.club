@@ -39,7 +39,7 @@ export function MemberWhispers() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: '-60px' }}
             transition={{ duration: 0.7, delay: i * 0.08 }}
-            className="bg-bg-base p-8 md:p-10 flex flex-col gap-5 group hover:bg-[#0E0C0A] transition-colors duration-500"
+            className="bg-bg-base p-8 md:p-10 flex flex-col gap-5 group hover:bg-bg-2 transition-colors duration-500"
           >
             <div className="font-display italic text-accent text-[48px] leading-none font-light -mb-4">
               &ldquo;

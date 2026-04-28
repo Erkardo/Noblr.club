@@ -89,7 +89,7 @@ export function SelectionProcessModal({ open, onClose, onApply }: {
           className="fixed inset-0 z-[60] flex items-start md:items-center justify-center p-3 md:p-6 overflow-y-auto"
           onClick={onClose}
         >
-          <div className="absolute inset-0 bg-bg-base/90 backdrop-blur-xl" />
+          <div className="absolute inset-0 bg-bg-2/95 backdrop-blur-xl" />
 
           <motion.div
             initial={{ scale: 0.96, y: 16, opacity: 0 }}
@@ -97,7 +97,7 @@ export function SelectionProcessModal({ open, onClose, onApply }: {
             exit={{ scale: 0.96, y: 16, opacity: 0 }}
             transition={{ duration: 0.5, ease: [0.25, 1, 0.5, 1] }}
             onClick={(e) => e.stopPropagation()}
-            className="relative z-10 w-full max-w-xl bg-[#0A0908] border border-accent-20 p-5 md:p-10 my-auto"
+            className="relative z-10 w-full max-w-xl bg-bg-base border border-accent-20 p-5 md:p-10 my-auto"
           >
             <button
               onClick={onClose}
@@ -188,7 +188,7 @@ export function SelectionProcessModal({ open, onClose, onApply }: {
                 Two paths to consideration
               </div>
               <div className="grid grid-cols-2 gap-px bg-accent-20 border border-accent-20">
-                <div className="bg-[#0A0908] p-4 md:p-5 flex flex-col items-center text-center opacity-70">
+                <div className="bg-bg-base p-4 md:p-5 flex flex-col items-center text-center opacity-70">
                   <div className="font-caps text-[8px] tracking-[0.25em] text-text-dim uppercase mb-3">
                     Walk-in
                   </div>
@@ -203,7 +203,7 @@ export function SelectionProcessModal({ open, onClose, onApply }: {
                     <span className="text-text-dim/60">капацитигаар</span>
                   </div>
                 </div>
-                <div className="bg-[#0A0908] p-4 md:p-5 flex flex-col items-center text-center relative overflow-hidden">
+                <div className="bg-bg-base p-4 md:p-5 flex flex-col items-center text-center relative overflow-hidden">
                   <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-accent to-transparent" />
                   <div className="font-caps text-[8px] tracking-[0.25em] text-accent uppercase mb-3 flex items-center gap-1.5">
                     <span className="w-1 h-1 rounded-full bg-accent animate-pulse" />
@@ -247,14 +247,14 @@ export function SelectionProcessModal({ open, onClose, onApply }: {
                 </button>
               </form>
               {redeemError && (
-                <div className="mt-3 text-center font-sans text-[10px] text-[#FF4A4A]">{redeemError}</div>
+                <div className="mt-3 text-center font-sans text-[10px] text-error">{redeemError}</div>
               )}
             </div>
 
             {/* CTA */}
             <button
               onClick={handleCta}
-              className="w-full bg-accent text-bg-base py-4 font-caps text-[11px] tracking-[0.2em] uppercase hover:bg-white transition-colors"
+              className="w-full bg-accent text-bg-base py-4 font-caps text-[11px] tracking-[0.2em] uppercase hover:bg-accent-deep transition-colors"
             >
               {ownApp ? 'Миний статус харах' : 'Өргөдөл илгээх'}
             </button>

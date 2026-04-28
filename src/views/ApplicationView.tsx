@@ -315,7 +315,7 @@ export function ApplicationView({ onComplete }: { onComplete: () => void }) {
         </div>
 
         {/* Right: form */}
-        <form onSubmit={nextStep} className="md:col-span-7 flex flex-col w-full bg-bg-base/20 border border-accent-20 p-6 md:p-10 backdrop-blur-sm">
+        <form onSubmit={nextStep} className="md:col-span-7 flex flex-col w-full bg-bg-2/50 border border-accent-20 p-6 md:p-10 backdrop-blur-sm">
           <div className="min-h-[440px]">
             <AnimatePresence mode="wait">
               {/* Step I — Identity */}
@@ -365,7 +365,7 @@ export function ApplicationView({ onComplete }: { onComplete: () => void }) {
                           </button>
                         ))}
                       </div>
-                      {errors.gender && <div className="font-sans text-[11px] text-[#FF4A4A]">{errors.gender}</div>}
+                      {errors.gender && <div className="font-sans text-[11px] text-error">{errors.gender}</div>}
                     </div>
                   </div>
 
@@ -450,7 +450,7 @@ export function ApplicationView({ onComplete }: { onComplete: () => void }) {
                         </button>
                       ))}
                     </div>
-                    {errors.experience && <div className="font-sans text-[11px] text-[#FF4A4A] mt-1">{errors.experience}</div>}
+                    {errors.experience && <div className="font-sans text-[11px] text-error mt-1">{errors.experience}</div>}
                   </div>
 
                   <Field label="Боловсрол (их сургууль, зэрэг)" error={errors.education}>
@@ -481,14 +481,14 @@ export function ApplicationView({ onComplete }: { onComplete: () => void }) {
                           key={opt.value}
                           type="button"
                           onClick={() => update('intent', opt.value)}
-                          className={`text-left p-4 border transition-all ${form.intent === opt.value ? 'border-accent bg-white/5' : 'border-accent-20 hover:border-accent/50'}`}
+                          className={`text-left p-4 border transition-all ${form.intent === opt.value ? 'border-accent bg-text-main/5' : 'border-accent-20 hover:border-accent/50'}`}
                         >
-                          <div className="font-caps text-[11px] tracking-[0.2em] text-white uppercase mb-1">{opt.title}</div>
+                          <div className="font-caps text-[11px] tracking-[0.2em] text-text-main uppercase mb-1">{opt.title}</div>
                           <div className="font-serif italic text-text-dim text-[13px]">{opt.desc}</div>
                         </button>
                       ))}
                     </div>
-                    {errors.intent && <div className="font-sans text-[11px] text-[#FF4A4A]">{errors.intent}</div>}
+                    {errors.intent && <div className="font-sans text-[11px] text-error">{errors.intent}</div>}
                   </div>
 
                   {/* Essay 1 */}
@@ -502,7 +502,7 @@ export function ApplicationView({ onComplete }: { onComplete: () => void }) {
                         onClick={handleDraftWithAI}
                         disabled={!geminiReady || isDrafting}
                         title={geminiReady ? 'Gemini-ээр төсөл бичүүлэх' : 'Gemini API key тохируулаагүй'}
-                        className="font-caps text-[9px] tracking-[0.2em] text-accent uppercase hover:text-white transition-colors pb-1 border-b border-accent/40 hover:border-accent flex items-center gap-2 disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:text-accent disabled:hover:border-accent/40"
+                        className="font-caps text-[9px] tracking-[0.2em] text-accent uppercase hover:text-text-main transition-colors pb-1 border-b border-accent/40 hover:border-accent flex items-center gap-2 disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:text-accent disabled:hover:border-accent/40"
                       >
                         <Sparkles className="w-3 h-3" />
                         {isDrafting ? 'Бичиж байна...' : 'Draft with AI'}
@@ -519,8 +519,8 @@ export function ApplicationView({ onComplete }: { onComplete: () => void }) {
                       onChange={e => update('motivation', e.target.value)}
                       className="w-full py-3 text-[15px] text-text-main placeholder-text-dim/30 resize-none font-serif leading-[1.8] bg-transparent border-0 border-b border-accent-20 focus:ring-0 focus:border-accent outline-none transition-colors"
                     />
-                    {draftError && <div className="font-sans text-[11px] text-[#FF4A4A]">{draftError}</div>}
-                    {errors.motivation && <div className="font-sans text-[11px] text-[#FF4A4A]">{errors.motivation}</div>}
+                    {draftError && <div className="font-sans text-[11px] text-error">{draftError}</div>}
+                    {errors.motivation && <div className="font-sans text-[11px] text-error">{errors.motivation}</div>}
                   </div>
 
                   {/* Essay 2 — the reflective filter */}
@@ -539,7 +539,7 @@ export function ApplicationView({ onComplete }: { onComplete: () => void }) {
                       onChange={e => update('influences', e.target.value)}
                       className="w-full py-3 text-[15px] text-text-main placeholder-text-dim/30 resize-none font-serif leading-[1.8] bg-transparent border-0 border-b border-accent-20 focus:ring-0 focus:border-accent outline-none transition-colors"
                     />
-                    {errors.influences && <div className="font-sans text-[11px] text-[#FF4A4A]">{errors.influences}</div>}
+                    {errors.influences && <div className="font-sans text-[11px] text-error">{errors.influences}</div>}
                   </div>
 
                   {/* Deposit consent */}
@@ -560,7 +560,7 @@ export function ApplicationView({ onComplete }: { onComplete: () => void }) {
                       <div className="font-serif italic text-[12px] text-text-dim mt-0.5">
                         Шалгарваагүй тохиолдолд бүрэн буцаан олгогдоно.
                       </div>
-                      {errors.depositAccepted && <div className="font-sans text-[11px] text-[#FF4A4A] mt-2">{errors.depositAccepted}</div>}
+                      {errors.depositAccepted && <div className="font-sans text-[11px] text-error mt-2">{errors.depositAccepted}</div>}
                     </div>
                   </label>
                 </motion.div>
@@ -581,7 +581,7 @@ export function ApplicationView({ onComplete }: { onComplete: () => void }) {
 
             <button
               type="submit"
-              className="bg-accent text-bg-base px-10 py-4 text-[11px] font-caps tracking-[0.2em] uppercase hover:bg-white transition-colors flex items-center justify-center gap-3"
+              className="bg-accent text-bg-base px-10 py-4 text-[11px] font-caps tracking-[0.2em] uppercase hover:bg-accent-deep transition-colors flex items-center justify-center gap-3"
             >
               {step === totalSteps ? 'Хянан үнэлгээнд илгээх' : 'Үргэлжлүүлэх'}
             </button>
@@ -604,7 +604,7 @@ function Field({ label, hint, error, children }: { label: string; hint?: string;
         {hint && <span className="font-sans text-[10px] text-text-dim/50">{hint}</span>}
       </div>
       {children}
-      {error && <div className="font-sans text-[11px] text-[#FF4A4A]">{error}</div>}
+      {error && <div className="font-sans text-[11px] text-error">{error}</div>}
     </div>
   );
 }
@@ -627,7 +627,7 @@ function PrefixField({ label, prefix, value, onChange, error, placeholder }: {
           className="flex-1 py-2 text-[16px] text-text-main placeholder-text-dim/30 font-mono font-light bg-transparent outline-none min-w-0"
         />
       </div>
-      {error && <div className="font-sans text-[11px] text-[#FF4A4A]">{error}</div>}
+      {error && <div className="font-sans text-[11px] text-error">{error}</div>}
     </div>
   );
 }

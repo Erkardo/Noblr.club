@@ -15,8 +15,8 @@ export function WaitlistView() {
 
   const statusColor =
     status === 'APPROVED' ? 'text-accent' :
-    status === 'REJECTED' ? 'text-[#FF4A4A]' :
-    'text-[#FF4A4A]';
+    status === 'REJECTED' ? 'text-error' :
+    'text-error';
 
   const statusLabel =
     status === 'APPROVED' ? 'Accepted' :
@@ -49,10 +49,10 @@ export function WaitlistView() {
           initial={{ scale: 0.8, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
           transition={{ duration: 1, delay: 0.3, type: "spring", stiffness: 100 }}
-          className={`w-20 h-20 md:w-24 md:h-24 rounded-full border flex items-center justify-center mb-8 md:mb-10 bg-[#0A0A0A] shadow-[0_0_50px_rgba(154,127,87,0.15)] ${status === 'REJECTED' ? 'border-[#FF4A4A]/60' : 'border-accent'}`}
+          className={`w-20 h-20 md:w-24 md:h-24 rounded-full border flex items-center justify-center mb-8 md:mb-10 bg-bg-2 shadow-[0_0_50px_rgba(154,127,87,0.15)] ${status === 'REJECTED' ? 'border-error/60' : 'border-accent'}`}
         >
           {status === 'APPROVED' ? <Check className="w-8 h-8 text-accent" /> :
-           status === 'REJECTED' ? <X className="w-8 h-8 text-[#FF4A4A]" /> :
+           status === 'REJECTED' ? <X className="w-8 h-8 text-error" /> :
            <Lock className="w-8 h-8 text-accent" />}
         </motion.div>
 
@@ -64,7 +64,7 @@ export function WaitlistView() {
           {subcopy}
         </p>
 
-        <div className="w-full text-left bg-[#0A0A0A] border border-accent-20 p-6 md:p-10 shadow-2xl relative overflow-hidden">
+        <div className="w-full text-left bg-bg-2 border border-accent-20 p-6 md:p-10 shadow-2xl relative overflow-hidden">
           <div className="absolute inset-0 opacity-10 mix-blend-overlay" style={{ backgroundImage: 'url("data:image/svg+xml,%3Csvg viewBox=%220 0 200 200%22 xmlns=%22http://www.w3.org/2000/svg%22%3E%3Cfilter id=%22noise%22%3E%3CfeTurbulence type=%22fractalNoise%22 baseFrequency=%221.5%22 numOctaves=%223%22 stitchTiles=%22stitch%22/%3E%3C/filter%3E%3Crect width=%22100%25%22 height=%22100%25%22 filter=%22url(%23noise)%22/%3E%3C/svg%3E")' }} />
 
           <div className="flex justify-between items-start mb-8 md:mb-10 border-b border-accent-20 pb-5 md:pb-6 relative z-10">
@@ -78,7 +78,7 @@ export function WaitlistView() {
             <div className="text-right shrink-0">
               <div className="font-caps text-[9px] uppercase tracking-[0.3em] text-text-dim mb-1">Status</div>
               <div className={`font-caps text-[10px] md:text-[11px] uppercase tracking-[0.2em] ${statusColor} flex items-center gap-2 justify-end`}>
-                <div className={`w-1.5 h-1.5 rounded-full ${status === 'APPROVED' ? 'bg-accent' : status === 'REJECTED' ? 'bg-[#FF4A4A]' : 'bg-[#FF4A4A] animate-pulse'}`} /> {statusLabel}
+                <div className={`w-1.5 h-1.5 rounded-full ${status === 'APPROVED' ? 'bg-accent' : status === 'REJECTED' ? 'bg-error' : 'bg-error animate-pulse'}`} /> {statusLabel}
               </div>
             </div>
           </div>
@@ -100,7 +100,7 @@ export function WaitlistView() {
                <span className="font-caps text-[10px] tracking-[0.2em] text-text-dim/60 uppercase">Committee Vote</span>
                <span className={`font-caps text-[9px] tracking-[0.2em] uppercase flex items-center gap-2 ${
                  status === 'APPROVED' ? 'text-accent' :
-                 status === 'REJECTED' ? 'text-[#FF4A4A]' :
+                 status === 'REJECTED' ? 'text-error' :
                  'text-text-dim'
                }`}>
                  {status === 'APPROVED' ? <><Check className="w-3 h-3" /> Approved</> :

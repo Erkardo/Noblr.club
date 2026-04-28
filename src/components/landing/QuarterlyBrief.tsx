@@ -99,19 +99,36 @@ export function QuarterlyBrief() {
           className="lg:col-span-6"
         >
           <div className="border border-accent-20 bg-gradient-to-br from-accent/[0.04] via-transparent to-transparent p-8 md:p-10">
-            {/* Brief cover mockup */}
-            <div className="border border-accent/30 bg-bg-2/70 aspect-[5/3] flex flex-col items-center justify-center gap-3 mb-8 p-8 text-center">
-              <div className="font-caps text-[8px] tracking-[0.4em] text-accent uppercase">
-                Spring 2026 · Issue 14
+            {/* Brief cover — editorial mock with atmospheric photo backdrop.
+                Aspect 5:7 evokes a printed magazine portrait cover. */}
+            <div
+              className="aspect-[5/7] relative flex flex-col justify-between mb-8 p-7 md:p-9 text-bg-base overflow-hidden border border-text-main/20"
+              style={{
+                backgroundImage: `linear-gradient(rgba(26,22,18,0.55), rgba(26,22,18,0.85)), url('https://images.unsplash.com/photo-1518709268805-4e9042af2176?auto=format&fit=crop&w=900&q=80')`,
+                backgroundSize: 'cover',
+                backgroundPosition: 'center',
+              }}
+            >
+              <div className="flex items-start justify-between">
+                <div className="font-caps text-[8px] tracking-[0.4em] uppercase" style={{ color: '#D9B8B6' }}>
+                  Noblr Private Brief
+                </div>
+                <div className="font-caps text-[8px] tracking-[0.3em] uppercase text-bg-base/70">
+                  Spring 2026
+                </div>
               </div>
-              <div className="font-display italic text-text-main text-[20px] md:text-[24px] font-light leading-tight max-w-[260px]">
-                "Монголын цахим эдийн засгийн шинэ үе"
-              </div>
-              <div className="font-serif italic text-text-dim text-[11px]">
-                14 гишүүний хэлсэн үг · 24 хуудас
-              </div>
-              <div className="mt-3 font-caps text-[8px] tracking-[0.3em] text-text-dim/50 uppercase">
-                Noblr Private Brief
+
+              <div>
+                <div className="font-caps text-[8px] tracking-[0.4em] uppercase mb-3" style={{ color: '#D9B8B6' }}>
+                  Issue 14 · Cover Story
+                </div>
+                <div className="font-display italic text-bg-base text-[24px] md:text-[28px] font-light leading-[1.1] mb-4">
+                  Монголын цахим эдийн засгийн шинэ үе.
+                </div>
+                <div className="font-serif italic text-bg-base/80 text-[12px] leading-relaxed">
+                  14 гишүүний нэр сэтгэлгээ · 24 хуудас<br/>
+                  Editorial: The Noblr Committee
+                </div>
               </div>
             </div>
 

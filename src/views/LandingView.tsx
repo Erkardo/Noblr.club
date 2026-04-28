@@ -186,9 +186,27 @@ export function LandingView({ onApply, onAdmin }: { onApply: () => void, onAdmin
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-1 md:gap-px bg-accent-20 border border-accent-20">
           {[
-            { tag: "The Network", title: "Бизнесийн хүрээлэл", desc: "Карер, хөрөнгө оруулалт болон масштаб" },
-            { tag: "The Circle", title: "Сонирхол нэгтэн", desc: "Оюун санаа болон үнэлэмжийн нөхөрлөл" },
-            { tag: "The Romance", title: "Хувийн харилцаа", desc: "Утга төгөлдөр болзоо болон хайр сэтгэл" }
+            {
+              tag: "The Network",
+              title: "Бизнесийн хүрээлэл",
+              desc: "Карер, хөрөнгө оруулалт болон масштаб",
+              // Heritage interior — leather, books. No faces (anonymity).
+              image: "https://images.unsplash.com/photo-1481627834876-b7833e8f5570?auto=format&fit=crop&w=900&h=675&q=80"
+            },
+            {
+              tag: "The Circle",
+              title: "Сонирхол нэгтэн",
+              desc: "Оюун санаа болон үнэлэмжийн нөхөрлөл",
+              // Candlelit dinner — wine glasses, intimate. Atmospheric.
+              image: "https://images.unsplash.com/photo-1414235077428-338989a2e8c0?auto=format&fit=crop&w=900&h=675&q=80"
+            },
+            {
+              tag: "The Romance",
+              title: "Хувийн харилцаа",
+              desc: "Утга төгөлдөр болзоо болон хайр сэтгэл",
+              // Piano keys / intimate music register.
+              image: "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?auto=format&fit=crop&w=900&h=675&q=80"
+            }
           ].map((dim, i) => (
             <motion.div
               key={i}
@@ -196,11 +214,24 @@ export function LandingView({ onApply, onAdmin }: { onApply: () => void, onAdmin
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: "-100px" }}
               transition={{ duration: 0.8, delay: i * 0.1 }}
-              className="bg-bg-2 p-10 flex flex-col items-center text-center group hover:bg-bg-3 transition-colors duration-500"
+              className="bg-bg-2 flex flex-col group hover:bg-bg-3 transition-colors duration-500 overflow-hidden"
             >
-              <div className="font-caps text-[9px] tracking-[0.2em] text-accent uppercase border-b border-accent/20 pb-2 mb-6 group-hover:border-accent transition-colors">{dim.tag}</div>
-              <h3 className="font-serif italic text-xl text-text-main mb-3">{dim.title}</h3>
-              <p className="font-sans text-[11px] text-text-dim uppercase tracking-[0.1em]">{dim.desc}</p>
+              {/* Editorial photo — desaturated to integrate with cream
+                  palette, slight warmth on hover for life. */}
+              <div className="aspect-[4/3] overflow-hidden bg-bg-3 relative">
+                <img
+                  src={dim.image}
+                  alt=""
+                  loading="lazy"
+                  className="w-full h-full object-cover grayscale opacity-90 group-hover:opacity-100 group-hover:scale-[1.04] transition-all duration-1000 ease-out"
+                />
+                <div className="absolute inset-0 bg-bg-base/15 group-hover:bg-bg-base/0 transition-colors duration-700 mix-blend-multiply" />
+              </div>
+              <div className="p-8 md:p-10 flex flex-col items-center text-center">
+                <div className="font-caps text-[9px] tracking-[0.2em] text-accent uppercase border-b border-accent/30 pb-2 mb-5 group-hover:border-accent transition-colors">{dim.tag}</div>
+                <h3 className="font-display italic text-2xl md:text-[26px] font-light text-text-main mb-3 leading-tight">{dim.title}</h3>
+                <p className="font-sans text-[11px] text-text-dim uppercase tracking-[0.15em] leading-relaxed">{dim.desc}</p>
+              </div>
             </motion.div>
           ))}
         </div>
@@ -300,18 +331,39 @@ export function LandingView({ onApply, onAdmin }: { onApply: () => void, onAdmin
       {/* Quarterly Brief — RECIPROCITY GIFT */}
       <QuarterlyBrief />
 
-      {/* Philosophy Statement */}
-      <div className="w-full max-w-5xl mx-auto py-32 md:py-48 px-6 relative z-10 text-center flex flex-col justify-center items-center">
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-100px" }}
-          transition={{ duration: 1.5, ease: [0.25, 1, 0.5, 1] }}
-          className="font-display text-4xl md:text-5xl lg:text-7xl text-text-main font-light leading-[1.1] tracking-[-0.02em]"
-        >
-          "Noble isn't a profession.<br/>
-          <span className="text-accent italic font-serif mt-2 block">It's a disposition.</span>"
-        </motion.div>
+      {/* Philosophy Statement — dramatic dark inverse against the cream
+          rhythm. A foggy steppe atmospheric photo behind the headline,
+          dimmed to read as texture rather than imagery. */}
+      <div className="w-full relative z-10 my-12 md:my-16 overflow-hidden">
+        <div
+          className="absolute inset-0 bg-bg-ink"
+          style={{
+            backgroundImage: `linear-gradient(rgba(26,22,18,0.78), rgba(26,22,18,0.86)), url('https://images.unsplash.com/photo-1469474968028-56623f02e42e?auto=format&fit=crop&w=2400&q=80')`,
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
+          }}
+        />
+        <div className="relative w-full max-w-5xl mx-auto py-32 md:py-48 px-6 text-center flex flex-col justify-center items-center">
+          <motion.div
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            viewport={{ once: true, margin: "-100px" }}
+            transition={{ duration: 1.2 }}
+            className="font-caps text-[10px] tracking-[0.4em] text-accent uppercase mb-8"
+          >
+            — Founders' Statement
+          </motion.div>
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-100px" }}
+            transition={{ duration: 1.5, ease: [0.25, 1, 0.5, 1] }}
+            className="font-display text-4xl md:text-5xl lg:text-7xl text-bg-base font-light leading-[1.1] tracking-[-0.02em]"
+          >
+            &ldquo;Noble isn't a profession.<br/>
+            <span className="italic font-serif mt-2 block" style={{ color: '#D9B8B6' }}>It's a disposition.&rdquo;</span>
+          </motion.div>
+        </div>
       </div>
 
       {/* Footer */}

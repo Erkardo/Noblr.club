@@ -61,7 +61,7 @@ export function QuarterlyBrief() {
           transition={{ duration: 1 }}
           className="lg:col-span-6"
         >
-          <div className="font-caps text-[9px] tracking-[0.4em] text-accent uppercase mb-5">
+          <div className="font-caps text-[9px] tracking-[0.4em] text-coral uppercase mb-5">
             Noblr Brief · Quarterly
           </div>
           <h2 className="font-display text-[38px] sm:text-[48px] md:text-[60px] font-light text-text-main leading-[1.02] tracking-[-0.02em] mb-7">
@@ -81,7 +81,7 @@ export function QuarterlyBrief() {
               'Бүрэн нууцлал · Захиалгагүй',
             ].map((item, i) => (
               <li key={i} className="flex items-start gap-3">
-                <Check className="w-3.5 h-3.5 text-accent mt-1 shrink-0" />
+                <Check className="w-3.5 h-3.5 text-coral mt-1 shrink-0" />
                 <span className="font-sans text-[13px] text-text-main/80 leading-relaxed">
                   {item}
                 </span>

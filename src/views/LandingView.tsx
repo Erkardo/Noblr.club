@@ -252,9 +252,9 @@ export function LandingView({ onApply, onAdmin }: { onApply: () => void, onAdmin
             transition={{ duration: 1 }}
             className="flex flex-col items-start"
           >
-            <div className="font-caps text-[9px] tracking-[0.3em] text-accent uppercase mb-8">The Standard</div>
+            <div className="font-caps text-[9px] tracking-[0.3em] text-ink-blue uppercase mb-8">The Standard</div>
             <div className="font-display text-[96px] sm:text-[120px] md:text-[140px] lg:text-[180px] leading-none text-text-main font-light mb-4 tracking-tighter">
-              {stats.rate}<span className="text-accent text-[56px] sm:text-[70px] md:text-[80px] lg:text-[100px] align-top relative top-4">%</span>
+              {stats.rate}<span className="text-ink-blue text-[56px] sm:text-[70px] md:text-[80px] lg:text-[100px] align-top relative top-4">%</span>
             </div>
             <div className="font-caps text-[11px] tracking-[0.2em] text-text-main uppercase mb-6 mt-4">Элсэх магадлал</div>
             <p className="font-serif italic text-[16px] text-text-dim leading-[1.8] max-w-sm">
@@ -292,24 +292,24 @@ export function LandingView({ onApply, onAdmin }: { onApply: () => void, onAdmin
 
             {/* Process */}
             <div className="pl-6 lg:pl-10 border-l border-accent-20">
-              <div className="font-caps text-[9px] tracking-[0.2em] text-accent uppercase mb-8">Сонгон шалгаруулах процесс</div>
+              <div className="font-caps text-[9px] tracking-[0.2em] text-ink-blue uppercase mb-8">Сонгон шалгаруулах процесс</div>
               <div className="flex flex-col gap-8">
                 <div className="flex gap-6 items-start">
-                  <div className="font-sans text-[10px] text-accent mt-1">01</div>
+                  <div className="font-sans text-[10px] text-ink-blue mt-1">01</div>
                   <div>
                     <div className="font-caps text-[11px] text-text-main uppercase tracking-[0.1em] mb-2">Анкет баталгаажилт</div>
                     <div className="font-serif italic text-[14px] text-text-dim">100% хувийн мэдээлэл болон карерын баталгаажуулалт.</div>
                   </div>
                 </div>
                 <div className="flex gap-6 items-start">
-                  <div className="font-sans text-[10px] text-accent mt-1">02</div>
+                  <div className="font-sans text-[10px] text-ink-blue mt-1">02</div>
                   <div>
                     <div className="font-caps text-[11px] text-text-main uppercase tracking-[0.1em] mb-2">Хорооны үнэлгээ</div>
                     <div className="font-serif italic text-[14px] text-text-dim">Хаалттай хороо 48-72 цагт хянан хэлэлцэнэ.</div>
                   </div>
                 </div>
                 <div className="flex gap-6 items-start">
-                  <div className="font-sans text-[10px] text-accent mt-1">03</div>
+                  <div className="font-sans text-[10px] text-ink-blue mt-1">03</div>
                   <div>
                     <div className="font-caps text-[11px] text-text-main uppercase tracking-[0.1em] mb-2">Эцсийн урилга</div>
                     <div className="font-serif italic text-[14px] text-text-dim">Шалгуур хангасан тусгай бүрэлдэхүүнд нэвтрэх эрх олгоно.</div>

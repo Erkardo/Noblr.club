@@ -2,11 +2,12 @@
 @import "tailwindcss";
 
 /*
- * Editorial cream palette — Soho House / Aman / Casa Cipriani / Monocle
- * register. The previous gold-on-black design read as crypto landing
- * page; this register reads as old-world private club / heritage
- * publication. Mongolian-coded oxblood accent ties to flag red and
- * Buddhist temple register without being literal.
+ * Modern Editorial Atelier palette — Loewe / Aesop / Hermès digital /
+ * Off-White luxury / Marni runway register. Warm ivory base reads as
+ * gallery print room. Burnt-orange primary accent feels current 2026,
+ * not heritage. Section accents (sage / eggplant / coral) rotate per
+ * spread so the page reads like flipping through a magazine, not a
+ * single mood.
  */
 @theme {
   --font-display: "Bodoni Moda", "Fraunces", serif;
@@ -14,33 +15,47 @@
   --font-sans: "Space Grotesk", "Inter", sans-serif;
   --font-caps: "Tenor Sans", "Space Grotesk", sans-serif;
 
-  /* Surfaces — warm paper layers, not blue-cool greys. */
-  --color-bg-base: #F5EFE2;       /* warm paper cream — page background */
-  --color-bg-2: #ECE4D0;          /* deeper cream — cards, surfaces */
-  --color-bg-3: #DCD2B8;          /* deepest cream — hover, active */
+  /* Surfaces — warm ivory layers. Slightly warmer + richer than the
+     previous cream, more "gallery white" than "country club cream." */
+  --color-bg-base: #F5EFE3;       /* warm ivory — page background */
+  --color-bg-2: #EDE5D2;          /* card cream */
+  --color-bg-3: #DBD2BC;          /* hover / divider deep */
   --color-bg-ink: #1A1612;        /* warm charcoal — inverse sections */
 
-  /* Accent — deep oxblood. Dignified, editorial, heritage-coded. */
-  --color-accent: #8E2C2A;
-  --color-accent-deep: #5C1B1A;
-  --color-accent-soft: #F0DEDA;   /* soft tint for accent-flooded blocks */
+  /* Primary brand accent — burnt orange. Modern saturation, not
+     muted. Reads as confident editorial (Hermès / Loewe register)
+     rather than heritage red. */
+  --color-accent: #D4683A;
+  --color-accent-deep: #A84A20;
+  --color-accent-soft: #F4DDCC;   /* soft tint for accent-flooded blocks */
+
+  /* Section accents — used sectorally so the page reads like
+     spreads. Don't combine more than 2 visible at once. */
+  --color-sage: #88997C;          /* Member Whispers — calm intimacy */
+  --color-sage-soft: #DDE3D4;
+  --color-eggplant: #553A55;      /* Quarterly Drop — mystery, urgency */
+  --color-eggplant-soft: #E1D5E1;
+  --color-coral: #D88060;         /* Brief — warmth, invitation */
+  --color-coral-soft: #F4DCD0;
+  --color-ink-blue: #2A3F5C;      /* Standards — institutional weight */
+  --color-ink-blue-soft: #D5DCE5;
 
   /* Type colors — warm charcoal hierarchy (no pure black). */
-  --color-text-main: #1A1612;     /* primary type */
+  --color-text-main: #1C1812;     /* primary type */
   --color-text-dim: #5C534B;      /* secondary type */
   --color-text-dim-2: #8B8478;    /* faint type */
 
   /* Hairline divider — charcoal at low opacity reads as a thin rule
      on cream, which is the editorial pattern we want. */
-  --color-accent-20: rgba(26, 22, 18, 0.14);
+  --color-accent-20: rgba(28, 24, 18, 0.14);
 
-  /* Status — paper-safe red, deeper than digital #FF4A4A. */
-  --color-error: #B33A3A;
-  --color-success: #2D6048;
+  /* Status — paper-safe palette. */
+  --color-error: #C8453F;
+  --color-success: #3E7A5F;
 }
 
 body {
-  @apply bg-bg-base text-text-main antialiased selection:bg-accent/15 selection:text-text-main min-h-screen overflow-x-hidden;
+  @apply bg-bg-base text-text-main antialiased selection:bg-accent/20 selection:text-text-main min-h-screen overflow-x-hidden;
   font-family: var(--font-serif);
   font-weight: 300;
 }
@@ -60,8 +75,8 @@ input:-webkit-autofill,
 input:-webkit-autofill:hover,
 input:-webkit-autofill:focus,
 input:-webkit-autofill:active{
-    -webkit-box-shadow: 0 0 0 30px #F5EFE2 inset !important;
-    -webkit-text-fill-color: #1A1612 !important;
+    -webkit-box-shadow: 0 0 0 30px #F5EFE3 inset !important;
+    -webkit-text-fill-color: #1C1812 !important;
 }
 
 .noise-overlay {

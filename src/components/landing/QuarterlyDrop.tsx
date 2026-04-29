@@ -52,7 +52,7 @@ export function QuarterlyDrop({ onApply }: { onApply: () => void }) {
         className="mb-12 md:mb-16 flex flex-wrap items-center gap-x-6 gap-y-3 justify-center font-caps text-[10px] md:text-[11px] tracking-[0.25em] text-text-main/75 uppercase"
       >
         <span className="inline-flex items-center gap-2">
-          <span className="w-1.5 h-1.5 rounded-full bg-eggplant animate-pulse" />
+          <span className="w-1.5 h-1.5 rounded-full bg-accent animate-pulse" />
           <span className="text-text-main">{dropName}</span> · Drop Open
         </span>
         <span className="text-text-dim/50">·</span>
@@ -72,7 +72,7 @@ export function QuarterlyDrop({ onApply }: { onApply: () => void }) {
           transition={{ duration: 1 }}
           className="lg:col-span-5"
         >
-          <div className="font-caps text-[9px] tracking-[0.4em] text-eggplant uppercase mb-5">
+          <div className="font-caps text-[9px] tracking-[0.4em] text-text-main uppercase mb-5">
             Хугацаат цонх
           </div>
           <h2 className="font-display text-[44px] sm:text-[56px] md:text-[68px] font-light text-text-main leading-[0.98] tracking-[-0.02em] mb-6">
@@ -112,7 +112,7 @@ export function QuarterlyDrop({ onApply }: { onApply: () => void }) {
               >
                 <div
                   className={`font-display font-light text-text-main tabular-nums leading-none tracking-[-0.03em] text-[44px] sm:text-[64px] md:text-[88px] lg:text-[104px] ${
-                    i === 3 ? 'text-eggplant' : ''
+                    i === 3 ? 'text-text-main' : ''
                   }`}
                 >
                   {String(cell.value).padStart(2, '0')}

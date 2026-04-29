@@ -46,104 +46,105 @@ export function LandingView({ onApply, onAdmin }: { onApply: () => void, onAdmin
     >
       <NoiseOverlay position="fixed" />
 
-      {/* Hero Section */}
-      <div className="w-full flex-1 flex flex-col items-center justify-center text-center px-5 sm:px-6 min-h-[85vh] relative z-10 pt-10 pb-20">
-        <div className="max-w-4xl flex flex-col items-center w-full">
+      {/* Hero — Tesla register: type-led top, full-bleed image
+          below, lots of negative space, sans-serif confidence. */}
+      <div className="w-full flex flex-col relative z-10">
+        <div className="w-full max-w-7xl mx-auto px-5 sm:px-8 lg:px-12 pt-12 md:pt-20 pb-12 md:pb-16 text-center">
           {pendingInvite && (
             <motion.div
               initial={{ opacity: 0, y: -8 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.1, ease: [0.25, 1, 0.5, 1] }}
-              className="mb-10 md:mb-12 w-full max-w-[420px] bg-accent/5 border border-accent/40 px-5 py-4 md:px-6 md:py-5 flex items-center gap-4"
+              className="mb-10 md:mb-12 w-full max-w-[440px] mx-auto bg-bg-2 border border-accent-20 px-5 py-4 md:px-6 md:py-5 flex items-center gap-4 text-left"
             >
-              <div className="w-8 h-8 md:w-9 md:h-9 rounded-full border border-accent/50 flex items-center justify-center shrink-0">
-                <Lock className="w-3.5 h-3.5 text-accent" />
+              <div className="w-9 h-9 rounded-full bg-bg-base border border-accent-20 flex items-center justify-center shrink-0">
+                <Lock className="w-3.5 h-3.5 text-text-main" />
               </div>
-              <div className="text-left flex-1 min-w-0">
-                <div className="font-caps text-[9px] tracking-[0.3em] text-accent uppercase mb-1">Sponsored invitation</div>
-                <div className="font-display text-[15px] md:text-[16px] text-text-main leading-tight">
-                  <span className="font-sans text-text-dim text-[10px] tracking-[0.2em] uppercase mr-2">By</span>
-                  {pendingInvite.issuedByMemberNumber} · <span className="italic text-text-dim">{pendingInvite.issuedByName}</span>
+              <div className="flex-1 min-w-0">
+                <div className="font-caps text-[10px] tracking-[0.2em] text-text-dim uppercase mb-0.5">Sponsored invitation</div>
+                <div className="text-[14px] text-text-main leading-tight">
+                  By {pendingInvite.issuedByMemberNumber} · <span className="text-text-dim">{pendingInvite.issuedByName}</span>
                 </div>
               </div>
             </motion.div>
           )}
 
           {hasDraft && draft && (
-            <ResumeApplicationBanner
-              draft={draft}
-              onResume={onApply}
-              onDiscard={() => setDraft(null)}
-            />
+            <div className="mx-auto">
+              <ResumeApplicationBanner
+                draft={draft}
+                onResume={onApply}
+                onDiscard={() => setDraft(null)}
+              />
+            </div>
           )}
 
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 1, delay: 0.2, ease: [0.25, 1, 0.5, 1] }}
-            className="inline-block border border-accent text-accent px-5 py-2.5 text-[9px] tracking-[0.3em] uppercase mb-10 md:mb-12 font-caps"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 1, delay: 0.2 }}
+            className="font-caps text-[11px] tracking-[0.2em] text-text-dim uppercase mb-6 md:mb-8"
           >
-            {pendingInvite ? 'Таныг Уриагаар Хүлээж Байна' : 'Хаалттай Нийгэмлэг'}
+            {pendingInvite ? 'Sponsored Invitation Active' : 'Private Members Club · Ulaanbaatar'}
           </motion.div>
 
           <motion.h1
-            initial={{ opacity: 0, y: 30 }}
+            initial={{ opacity: 0, y: 24 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 1.2, delay: 0.4, ease: [0.25, 1, 0.5, 1] }}
-            className="text-[40px] sm:text-5xl md:text-6xl lg:text-[80px] font-display text-text-main font-light leading-[1.05] tracking-[-0.02em] mb-6 md:mb-8"
+            transition={{ duration: 1.2, delay: 0.35, ease: [0.25, 1, 0.5, 1] }}
+            className="text-[44px] sm:text-[64px] md:text-[88px] lg:text-[112px] font-display text-text-main font-medium leading-[0.96] tracking-[-0.035em] mb-6 md:mb-8"
           >
-            Олонхид биш. <br/>
-            <span className="text-text-dim italic font-serif">Шилдгүүдэд.</span>
+            Олонхид биш. <span className="text-text-dim font-light">Шилдгүүдэд.</span>
           </motion.h1>
 
           <motion.p
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            transition={{ duration: 1.2, delay: 0.6, ease: "easeOut" }}
-            className="text-text-dim text-[15px] sm:text-[17px] md:text-[18px] max-w-[500px] leading-[1.6] mb-10 md:mb-14 mx-auto font-serif font-light"
+            transition={{ duration: 1.2, delay: 0.55 }}
+            className="text-text-dim text-[16px] sm:text-[18px] md:text-[19px] max-w-[640px] leading-[1.55] mb-10 md:mb-14 mx-auto font-sans font-light"
           >
-            Карер, боловсрол, үнэлэмжээрээ ижил түвшний хүмүүст зориулагдсан Монголын хамгийн өндөр шалгууртай танилцах клуб. Бид хүн бүрт нээлттэй биш.
+            Карер, боловсрол, үнэлэмжээрээ ижил түвшний хүмүүст зориулагдсан Монголын хамгийн өндөр шалгууртай танилцах клуб.
           </motion.p>
 
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 1, delay: 0.8, ease: [0.25, 1, 0.5, 1] }}
-            className="flex flex-col sm:flex-row items-center justify-center gap-5 sm:gap-8 w-full sm:w-auto"
+            transition={{ duration: 1, delay: 0.75 }}
+            className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-3 w-full max-w-[640px] mx-auto"
           >
             <button
               onClick={onApply}
-              className="group relative bg-accent text-bg-base px-8 sm:px-10 py-4 sm:py-5 text-[10px] sm:text-[11px] font-caps tracking-[0.2em] uppercase overflow-hidden hover:bg-accent-deep transition-all duration-500 flex items-center justify-center gap-3 sm:gap-4 w-full sm:w-auto"
+              className="group w-full sm:w-auto sm:min-w-[280px] bg-text-main text-bg-base px-8 py-4 text-[12px] font-sans font-medium tracking-[0.05em] uppercase hover:bg-accent transition-colors duration-300 flex items-center justify-center gap-3"
             >
-              <span>Гишүүнчлэлийн хүсэлт илгээх</span>
-              <ArrowRight className="w-4 h-4 transform group-hover:translate-x-1 transition-transform duration-300 shrink-0" />
+              <span>Гишүүнчлэлийн хүсэлт</span>
+              <ArrowRight className="w-4 h-4 transform group-hover:translate-x-1 transition-transform duration-300" />
             </button>
 
             <button
               type="button"
               onClick={() => setShowProcess(true)}
-              className="text-text-main text-[10px] tracking-[0.15em] uppercase border-b border-accent/20 pb-1 hover:border-accent hover:text-accent transition-all duration-300 font-caps"
+              className="group w-full sm:w-auto sm:min-w-[280px] bg-transparent border border-text-main text-text-main px-8 py-4 text-[12px] font-sans font-medium tracking-[0.05em] uppercase hover:bg-text-main hover:text-bg-base transition-colors duration-300 flex items-center justify-center"
             >
               Сонгон шалгаруулах үйл явц
             </button>
           </motion.div>
 
-          {/* Urgency pill — compact countdown */}
+          {/* Live ticker — minimalist, monospace, lots of space */}
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.8, delay: 1 }}
-            className="mt-10 flex flex-wrap items-center justify-center gap-x-4 gap-y-2 font-caps text-[10px] md:text-[11px] tracking-[0.25em] text-text-main/75 uppercase"
+            className="mt-12 md:mt-16 flex flex-wrap items-center justify-center gap-x-5 gap-y-2 font-sans text-[11px] tracking-[0.05em] text-text-dim"
           >
             <span className="inline-flex items-center gap-2">
               <span className="w-1.5 h-1.5 rounded-full bg-accent animate-pulse" />
-              Хаалга хаагдана
+              Spring 2026 drop closing in
             </span>
-            <span className="text-text-main tabular-nums">
-              {days}<span className="text-text-dim/70">d</span> {String(hours).padStart(2, '0')}<span className="text-text-dim/70">h</span> {String(minutes).padStart(2, '0')}<span className="text-text-dim/70">m</span>
+            <span className="text-text-main font-medium tabular-nums">
+              {days}d {String(hours).padStart(2, '0')}h {String(minutes).padStart(2, '0')}m
             </span>
-            <span className="text-text-dim/50">·</span>
-            <span>Acceptance <span className="text-accent font-medium">{stats.rate}%</span></span>
+            <span className="text-text-dim-2">·</span>
+            <span>Acceptance rate <span className="text-text-main font-medium">{stats.rate}%</span></span>
           </motion.div>
 
           {hasPendingApplication && (
@@ -153,14 +154,33 @@ export function LandingView({ onApply, onAdmin }: { onApply: () => void, onAdmin
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ duration: 0.8, delay: 1.2 }}
-              className="mt-8 font-caps text-[10px] tracking-[0.25em] text-accent/80 uppercase hover:text-accent transition-colors flex items-center gap-2 group"
+              className="mt-8 font-sans text-[12px] tracking-[0.05em] text-text-main hover:text-accent transition-colors flex items-center gap-2 group mx-auto"
             >
               <span className="w-1.5 h-1.5 rounded-full bg-accent animate-pulse" />
-              Миний dossier статус · Committee 48–72 цагт
-              <ArrowRight className="w-3 h-3 transform group-hover:translate-x-1 transition-transform" />
+              View dossier status — Committee in 48–72h
+              <ArrowRight className="w-3.5 h-3.5 transform group-hover:translate-x-1 transition-transform" />
             </motion.button>
           )}
         </div>
+
+        {/* Full-bleed atmospheric photo — Tesla model page register.
+            The image is the visual content that carries the emotion;
+            the type above is the rational claim. Keep aspect tall on
+            mobile so it lands just right. */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 1.2, delay: 0.9 }}
+          className="w-full aspect-[16/9] md:aspect-[21/9] overflow-hidden bg-bg-2 relative"
+        >
+          <img
+            src="https://images.unsplash.com/photo-1519642918688-7e43b19245d8?auto=format&fit=crop&w=2400&h=1000&q=85"
+            alt=""
+            loading="eager"
+            className="w-full h-full object-cover"
+          />
+          <div className="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-bg-base to-transparent pointer-events-none" />
+        </motion.div>
       </div>
 
       {/* Quarterly Drop — URGENCY */}
@@ -252,9 +272,9 @@ export function LandingView({ onApply, onAdmin }: { onApply: () => void, onAdmin
             transition={{ duration: 1 }}
             className="flex flex-col items-start"
           >
-            <div className="font-caps text-[9px] tracking-[0.3em] text-ink-blue uppercase mb-8">The Standard</div>
+            <div className="font-caps text-[9px] tracking-[0.3em] text-text-main uppercase mb-8">The Standard</div>
             <div className="font-display text-[96px] sm:text-[120px] md:text-[140px] lg:text-[180px] leading-none text-text-main font-light mb-4 tracking-tighter">
-              {stats.rate}<span className="text-ink-blue text-[56px] sm:text-[70px] md:text-[80px] lg:text-[100px] align-top relative top-4">%</span>
+              {stats.rate}<span className="text-text-main text-[56px] sm:text-[70px] md:text-[80px] lg:text-[100px] align-top relative top-4">%</span>
             </div>
             <div className="font-caps text-[11px] tracking-[0.2em] text-text-main uppercase mb-6 mt-4">Элсэх магадлал</div>
             <p className="font-serif italic text-[16px] text-text-dim leading-[1.8] max-w-sm">
@@ -292,24 +312,24 @@ export function LandingView({ onApply, onAdmin }: { onApply: () => void, onAdmin
 
             {/* Process */}
             <div className="pl-6 lg:pl-10 border-l border-accent-20">
-              <div className="font-caps text-[9px] tracking-[0.2em] text-ink-blue uppercase mb-8">Сонгон шалгаруулах процесс</div>
+              <div className="font-caps text-[9px] tracking-[0.2em] text-text-main uppercase mb-8">Сонгон шалгаруулах процесс</div>
               <div className="flex flex-col gap-8">
                 <div className="flex gap-6 items-start">
-                  <div className="font-sans text-[10px] text-ink-blue mt-1">01</div>
+                  <div className="font-sans text-[10px] text-text-main mt-1">01</div>
                   <div>
                     <div className="font-caps text-[11px] text-text-main uppercase tracking-[0.1em] mb-2">Анкет баталгаажилт</div>
                     <div className="font-serif italic text-[14px] text-text-dim">100% хувийн мэдээлэл болон карерын баталгаажуулалт.</div>
                   </div>
                 </div>
                 <div className="flex gap-6 items-start">
-                  <div className="font-sans text-[10px] text-ink-blue mt-1">02</div>
+                  <div className="font-sans text-[10px] text-text-main mt-1">02</div>
                   <div>
                     <div className="font-caps text-[11px] text-text-main uppercase tracking-[0.1em] mb-2">Хорооны үнэлгээ</div>
                     <div className="font-serif italic text-[14px] text-text-dim">Хаалттай хороо 48-72 цагт хянан хэлэлцэнэ.</div>
                   </div>
                 </div>
                 <div className="flex gap-6 items-start">
-                  <div className="font-sans text-[10px] text-ink-blue mt-1">03</div>
+                  <div className="font-sans text-[10px] text-text-main mt-1">03</div>
                   <div>
                     <div className="font-caps text-[11px] text-text-main uppercase tracking-[0.1em] mb-2">Эцсийн урилга</div>
                     <div className="font-serif italic text-[14px] text-text-dim">Шалгуур хангасан тусгай бүрэлдэхүүнд нэвтрэх эрх олгоно.</div>

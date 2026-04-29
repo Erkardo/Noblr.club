@@ -20,7 +20,7 @@ export function MemberWhispers() {
         transition={{ duration: 1 }}
         className="text-center mb-14 md:mb-20"
       >
-        <div className="font-caps text-[9px] tracking-[0.4em] text-sage uppercase mb-5">
+        <div className="font-caps text-[9px] tracking-[0.4em] text-text-main uppercase mb-5">
           Гишүүдийн чимээ
         </div>
         <h2 className="font-display text-[38px] sm:text-[48px] md:text-[60px] font-light text-text-main leading-[1.02] tracking-[-0.02em]">
@@ -41,7 +41,7 @@ export function MemberWhispers() {
             transition={{ duration: 0.7, delay: i * 0.08 }}
             className="bg-bg-base p-8 md:p-10 flex flex-col gap-5 group hover:bg-bg-2 transition-colors duration-500"
           >
-            <div className="font-display italic text-sage text-[48px] leading-none font-light -mb-4">
+            <div className="font-display italic text-text-main text-[48px] leading-none font-light -mb-4">
               &ldquo;
             </div>
             <blockquote className="font-serif italic text-text-main text-[16px] md:text-[17px] leading-[1.7] font-light">

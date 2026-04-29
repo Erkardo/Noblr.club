@@ -1,63 +1,53 @@
-@import url('https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,300;0,6..96,400;0,6..96,500;1,6..96,300;1,6..96,400&family=Fraunces:ital,opsz,wght@0,9..144,200;0,9..144,300;0,9..144,400;1,9..144,300&family=Space+Grotesk:wght@300;400;500&family=Tenor+Sans&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,300;0,6..96,400;0,6..96,500;1,6..96,300;1,6..96,400&family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@300;400;500;600;700&display=swap');
 @import "tailwindcss";
 
 /*
- * Modern Editorial Atelier palette — Loewe / Aesop / Hermès digital /
- * Off-White luxury / Marni runway register. Warm ivory base reads as
- * gallery print room. Burnt-orange primary accent feels current 2026,
- * not heritage. Section accents (sage / eggplant / coral) rotate per
- * spread so the page reads like flipping through a magazine, not a
- * single mood.
+ * "Tesla register" — futuristic premium minimalism. Pure-white surface,
+ * confident black type, tons of negative space, photography is where
+ * the color lives. UI itself is near-monochromatic with a single deep
+ * amber accent for interactive moments. The previous iterations were
+ * editorial / heritage / multi-color — this one is the opposite:
+ * Apple-Tesla-Linear register, where restraint is the luxury signal.
  */
 @theme {
-  --font-display: "Bodoni Moda", "Fraunces", serif;
-  --font-serif: "Fraunces", "Bodoni Moda", serif;
+  --font-display: "Inter", "Space Grotesk", sans-serif;
+  --font-serif: "Bodoni Moda", "Fraunces", serif;
   --font-sans: "Space Grotesk", "Inter", sans-serif;
-  --font-caps: "Tenor Sans", "Space Grotesk", sans-serif;
+  --font-caps: "Space Grotesk", sans-serif;
 
-  /* Surfaces — warm ivory layers. Slightly warmer + richer than the
-     previous cream, more "gallery white" than "country club cream." */
-  --color-bg-base: #F5EFE3;       /* warm ivory — page background */
-  --color-bg-2: #EDE5D2;          /* card cream */
-  --color-bg-3: #DBD2BC;          /* hover / divider deep */
-  --color-bg-ink: #1A1612;        /* warm charcoal — inverse sections */
+  /* Surfaces — near-pure white. Subtle warmth so it doesn't feel
+     clinical, but not enough to read as cream/beige. */
+  --color-bg-base: #FAFAF7;       /* near-pure white, faint warmth */
+  --color-bg-2: #F1F1EE;          /* card surfaces */
+  --color-bg-3: #E5E5E1;          /* hover / divider */
+  --color-bg-ink: #0F1014;        /* near-black for inverse sections */
 
-  /* Primary brand accent — burnt orange. Modern saturation, not
-     muted. Reads as confident editorial (Hermès / Loewe register)
-     rather than heritage red. */
-  --color-accent: #D4683A;
-  --color-accent-deep: #A84A20;
-  --color-accent-soft: #F4DDCC;   /* soft tint for accent-flooded blocks */
+  /* Single accent — deep amber. Used sparingly: primary CTA, key
+     highlights, focus rings. Everything else is monochromatic so
+     the accent reads as a deliberate choice. */
+  --color-accent: #A47148;
+  --color-accent-deep: #7A5430;
+  --color-accent-soft: #EDE0CF;
 
-  /* Section accents — used sectorally so the page reads like
-     spreads. Don't combine more than 2 visible at once. */
-  --color-sage: #88997C;          /* Member Whispers — calm intimacy */
-  --color-sage-soft: #DDE3D4;
-  --color-eggplant: #553A55;      /* Quarterly Drop — mystery, urgency */
-  --color-eggplant-soft: #E1D5E1;
-  --color-coral: #D88060;         /* Brief — warmth, invitation */
-  --color-coral-soft: #F4DCD0;
-  --color-ink-blue: #2A3F5C;      /* Standards — institutional weight */
-  --color-ink-blue-soft: #D5DCE5;
+  /* Type colors — neutral grayscale. Pure black is too harsh; this
+     warm near-black sits more naturally on the off-white. */
+  --color-text-main: #0F1014;     /* primary type */
+  --color-text-dim: #4A4A47;      /* secondary type */
+  --color-text-dim-2: #8A8A86;    /* faint type */
 
-  /* Type colors — warm charcoal hierarchy (no pure black). */
-  --color-text-main: #1C1812;     /* primary type */
-  --color-text-dim: #5C534B;      /* secondary type */
-  --color-text-dim-2: #8B8478;    /* faint type */
+  /* Hairline divider — near-black at low opacity. */
+  --color-accent-20: rgba(15, 16, 20, 0.08);
 
-  /* Hairline divider — charcoal at low opacity reads as a thin rule
-     on cream, which is the editorial pattern we want. */
-  --color-accent-20: rgba(28, 24, 18, 0.14);
-
-  /* Status — paper-safe palette. */
+  /* Status — restrained. */
   --color-error: #C8453F;
   --color-success: #3E7A5F;
 }
 
 body {
-  @apply bg-bg-base text-text-main antialiased selection:bg-accent/20 selection:text-text-main min-h-screen overflow-x-hidden;
-  font-family: var(--font-serif);
-  font-weight: 300;
+  @apply bg-bg-base text-text-main antialiased selection:bg-text-main selection:text-bg-base min-h-screen overflow-x-hidden;
+  font-family: var(--font-sans);
+  font-weight: 400;
+  letter-spacing: -0.01em;
 }
 
 ::-webkit-scrollbar {
@@ -66,7 +56,7 @@ body {
 }
 
 input, textarea, select {
-  @apply bg-transparent border-0 border-b border-accent-20 focus:ring-0 focus:border-accent transition-colors duration-500 outline-none;
+  @apply bg-transparent border-0 border-b border-accent-20 focus:ring-0 focus:border-text-main transition-colors duration-300 outline-none;
   font-family: var(--font-sans);
   color: var(--color-text-main);
 }
@@ -75,8 +65,8 @@ input:-webkit-autofill,
 input:-webkit-autofill:hover,
 input:-webkit-autofill:focus,
 input:-webkit-autofill:active{
-    -webkit-box-shadow: 0 0 0 30px #F5EFE3 inset !important;
-    -webkit-text-fill-color: #1C1812 !important;
+    -webkit-box-shadow: 0 0 0 30px #FAFAF7 inset !important;
+    -webkit-text-fill-color: #0F1014 !important;
 }
 
 .noise-overlay {
@@ -84,7 +74,7 @@ input:-webkit-autofill:active{
   inset: 0;
   pointer-events: none;
   z-index: 50;
-  opacity: 0.06;
+  opacity: 0.03;
   mix-blend-mode: multiply;
   background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
 }

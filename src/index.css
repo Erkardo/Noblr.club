@@ -1,42 +1,48 @@
-@import url('https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,300;0,6..96,400;0,6..96,500;1,6..96,300;1,6..96,400&family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,300;0,6..96,400;0,6..96,500;1,6..96,300;1,6..96,400&family=Fraunces:ital,opsz,wght@0,9..144,200;0,9..144,300;0,9..144,400;1,9..144,300&family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@300;400;500;600;700&display=swap');
 @import "tailwindcss";
 
 /*
- * "Tesla register" — futuristic premium minimalism. Pure-white surface,
- * confident black type, tons of negative space, photography is where
- * the color lives. UI itself is near-monochromatic with a single deep
- * amber accent for interactive moments. The previous iterations were
- * editorial / heritage / multi-color — this one is the opposite:
- * Apple-Tesla-Linear register, where restraint is the luxury signal.
+ * "Bottega Veneta + Editorial" register — pure ivory surface, deep
+ * bottle green primary accent, occasional chartreuse pop. Restored
+ * Bodoni Moda display so the logo and headlines keep their editorial
+ * serif voice. The previous Tesla-era amber accent felt brown/dated;
+ * bottle green is the signature luxury accent of the 2020-2026 era
+ * (Bottega) — saturated, confident, distinctly modern, mysterious.
  */
 @theme {
-  --font-display: "Inter", "Space Grotesk", sans-serif;
-  --font-serif: "Bodoni Moda", "Fraunces", serif;
-  --font-sans: "Space Grotesk", "Inter", sans-serif;
-  --font-caps: "Space Grotesk", sans-serif;
+  --font-display: "Bodoni Moda", "Fraunces", serif;
+  --font-serif: "Fraunces", "Bodoni Moda", serif;
+  --font-sans: "Inter", "Space Grotesk", sans-serif;
+  --font-caps: "Space Grotesk", "Inter", sans-serif;
 
-  /* Surfaces — near-pure white. Subtle warmth so it doesn't feel
-     clinical, but not enough to read as cream/beige. */
-  --color-bg-base: #FAFAF7;       /* near-pure white, faint warmth */
-  --color-bg-2: #F1F1EE;          /* card surfaces */
-  --color-bg-3: #E5E5E1;          /* hover / divider */
-  --color-bg-ink: #0F1014;        /* near-black for inverse sections */
+  /* Surfaces — gallery ivory. Slightly warmer than pure white, but
+     reads as "art space white" rather than "country club cream". */
+  --color-bg-base: #F8F5EC;       /* ivory page background */
+  --color-bg-2: #F0EBDC;          /* card surface */
+  --color-bg-3: #E2DBC4;          /* hover / divider deep */
+  --color-bg-ink: #0A0F0C;        /* near-black with green undertone */
 
-  /* Single accent — deep amber. Used sparingly: primary CTA, key
-     highlights, focus rings. Everything else is monochromatic so
-     the accent reads as a deliberate choice. */
-  --color-accent: #A47148;
-  --color-accent-deep: #7A5430;
-  --color-accent-soft: #EDE0CF;
+  /* Primary accent — Bottega bottle green. Deep, saturated,
+     confident. Used on CTAs, key marks, accent type. The single
+     defining color of the brand. */
+  --color-accent: #1F4233;
+  --color-accent-deep: #0F2A1F;
+  --color-accent-soft: #DEE5DC;
 
-  /* Type colors — neutral grayscale. Pure black is too harsh; this
-     warm near-black sits more naturally on the off-white. */
-  --color-text-main: #0F1014;     /* primary type */
-  --color-text-dim: #4A4A47;      /* secondary type */
-  --color-text-dim-2: #8A8A86;    /* faint type */
+  /* Pop accent — chartreuse. Used very sparingly: hover flashes,
+     status pulses, a single highlight per page. The "wake-up" color
+     against the deep green base. */
+  --color-pop: #C8D43B;
+  --color-pop-deep: #A8B432;
+
+  /* Type colors — neutral charcoal hierarchy. Pure black is too
+     digital; this near-black has subtle warmth. */
+  --color-text-main: #0A0F0C;     /* primary type */
+  --color-text-dim: #4A5048;      /* secondary type */
+  --color-text-dim-2: #8A8E84;    /* faint type */
 
   /* Hairline divider — near-black at low opacity. */
-  --color-accent-20: rgba(15, 16, 20, 0.08);
+  --color-accent-20: rgba(10, 15, 12, 0.10);
 
   /* Status — restrained. */
   --color-error: #C8453F;
@@ -44,10 +50,10 @@
 }
 
 body {
-  @apply bg-bg-base text-text-main antialiased selection:bg-text-main selection:text-bg-base min-h-screen overflow-x-hidden;
+  @apply bg-bg-base text-text-main antialiased selection:bg-accent selection:text-bg-base min-h-screen overflow-x-hidden;
   font-family: var(--font-sans);
   font-weight: 400;
-  letter-spacing: -0.01em;
+  letter-spacing: -0.005em;
 }
 
 ::-webkit-scrollbar {
@@ -56,7 +62,7 @@ body {
 }
 
 input, textarea, select {
-  @apply bg-transparent border-0 border-b border-accent-20 focus:ring-0 focus:border-text-main transition-colors duration-300 outline-none;
+  @apply bg-transparent border-0 border-b border-accent-20 focus:ring-0 focus:border-accent transition-colors duration-300 outline-none;
   font-family: var(--font-sans);
   color: var(--color-text-main);
 }
@@ -65,8 +71,8 @@ input:-webkit-autofill,
 input:-webkit-autofill:hover,
 input:-webkit-autofill:focus,
 input:-webkit-autofill:active{
-    -webkit-box-shadow: 0 0 0 30px #FAFAF7 inset !important;
-    -webkit-text-fill-color: #0F1014 !important;
+    -webkit-box-shadow: 0 0 0 30px #F8F5EC inset !important;
+    -webkit-text-fill-color: #0A0F0C !important;
 }
 
 .noise-overlay {
@@ -74,7 +80,7 @@ input:-webkit-autofill:active{
   inset: 0;
   pointer-events: none;
   z-index: 50;
-  opacity: 0.03;
+  opacity: 0.04;
   mix-blend-mode: multiply;
   background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
 }

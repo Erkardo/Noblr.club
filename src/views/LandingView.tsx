@@ -92,9 +92,9 @@ export function LandingView({ onApply, onAdmin }: { onApply: () => void, onAdmin
             initial={{ opacity: 0, y: 24 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 1.2, delay: 0.35, ease: [0.25, 1, 0.5, 1] }}
-            className="text-[44px] sm:text-[64px] md:text-[88px] lg:text-[112px] font-display text-text-main font-medium leading-[0.96] tracking-[-0.035em] mb-6 md:mb-8"
+            className="text-[44px] sm:text-[64px] md:text-[88px] lg:text-[112px] font-display text-text-main font-light leading-[0.98] tracking-[-0.025em] mb-6 md:mb-8"
           >
-            Олонхид биш. <span className="text-text-dim font-light">Шилдгүүдэд.</span>
+            Олонхид биш. <span className="text-accent italic font-serif">Шилдгүүдэд.</span>
           </motion.h1>
 
           <motion.p
